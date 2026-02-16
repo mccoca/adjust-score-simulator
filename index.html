@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adjust the Score Simulator</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --border:#e5e7eb;
+      --muted:#6b7280;
+      --text:#111827;
+      --accent:#0f172a;
+      --track:#d1d5db;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#ffffff, var(--bg));
+      padding:24px;
+    }
+    .wrap{max-width:980px;margin:0 auto}
+    .header{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:18px 20px;
+    }
+    h1{margin:0 0 6px 0;font-size:24px}
+    p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+    .grid{display:grid;gap:14px;margin-top:14px}
+    .scoreCard{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px 18px;
+    }
+    .kicker{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.3px}
+    .score{font-size:44px;font-weight:900;margin-top:4px}
+    .band{font-weight:900;margin-top:4px}
+    .note{font-size:12px;color:var(--muted);margin-top:8px}
+    .panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px 16px;
+    }
+    .rowTop{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+    .label{font-weight:900}
+    .pct{color:var(--muted);font-weight:800}
+    .val{font-size:13px;color:var(--text)}
+    input[type="range"]{
+      width:100%;
+      margin-top:10px;
+      -webkit-appearance:none;
+      height:10px;
+      border-radius:999px;
+      background:var(--track);
+      outline:none;
+    }
+    input[type="range"]::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      appearance:none;
+      width:20px;height:20px;border-radius:50%;
+      background:var(--accent);
+      cursor:pointer;
+      border:2px solid #fff;
+      box-shadow:0 2px 8px rgba(0,0,0,.15);
+    }
+    input[type="range"]::-moz-range-thumb{
+      width:20px;height:20px;border-radius:50%;
+      background:var(--accent);
+      cursor:pointer;border:2px solid #fff;
+      box-shadow:0 2px 8px rgba(0,0,0,.15);
+    }
+    details{border:1px solid var(--border);border-radius:16px;background:var(--card)}
+    summary{cursor:pointer;padding:12px 14px;font-weight:900}
+    details .inner{padding:0 14px 14px 14px}
+    .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .pill{border:1px solid var(--border);background:#f9fafb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;color:#374151}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <h1>Adjust the Score Simulator</h1>
+      <p>Move the sliders to see how a simulated credit score changes. Learning tool only (not an official FICO score).</p>
+      <div class="pillRow">
+        <div class="pill">FICO weights: 35/30/15/10/10</div>
+        <div class="pill">Scale: 300–850</div>
+        <div class="pill">Focus levers: Payment History + Utilization</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="scoreCard">
+        <div class="kicker">SIMULATED SCORE (300–850)</div>
+        <div id="score" class="score">—</div>
+        <div id="band" class="band">—</div>
+        <div class="note">Tip: Small changes in utilization can move a score quickly. Late payments can hurt hard and linger.</div>
+      </div>
+
+      <div class="panel">
+        <div class="rowTop">
+          <div class="label">Payment History <span class="pct">(35%)</span></div>
+          <div class="val">Value: <span id="phv">80</span>/100</div>
+        </div>
+        <input id="ph" type="range" min="0" max="100" value="80" />
+      </div>
+
+      <div class="panel">
+        <div class="rowTop">
+          <div class="label">Credit Utilization <span class="pct">(30%)</span></div>
+          <div class="val">Value: <span id="utv">70</span>/100</div>
+        </div>
+        <input id="ut" type="range" min="0" max="100" value="70" />
+      </div>
+
+      <details>
+        <summary>Advanced: Other Factors (optional)</summary>
+        <div class="inner">
+          <div class="panel" style="margin-top:12px;">
+            <div class="rowTop">
+              <div class="label">Length of Credit History <span class="pct">(15%)</span></div>
+              <div class="val">Value: <span id="lnv">60</span>/100</div>
+            </div>
+            <input id="ln" type="range" min="0" max="100" value="60" />
+          </div>
+
+          <div class="panel" style="margin-top:12px;">
+            <div class="rowTop">
+              <div class="label">Credit Mix <span class="pct">(10%)</span></div>
+              <div class="val">Value: <span id="mxv">60</span>/100</div>
+            </div>
+            <input id="mx" type="range" min="0" max="100" value="60" />
+          </div>
+
+          <div class="panel" style="margin-top:12px;">
+            <div class="rowTop">
+              <div class="label">New Credit / Inquiries <span class="pct">(10%)</span></div>
+              <div class="val">Value: <span id="nwv">70</span>/100</div>
+            </div>
+            <input id="nw" type="range" min="0" max="100" value="70" />
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function bandLabel(s){
+      if (s >= 800) return "Exceptional (800–850)";
+      if (s >= 740) return "Very Good (740–799)";
+      if (s >= 670) return "Good (670–739)";
+      if (s >= 580) return "Fair (580–669)";
+      return "Poor (Below 580)";
+    }
+
+    function update(){
+      const ph = +$("ph").value;
+      const ut = +$("ut").value;
+      const ln = +$("ln").value;
+      const mx = +$("mx").value;
+      const nw = +$("nw").value;
+
+      $("phv").textContent = ph;
+      $("utv").textContent = ut;
+      $("lnv").textContent = ln;
+      $("mxv").textContent = mx;
+      $("nwv").textContent = nw;
+
+      // Weighted index 0–100
+      const idx = (ph*0.35 + ut*0.30 + ln*0.15 + mx*0.10 + nw*0.10);
+
+      // Map to 300–850 for learning: 300 + idx*5.5
+      const score = Math.round(300 + idx * 5.5);
+
+      $("score").textContent = score;
+      $("band").textContent = bandLabel(score);
+    }
+
+    ["ph","ut","ln","mx","nw"].forEach(id => $(id).addEventListener("input", update));
+    update();
+  </script>
+</body>
+</html>
