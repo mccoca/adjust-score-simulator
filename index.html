@@ -12,6 +12,11 @@
       --muted:#6b7280;
       --text:#111827;
       --accent:#0f172a;
+
+      --good:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+
       --track:#d1d5db;
     }
     *{box-sizing:border-box}
@@ -31,8 +36,10 @@
     }
     h1{margin:0 0 6px 0;font-size:24px}
     p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+    .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .pill{border:1px solid var(--border);background:#f9fafb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;color:#374151}
     .grid{display:grid;gap:14px;margin-top:14px}
-    .scoreCard{
+    .card{
       background:var(--card);
       border:1px solid var(--border);
       border-radius:16px;
@@ -42,12 +49,6 @@
     .score{font-size:44px;font-weight:900;margin-top:4px}
     .band{font-weight:900;margin-top:4px}
     .note{font-size:12px;color:var(--muted);margin-top:8px}
-    .panel{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px 16px;
-    }
     .rowTop{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
     .label{font-weight:900}
     .pct{color:var(--muted);font-weight:800}
@@ -79,50 +80,168 @@
     details{border:1px solid var(--border);border-radius:16px;background:var(--card)}
     summary{cursor:pointer;padding:12px 14px;font-weight:900}
     details .inner{padding:0 14px 14px 14px}
-    .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .pill{border:1px solid var(--border);background:#f9fafb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;color:#374151}
+
+    /* Toggle */
+    .toggleRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+    .toggle{
+      display:flex;align-items:center;gap:10px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      border-radius:12px;
+      padding:10px 12px;
+      width:fit-content;
+    }
+    .toggle input{transform:scale(1.2)}
+    .toggle strong{font-size:13px}
+    .toggle span{font-size:12px;color:var(--muted);font-weight:700}
+
+    /* Score Range Bar */
+    .rangeWrap{margin-top:12px}
+    .rangeBar{
+      position:relative;
+      height:14px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:
+        linear-gradient(90deg,
+          #ef4444 0%,
+          #f59e0b 35%,
+          #16a34a 55%,
+          #0ea5e9 75%,
+          #7c3aed 100%);
+      overflow:hidden;
+    }
+    .rangeFill{
+      position:absolute;left:0;top:0;height:100%;
+      width:0%;
+      background:rgba(255,255,255,0.55);
+      mix-blend-mode:overlay;
+    }
+    .marker{
+      position:absolute;top:50%;
+      width:12px;height:12px;border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:#111827;
+      border:2px solid #fff;
+      box-shadow:0 2px 8px rgba(0,0,0,.20);
+      left:0%;
+    }
+    .rangeLabels{
+      display:flex;justify-content:space-between;gap:8px;
+      margin-top:8px;font-size:11px;color:var(--muted);font-weight:800;
+    }
+
+    /* Utilization Meter */
+    .meter{
+      height:12px;border-radius:999px;border:1px solid var(--border);
+      background:#f3f4f6;overflow:hidden;margin-top:10px;position:relative;
+    }
+    .meterFill{
+      height:100%;width:0%;
+      background:var(--good);
+      transition:width .05s linear;
+    }
+    .meterLine{
+      position:absolute;top:0;height:100%;width:2px;background:#111827;
+      left:30%;
+      opacity:.5;
+    }
+    .meterText{
+      margin-top:6px;font-size:12px;color:var(--muted);font-weight:800;
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    }
+    .callout{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:13px;
+      color:#374151;
+    }
+    .callout strong{color:#111827}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="header">
       <h1>Adjust the Score Simulator</h1>
-      <p>Move the sliders to see how a simulated credit score changes. Learning tool only (not an official FICO score).</p>
+      <p>Move the sliders to see how changes in Payment History and Utilization impact a simulated score. Learning tool only (not an official FICO score).</p>
+
       <div class="pillRow">
         <div class="pill">FICO weights: 35/30/15/10/10</div>
         <div class="pill">Scale: 300–850</div>
-        <div class="pill">Focus levers: Payment History + Utilization</div>
+        <div class="pill">Key levers: Payment History + Utilization</div>
+      </div>
+
+      <div class="toggleRow">
+        <label class="toggle">
+          <input id="lateToggle" type="checkbox" />
+          <div>
+            <strong>Missed payment impact (30+ days late)</strong><br/>
+            <span>Applies a realistic score hit + lowers Payment History effectiveness</span>
+          </div>
+        </label>
+        <div id="lateMsg" class="callout" style="display:none;">
+          <strong>Late payment ON:</strong> score takes a hit and risk increases.
+        </div>
       </div>
     </div>
 
     <div class="grid">
-      <div class="scoreCard">
+      <div class="card">
         <div class="kicker">SIMULATED SCORE (300–850)</div>
         <div id="score" class="score">—</div>
         <div id="band" class="band">—</div>
-        <div class="note">Tip: Small changes in utilization can move a score quickly. Late payments can hurt hard and linger.</div>
+
+        <!-- Dynamic Range Bar -->
+        <div class="rangeWrap">
+          <div class="rangeBar" aria-label="credit score range bar">
+            <div id="rangeFill" class="rangeFill"></div>
+            <div id="marker" class="marker" title="Your simulated score"></div>
+          </div>
+          <div class="rangeLabels">
+            <span>Poor<br><span style="font-weight:700;">&lt;580</span></span>
+            <span>Fair<br><span style="font-weight:700;">580–669</span></span>
+            <span>Good<br><span style="font-weight:700;">670–739</span></span>
+            <span>Very Good<br><span style="font-weight:700;">740–799</span></span>
+            <span>Exceptional<br><span style="font-weight:700;">800–850</span></span>
+          </div>
+        </div>
+
+        <div class="note">Reminder: utilization is most controllable; late payments are the most damaging.</div>
       </div>
 
-      <div class="panel">
+      <!-- Payment History -->
+      <div class="card">
         <div class="rowTop">
           <div class="label">Payment History <span class="pct">(35%)</span></div>
           <div class="val">Value: <span id="phv">80</span>/100</div>
         </div>
         <input id="ph" type="range" min="0" max="100" value="80" />
+        <div class="note">Missed-payment toggle simulates a 30+ day late: score drop + reduced Payment History effectiveness.</div>
       </div>
 
-      <div class="panel">
+      <!-- Utilization as % -->
+      <div class="card">
         <div class="rowTop">
           <div class="label">Credit Utilization <span class="pct">(30%)</span></div>
-          <div class="val">Value: <span id="utv">70</span>/100</div>
+          <div class="val"><span id="utPct">28</span>% used • Utilization Score: <span id="utScore">—</span>/100</div>
         </div>
-        <input id="ut" type="range" min="0" max="100" value="70" />
+        <input id="ut" type="range" min="0" max="100" value="28" />
+        <div class="meter" aria-label="utilization meter">
+          <div id="utFill" class="meterFill"></div>
+          <div class="meterLine" title="30% threshold"></div>
+        </div>
+        <div class="meterText">
+          <span>Target: <strong>&lt;30%</strong> (ideal: <strong>&lt;10%</strong>)</span>
+          <span id="utFlag"></span>
+        </div>
       </div>
 
       <details>
         <summary>Advanced: Other Factors (optional)</summary>
         <div class="inner">
-          <div class="panel" style="margin-top:12px;">
+          <div class="card" style="margin-top:12px;">
             <div class="rowTop">
               <div class="label">Length of Credit History <span class="pct">(15%)</span></div>
               <div class="val">Value: <span id="lnv">60</span>/100</div>
@@ -130,7 +249,7 @@
             <input id="ln" type="range" min="0" max="100" value="60" />
           </div>
 
-          <div class="panel" style="margin-top:12px;">
+          <div class="card" style="margin-top:12px;">
             <div class="rowTop">
               <div class="label">Credit Mix <span class="pct">(10%)</span></div>
               <div class="val">Value: <span id="mxv">60</span>/100</div>
@@ -138,7 +257,7 @@
             <input id="mx" type="range" min="0" max="100" value="60" />
           </div>
 
-          <div class="panel" style="margin-top:12px;">
+          <div class="card" style="margin-top:12px;">
             <div class="rowTop">
               <div class="label">New Credit / Inquiries <span class="pct">(10%)</span></div>
               <div class="val">Value: <span id="nwv">70</span>/100</div>
@@ -161,30 +280,90 @@
       return "Poor (Below 580)";
     }
 
+    // Convert utilization % to a 0–100 "utilization score"
+    // Heuristic: <=10% = 100, 10–30% linearly drops to 80, 30–100% linearly drops to 0.
+    function utilizationToScore(pct){
+      if (pct <= 10) return 100;
+      if (pct <= 30){
+        // 10->100, 30->80
+        return Math.round(100 - ((pct - 10) * (20/20)));
+      }
+      // 30->80, 100->0
+      const score = 80 - ((pct - 30) * (80/70));
+      return Math.max(0, Math.round(score));
+    }
+
+    // Map weighted index (0–100) to 300–850
+    function indexToScore(idx){
+      return Math.round(300 + idx * 5.5);
+    }
+
+    function clamp(n, lo, hi){ return Math.max(lo, Math.min(hi, n)); }
+
     function update(){
-      const ph = +$("ph").value;
-      const ut = +$("ut").value;
+      const late = $("lateToggle").checked;
+
+      const phRaw = +$("ph").value;
+      const utPct = +$("ut").value;           // utilization in %
       const ln = +$("ln").value;
       const mx = +$("mx").value;
       const nw = +$("nw").value;
 
-      $("phv").textContent = ph;
-      $("utv").textContent = ut;
+      // Display raw values
+      $("phv").textContent = phRaw;
+      $("utPct").textContent = utPct;
       $("lnv").textContent = ln;
       $("mxv").textContent = mx;
       $("nwv").textContent = nw;
 
-      // Weighted index 0–100
-      const idx = (ph*0.35 + ut*0.30 + ln*0.15 + mx*0.10 + nw*0.10);
+      // Utilization meter + flag + utilization score
+      const utScore = utilizationToScore(utPct);
+      $("utScore").textContent = utScore;
 
-      // Map to 300–850 for learning: 300 + idx*5.5
-      const score = Math.round(300 + idx * 5.5);
+      $("utFill").style.width = utPct + "%";
+      if (utPct > 30){
+        $("utFill").style.background = "var(--bad)";
+        $("utFlag").innerHTML = "Status: <strong style='color:#b91c1c;'>Above 30% (hurts score)</strong>";
+      } else if (utPct > 10){
+        $("utFill").style.background = "var(--warn)";
+        $("utFlag").innerHTML = "Status: <strong style='color:#92400e;'>10–30% (okay)</strong>";
+      } else {
+        $("utFill").style.background = "var(--good)";
+        $("utFlag").innerHTML = "Status: <strong style='color:#166534;'>Under 10% (ideal)</strong>";
+      }
+
+      // Missed payment impact
+      // - Reduce effective Payment History score (trust hit)
+      // - Apply a direct score penalty (models the immediate drop)
+      let phEffective = phRaw;
+      let penalty = 0;
+
+      if (late){
+        phEffective = clamp(phRaw - 40, 0, 100);
+        penalty = 80; // "realistic" one-late-payment hit for education; varies in real life
+        $("lateMsg").style.display = "block";
+      } else {
+        $("lateMsg").style.display = "none";
+      }
+
+      // Weighted index 0–100
+      const idx = (phEffective*0.35 + utScore*0.30 + ln*0.15 + mx*0.10 + nw*0.10);
+
+      // Convert to 300–850 and apply penalty, then clamp
+      let score = indexToScore(idx) - penalty;
+      score = clamp(score, 300, 850);
 
       $("score").textContent = score;
       $("band").textContent = bandLabel(score);
+
+      // Dynamic range bar: fill + marker mapped from 300–850
+      const pct = ((score - 300) / (850 - 300)) * 100;
+      const pctClamped = clamp(pct, 0, 100);
+      $("marker").style.left = pctClamped + "%";
+      $("rangeFill").style.width = pctClamped + "%";
     }
 
-    ["ph","ut","ln","mx","nw"].forEach(id => $(id).addEventListener("input", update));
+    ["ph","ut","ln","mx","nw","lateToggle"].forEach(id => $(id).addEventListener("input", update));
     update();
   </script>
 </body>
