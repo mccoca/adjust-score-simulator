@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interest Difference Calculator</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --border:#e5e7eb;
+      --muted:#6b7280;
+      --text:#111827;
+      --accent:#0f172a;
+      --good:#16a34a;
+      --bad:#ef4444;
+      --warn:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#ffffff,var(--bg));
+      padding:24px;
+    }
+    .wrap{max-width:980px;margin:0 auto}
+    h1{margin:0 0 6px 0;font-size:24px}
+    p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+    .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .pill{
+      border:1px solid var(--border);
+      background:#f9fafb;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:800;
+      color:#374151;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+      gap:16px;
+      margin-top:16px;
+    }
+    @media (max-width:800px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px 18px;
+    }
+    .cardHeader{
+      font-weight:900;
+      margin-bottom:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:10px;
+    }
+    .cardHeader span{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+    }
+    label{
+      font-size:13px;
+      font-weight:800;
+      color:#111827;
+      display:block;
+      margin-bottom:3px;
+    }
+    input[type="number"]{
+      width:100%;
+      padding:6px 8px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      font-size:14px;
+    }
+    .field{
+      margin-bottom:10px;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .row > div{flex:1 1 0}
+    .hint{
+      font-size:11px;
+      color:var(--muted);
+      margin-top:2px;
+    }
+    .kicker{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:800;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+    }
+    .bigNumber{
+      font-size:24px;
+      font-weight:900;
+      margin-top:4px;
+    }
+    .subNumber{
+      font-size:13px;
+      color:#374151;
+      margin-top:2px;
+    }
+    .highlightGood{color:var(--good);font-weight:900;}
+    .highlightBad{color:var(--bad);font-weight:900;}
+    .highlightWarn{color:var(--warn);font-weight:900;}
+    .divider{
+      height:1px;
+      background:var(--border);
+      margin:12px 0;
+    }
+    .totalRow{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      margin-top:4px;
+    }
+    .barWrap{
+      margin-top:10px;
+    }
+    .bar{
+      position:relative;
+      height:12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#f3f4f6;
+      overflow:hidden;
+    }
+    .barFill{
+      position:absolute;
+      left:0;top:0;
+      height:100%;
+      width:0%;
+      background:var(--good);
+    }
+    .barFill.bad{background:var(--bad);}
+    .barLabels{
+      display:flex;
+      justify-content:space-between;
+      font-size:11px;
+      color:var(--muted);
+      margin-top:4px;
+      font-weight:700;
+    }
+    .callout{
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      padding:10px 12px;
+      font-size:13px;
+      color:#374151;
+      margin-top:10px;
+    }
+    .callout strong{color:#111827;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Interest Difference Calculator</h1>
+    <p>
+      Compare the total cost of borrowing with a strong credit score versus a weaker score.
+      Adjust the inputs to see how loan amount, years, and interest rates change your total interest and lifetime cost.
+    </p>
+
+    <div class="pillRow">
+      <div class="pill">$40,000 / year × 4 years → $160,000 example</div>
+      <div class="pill">Typical terms: 10–20 years</div>
+      <div class="pill">Strong credit lowers interest, not the education</div>
+    </div>
+
+    <div class="grid">
+      <!-- INPUTS -->
+      <div class="card">
+        <div class="cardHeader">
+          <div>Loan Inputs</div>
+          <span>Customize to match your plan</span>
+        </div>
+
+        <div class="field">
+          <label for="perYear">Loan amount per year ($)</label>
+          <input id="perYear" type="number" value="40000" min="5000" step="1000" />
+          <div class="hint">Total borrowing = amount per year × number of years in school.</div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="yearsInSchool">Years of borrowing</label>
+            <input id="yearsInSchool" type="number" value="4" min="1" max="8" />
+            <div class="hint">Most MWU programs: 3–4 years.</div>
+          </div>
+          <div class="field">
+            <label for="termYears">Repayment term (years)</label>
+            <input id="termYears" type="number" value="10" min="5" max="30" />
+            <div class="hint">Standard is often 10 years; longer terms lower payments but raise total interest.</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <div class="field">
+            <label for="rateA">Rate with stronger credit (A) %</label>
+            <input id="rateA" type="number" value="6.5" step="0.1" />
+            <div class="hint">Example: 760+ score → ~6.5%</div>
+          </div>
+          <div class="field">
+            <label for="rateB">Rate with weaker credit (B) %</label>
+            <input id="rateB" type="number" value="12.5" step="0.1" />
+            <div class="hint">Example: &lt;660 score → ~12.5%</div>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>How to use this:</strong> Try your likely borrowing amount and compare a “goal” score rate vs a “current” score rate to see the dollar impact of improving credit.
+        </div>
+      </div>
+
+      <!-- OUTPUTS -->
+      <div class="card">
+        <div class="cardHeader">
+          <div>Results</div>
+          <span>Updated as you type</span>
+        </div>
+
+        <div class="kicker">Total Principal Borrowed</div>
+        <div id="principal" class="bigNumber">$160,000</div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <div style="flex:1 1 0;">
+            <div class="kicker">Scenario A – Stronger Credit</div>
+            <div class="subNumber">
+              Rate: <span id="rateALabel" class="highlightGood">6.5%</span>
+            </div>
+            <div class="subNumber">
+              Monthly payment: <span id="payA">$0</span>
+            </div>
+            <div class="subNumber">
+              Total repaid: <span id="totalA">$0</span>
+            </div>
+            <div class="subNumber">
+              Interest paid: <span id="interestA" class="highlightGood">$0</span>
+            </div>
+
+            <div class="barWrap">
+              <div class="bar">
+                <div id="barA" class="barFill"></div>
+              </div>
+              <div class="barLabels">
+                <span>Principal</span>
+                <span>Principal + Interest (A)</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1 1 0;">
+            <div class="kicker">Scenario B – Weaker Credit</div>
+            <div class="subNumber">
+              Rate: <span id="rateBLabel" class="highlightBad">12.5%</span>
+            </div>
+            <div class="subNumber">
+              Monthly payment: <span id="payB">$0</span>
+            </div>
+            <div class="subNumber">
+              Total repaid: <span id="totalB">$0</span>
+            </div>
+            <div class="subNumber">
+              Interest paid: <span id="interestB" class="highlightBad">$0</span>
+            </div>
+
+            <div class="barWrap">
+              <div class="bar">
+                <div id="barB" class="barFill bad"></div>
+              </div>
+              <div class="barLabels">
+                <span>Principal</span>
+                <span>Principal + Interest (B)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="kicker">Difference – Cost of Weaker Credit</div>
+        <div id="diffInterest" class="bigNumber highlightBad">$0 more interest</div>
+        <div id="diffTotal" class="subNumber">
+          Total extra repaid: <span class="highlightBad">$0</span>
+        </div>
+
+        <div class="callout" id="coaching">
+          Improving your credit score before borrowing can move you closer to Scenario A and reduce how much of your future income goes to interest.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatMoney(n){
+      return "$" + n.toLocaleString(undefined,{maximumFractionDigits:0});
+    }
+
+    function loanTotals(principal, ratePercent, years){
+      const r = ratePercent/100/12;
+      const n = years*12;
+      if (r === 0){
+        const payment = principal/n;
+        return {payment, total:principal, interest:0};
+      }
+      const payment = principal * r / (1 - Math.pow(1+r, -n));
+      const total = payment * n;
+      const interest = total - principal;
+      return {payment, total, interest};
+    }
+
+    function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+    function update(){
+      const perYear = Math.max(0, Number(document.getElementById("perYear").value) || 0);
+      const yearsInSchool = Math.max(1, Number(document.getElementById("yearsInSchool").value) || 1);
+      const termYears = Math.max(1, Number(document.getElementById("termYears").value) || 1);
+      const rateA = Math.max(0, Number(document.getElementById("rateA").value) || 0);
+      const rateB = Math.max(0, Number(document.getElementById("rateB").value) || 0);
+
+      const principal = perYear * yearsInSchool;
+
+      document.getElementById("principal").textContent = formatMoney(principal);
+      document.getElementById("rateALabel").textContent = rateA.toFixed(1) + "%";
+      document.getElementById("rateBLabel").textContent = rateB.toFixed(1) + "%";
+
+      const a = loanTotals(principal, rateA, termYears);
+      const b = loanTotals(principal, rateB, termYears);
+
+      document.getElementById("payA").textContent = formatMoney(Math.round(a.payment));
+      document.getElementById("totalA").textContent = formatMoney(Math.round(a.total));
+      document.getElementById("interestA").textContent = formatMoney(Math.round(a.interest));
+
+      document.getElementById("payB").textContent = formatMoney(Math.round(b.payment));
+      document.getElementById("totalB").textContent = formatMoney(Math.round(b.total));
+      document.getElementById("interestB").textContent = formatMoney(Math.round(b.interest));
+
+      const diffInterest = b.interest - a.interest;
+      const diffTotal = b.total - a.total;
+
+      document.getElementById("diffInterest").textContent =
+        formatMoney(Math.round(diffInterest)) + " more interest";
+      document.getElementById("diffTotal").innerHTML =
+        'Total extra repaid: <span class="highlightBad">' + formatMoney(Math.round(diffTotal)) + "</span>";
+
+      // Bars relative to principal
+      const maxTotal = Math.max(a.total, b.total, principal);
+      const pctA = clamp((a.total / maxTotal) * 100, 0, 100);
+      const pctB = clamp((b.total / maxTotal) * 100, 0, 100);
+
+      document.getElementById("barA").style.width = pctA + "%";
+      document.getElementById("barB").style.width = pctB + "%";
+
+      // Coaching text
+      const coaching = document.getElementById("coaching");
+      if (diffInterest <= 0){
+        coaching.innerHTML =
+          "<strong>Great job:</strong> At these settings your stronger-credit scenario is equal or cheaper. Focus on keeping utilization low and payments on time to protect this.";
+      } else if (diffInterest < 30000){
+        coaching.innerHTML =
+          "<strong>Notice the gap:</strong> Weaker credit costs you " +
+          formatMoney(Math.round(diffInterest)) +
+          " more in interest. Even a modest score improvement could move you closer to Scenario A.";
+      } else {
+        coaching.innerHTML =
+          "<strong>Big impact:</strong> Weaker credit costs you " +
+          formatMoney(Math.round(diffInterest)) +
+          " more in interest. That’s the price of delayed credit work before school.";
+      }
+    }
+
+    ["perYear","yearsInSchool","termYears","rateA","rateB"].forEach(id=>{
+      document.getElementById(id).addEventListener("input",update);
+      document.getElementById(id).addEventListener("change",update);
+    });
+
+    update();
+  </script>
+</body>
+</html>
