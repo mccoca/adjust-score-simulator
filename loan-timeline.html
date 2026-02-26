@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Loan Timeline Slider</title>
+
+<style>
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --muted: #6b7280;
+  --text: #111827;
+  --header: #0f172a;
+  --accent: #2563eb;
+}
+body {
+  margin: 0;
+  padding: 24px;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+}
+h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--header);
+}
+p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Slider Track */
+.timeline {
+  margin: 30px 0 18px;
+}
+.timeline label {
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 5px;
+  display: block;
+}
+input[type="range"] {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  background: #d1d5db;
+  border-radius: 999px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Card */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: 14px;
+}
+.card h2 {
+  font-size: 18px;
+  margin: 0 0 10px;
+  font-weight: 900;
+}
+.sectionTitle {
+  margin-top: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--header);
+}
+ul {
+  padding-left: 16px;
+  margin: 4px 0 10px;
+}
+li {
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+/* Highlight tags */
+.tag {
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 4px 8px;
+  display: inline-block;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+.tag.pre { background: #d1fae5; color: #065f46; }
+.tag.post { background: #fee2e2; color: #991b1b; }
+</style>
+
+</head>
+
+<body>
+<div class="wrap">
+
+  <h1>Loan System Timeline Slider</h1>
+  <p>Move the slider to view how loan options differ before and after July 1, 2026.</p>
+
+  <div class="timeline">
+    <label for="timeSlider">Timeline</label>
+    <input type="range" id="timeSlider" min="0" max="1" step="1" value="0">
+    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin-top:4px;">
+      <span>Pre-2026</span>
+      <span>Post-2026</span>
+    </div>
+  </div>
+
+  <div id="content" class="card">
+    <!-- Dynamic content goes here -->
+  </div>
+
+</div>
+
+<script>
+function render(pre2026){
+  const box = document.getElementById("content");
+  
+  if(pre2026){
+    box.innerHTML = `
+      <div class="tag pre">Pre-2026 Rules</div>
+      <h2>Current Federal Loan System</h2>
+
+      <div class="sectionTitle">Direct Unsubsidized Loans</div>
+      <ul>
+        <li>Up to $20,500 per academic year</li>
+        <li>Lifetime limit: $138,500 (including undergrad)</li>
+        <li>No credit score requirement</li>
+      </ul>
+
+      <div class="sectionTitle">Graduate PLUS Loans</div>
+      <ul>
+        <li>Available until July 1, 2026 for continuing students</li>
+        <li>Adverse credit check only — no score requirement</li>
+        <li>Borrow up to full Cost of Attendance</li>
+      </ul>
+
+      <div class="sectionTitle">Repayment Benefits</div>
+      <ul>
+        <li>Income-driven repayment (SAVE)</li>
+        <li>PSLF eligible</li>
+        <li>Fixed federal interest rates</li>
+      </ul>
+    `;
+  } else {
+    box.innerHTML = `
+      <div class="tag post">Post-2026 Rules</div>
+      <h2>New Federal Loan System</h2>
+
+      <div class="sectionTitle">Direct Unsubsidized Loans</div>
+      <ul>
+        <li>Slightly increased caps (≈$200,000 lifetime)</li>
+        <li>Still far below Cost of Attendance for most programs</li>
+      </ul>
+
+      <div class="sectionTitle">Graduate PLUS Loans</div>
+      <ul>
+        <li><strong>Eliminated</strong> for all new borrowers</li>
+      </ul>
+
+      <div class="sectionTitle">New Funding Reality</div>
+      <ul>
+        <li>Students must rely on MWU Institutional Loans</li>
+        <li>OR private loans</li>
+        <li>Both are credit-score dependent</li>
+      </ul>
+
+      <div class="sectionTitle">Key Implication</div>
+      <ul>
+        <li>Credit score now determines your ability to fund school</li>
+        <li>Higher scores = lower interest & more options</li>
+      </ul>
+    `;
+  }
+}
+
+document.getElementById("timeSlider").addEventListener("input", function(){
+  render(this.value === "0");
+});
+
+// Load initial (Pre-2026)
+render(true);
+</script>
+
+</body>
+</html>
