@@ -14,6 +14,11 @@
       --text: #111827;
       --header: #0f172a;
       --accent: #2563eb;
+      --accent-mid: #0ea5e9;
+      --pre: #16a34a;
+      --post: #b91c1c;
+      --gap: #f97316;
+      --fed: #2563eb;
     }
     body {
       margin: 0;
@@ -38,8 +43,9 @@
       color: var(--muted);
     }
 
+    /* Slider */
     .timeline {
-      margin: 30px 0 18px;
+      margin: 24px 0 18px;
     }
     .timeline label {
       font-weight: 800;
@@ -62,14 +68,48 @@
       background: var(--accent);
       border-radius: 50%;
       cursor: pointer;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .timelineLabels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+    .timelineLabels span {
+      width: 33%;
+      text-align: center;
     }
 
+    /* Card + animation */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 18px;
       margin-top: 14px;
+      overflow: hidden;
+    }
+    .cardInner {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+    }
+    .cardInner.fade-out {
+      opacity: 0;
+      transform: translateY(6px);
     }
     .card h2 {
       font-size: 18px;
@@ -102,7 +142,68 @@
       letter-spacing: .3px;
     }
     .tag.pre  { background: #d1fae5; color: #065f46; }
+    .tag.mid  { background: #e0f2fe; color: #075985; }
     .tag.post { background: #fee2e2; color: #991b1b; }
+
+    /* Funding bar */
+    .fundingBlock {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 10px 12px;
+    }
+    .fundingTitle {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .fundingBar {
+      position: relative;
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e5e7eb;
+      display: flex;
+      margin-bottom: 4px;
+    }
+    .fundSegment {
+      height: 100%;
+    }
+    .fundSegment.federal {
+      background: var(--fed);
+    }
+    .fundSegment.gap {
+      background: var(--gap);
+    }
+    .fundingLabels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .fundingLegend {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-right: 8px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot.federal { background: var(--fed); }
+    .dot.gap     { background: var(--gap); }
   </style>
 </head>
 
@@ -112,33 +213,37 @@
     <h1>Loan System Timeline Slider</h1>
     <p>
       Move the slider to see how loan options differ for students who start their program
-      before July 1, 2026 (grandfathered cohorts) versus students who start after that date.
+      before July 1, 2026, during the transition period, and after the new rules take effect.
     </p>
 
     <div class="timeline">
       <label for="timeSlider">Timeline</label>
-      <input type="range" id="timeSlider" min="0" max="1" step="1" value="0">
-      <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin-top:4px;">
-        <span>Pre-2026 Cohorts (Grandfathered)</span>
-        <span>Post-2026 New Entrants</span>
+      <input type="range" id="timeSlider" min="0" max="2" step="1" value="0">
+      <div class="timelineLabels">
+        <span>Pre-2026<br>(Grandfathered)</span>
+        <span>Today<br>(Crossover Period)</span>
+        <span>Post-2026<br>(New Entrants)</span>
       </div>
     </div>
 
     <div id="content" class="card">
-      <!-- Dynamic content goes here -->
+      <div id="cardInner" class="cardInner">
+        <!-- dynamic content goes here -->
+      </div>
     </div>
 
   </div>
 
   <script>
-    function render(pre2026) {
-      const box = document.getElementById("content");
-
-      if (pre2026) {
-        box.innerHTML = `
-          <div class="tag pre">Pre-2026 Cohorts</div>
-          <h2>Grandfathered Federal Loan System</h2>
-
+    const stateData = [
+      {
+        // 0: Pre-2026
+        tagClass: "pre",
+        tagText: "Pre-2026 Cohorts",
+        title: "Grandfathered Federal Loan System",
+        federalPct: 95,
+        gapPct: 5,
+        bodyHtml: `
           <div class="sectionTitle">Direct Unsubsidized Loans</div>
           <ul>
             <li>Up to <strong>$20,500</strong> per academic year</li>
@@ -160,48 +265,134 @@
             <li>Eligibility for federal benefits such as deferment, forbearance, and certain forgiveness programs (e.g., PSLF) when criteria are met</li>
             <li>Fixed federal interest rates and federal servicing structure</li>
           </ul>
-        `;
-      } else {
-        box.innerHTML = `
-          <div class="tag post">Post-2026 New Entrants</div>
-          <h2>New Federal + Credit-Based Funding Mix</h2>
+        `
+      },
+      {
+        // 1: Today / Crossover
+        tagClass: "mid",
+        tagText: "Today / Crossover Years",
+        title: "Transition Period (Enrollment Before July 1, 2026)",
+        federalPct: 90,
+        gapPct: 10,
+        bodyHtml: `
+          <div class="sectionTitle">Determining Your Rules</div>
+          <ul>
+            <li>Your treatment depends on <strong>when you first borrow</strong> for your current program.</li>
+            <li>If your first federal loan disbursement is <strong>before July 1, 2026</strong>, you are typically treated as a grandfathered borrower for that program.</li>
+            <li>Exact handling can vary by program and timing — always confirm with Student Financial Services.</li>
+          </ul>
 
+          <div class="sectionTitle">Grandfathered Students in the Transition</div>
+          <ul>
+            <li>Continue to access <strong>Direct Unsubsidized</strong> and <strong>Graduate PLUS</strong> for the length of their current program.</li>
+            <li>Can still use Grad PLUS to fill the gap between Direct Unsubsidized limits and full Cost of Attendance.</li>
+          </ul>
+
+          <div class="sectionTitle">Newer Students Approaching July 2026</div>
+          <ul>
+            <li>Students starting close to the July 1, 2026 cutoff date need to understand which rule set will apply for their full program.</li>
+            <li>Planning ahead helps avoid surprises when Grad PLUS is no longer available for new entrants.</li>
+          </ul>
+        `
+      },
+      {
+        // 2: Post-2026
+        tagClass: "post",
+        tagText: "Post-2026 New Entrants",
+        title: "New Federal + Credit-Based Funding Mix",
+        federalPct: 55,
+        gapPct: 45,
+        bodyHtml: `
           <div class="sectionTitle">Direct Unsubsidized Loans</div>
           <ul>
-            <li>Lifetime cap increased (approx. <strong>$200,000</strong> total, based on final federal limits)</li>
-            <li>Still not tied to a specific credit score</li>
-            <li>For most professional programs, this <strong>does not cover total cost</strong> of attendance</li>
+            <li>Lifetime cap increased (approx. <strong>$200,000</strong> total, based on final federal limits).</li>
+            <li>Still not tied to a specific credit score.</li>
+            <li>For most professional programs, this <strong>does not cover the full cost</strong> of attendance.</li>
           </ul>
 
           <div class="sectionTitle">Graduate PLUS Loans</div>
           <ul>
-            <li><strong>No longer available</strong> for new borrowers who first enter after July 1, 2026</li>
-            <li>New students cannot use Grad PLUS to fill the gap between costs and unsubsidized limits</li>
+            <li><strong>No longer available</strong> for new borrowers who first enter after July 1, 2026.</li>
+            <li>New students cannot use Grad PLUS to fill the gap between costs and unsubsidized limits.</li>
           </ul>
 
           <div class="sectionTitle">How Students Fill the Gap</div>
           <ul>
-            <li><strong>MWU Institutional Loans</strong> – credit-based, with minimum score requirements and school-specific terms</li>
-            <li><strong>Private loans</strong> – fully credit-dependent; stronger credit tiers receive lower interest rates</li>
-            <li>Co-signers are commonly required for lower scores or thin credit files</li>
+            <li><strong>MWU Institutional Loans</strong> – credit-based, with minimum score requirements and school-specific terms.</li>
+            <li><strong>Private loans</strong> – fully credit-dependent; stronger credit tiers receive lower interest rates.</li>
+            <li>Co-signers are commonly required for lower scores or thin credit files.</li>
           </ul>
 
           <div class="sectionTitle">Key Implication</div>
           <ul>
-            <li>Federal loans alone will <strong>not</strong> cover the full cost of most programs for post-2026 entrants</li>
-            <li>Your <strong>credit score and co-signer strength</strong> become central to your funding strategy</li>
-            <li>Improving credit <strong>before enrolling</strong> can significantly reduce your long-term borrowing cost</li>
+            <li>Federal loans alone will <strong>not</strong> cover the full cost of most programs for post-2026 entrants.</li>
+            <li>Your <strong>credit score and co-signer strength</strong> become central to your funding strategy.</li>
+            <li>Improving credit <strong>before enrolling</strong> can significantly reduce your long-term borrowing cost.</li>
           </ul>
-        `;
+        `
       }
+    ];
+
+    function setFundingBar(federalPct, gapPct) {
+      const fedSeg = document.getElementById("fundFederal");
+      const gapSeg = document.getElementById("fundGap");
+      const fedLabel = document.getElementById("fundLabelFederal");
+      const gapLabel = document.getElementById("fundLabelGap");
+
+      fedSeg.style.width = federalPct + "%";
+      gapSeg.style.width = gapPct + "%";
+      fedLabel.textContent = `Estimated federal coverage: ${federalPct}%`;
+      gapLabel.textContent = `Estimated credit-based gap: ${gapPct}%`;
+    }
+
+    function renderState(index) {
+      const data = stateData[index];
+      const inner = document.getElementById("cardInner");
+
+      // Fade out
+      inner.classList.add("fade-out");
+
+      setTimeout(() => {
+        inner.innerHTML = `
+          <div class="tag ${data.tagClass}">${data.tagText}</div>
+          <h2>${data.title}</h2>
+
+          <div class="fundingBlock">
+            <div class="fundingTitle">Estimated Funding Mix for a Typical Professional Program</div>
+            <div class="fundingBar">
+              <div id="fundFederal" class="fundSegment federal"></div>
+              <div id="fundGap" class="fundSegment gap"></div>
+            </div>
+            <div class="fundingLabels">
+              <span id="fundLabelFederal"></span>
+              <span id="fundLabelGap" style="text-align:right;"></span>
+            </div>
+            <div class="fundingLegend">
+              <span class="chip"><span class="dot federal"></span> Federal (Direct Unsubsidized +, if applicable, Grad PLUS)</span>
+              <span class="chip"><span class="dot gap"></span> Credit-Based Gap (MWU Institutional + Private)</span>
+            </div>
+          </div>
+
+          ${data.bodyHtml}
+        `;
+
+        // Update funding bar
+        setFundingBar(data.federalPct, data.gapPct);
+
+        // Fade back in
+        requestAnimationFrame(() => {
+          inner.classList.remove("fade-out");
+        });
+      }, 170);
     }
 
     document.getElementById("timeSlider").addEventListener("input", function () {
-      render(this.value === "0");
+      const idx = Number(this.value);
+      renderState(idx);
     });
 
-    // Initial state: Pre-2026 cohorts
-    render(true);
+    // Initial state
+    renderState(0);
   </script>
 </body>
 </html>
