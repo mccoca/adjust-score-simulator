@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Compare Your Options – Loan Cost Calculator</title>
+
+  <style>
+    :root {
+      --bg: #f3f4ff;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --muted: #6b7280;
+      --text: #0f172a;
+      --accent: #2563eb;
+      --accent2: #0ea5e9;
+      --accent3: #22c55e;
+      --danger: #f97316;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 40%, #eef2ff 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+    }
+    .subtitle {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .banner {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #f9fafb;
+      padding: 16px 18px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 25px rgba(15, 23, 42, 0.15);
+    }
+    .banner-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .banner-text {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .banner-strong {
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 14px 14px 12px;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+    }
+    .card.best {
+      border-color: var(--accent3);
+      box-shadow: 0 14px 32px rgba(22, 163, 74, 0.25);
+    }
+    .pill {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      padding: 3px 9px;
+      font-size: 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 800;
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+    .pill-mwu {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+    .dot-a { background: var(--accent); }
+    .dot-b { background: var(--accent2); }
+    .dot-c { background: var(--danger); }
+
+    .hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 3px;
+      color: var(--muted);
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+      outline: none;
+      background: #f9fafb;
+    }
+    input[type="number"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
+      background: #ffffff;
+    }
+    .field {
+      margin-bottom: 8px;
+    }
+
+    .results {
+      margin-top: 8px;
+      border-top: 1px dashed #e5e7eb;
+      padding-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .results-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+    .results-label {
+      font-weight: 600;
+    }
+    .results-value {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+    button {
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: .03em;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #f9fafb;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+    }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .summary {
+      background: #0f172a;
+      color: #e5e7eb;
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .summary-title {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 4px;
+    }
+    .summary-line {
+      font-size: 12px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 11px;
+      background: rgba(34, 197, 94, 0.15);
+      color: #bbf7d0;
+      border: 1px solid rgba(34, 197, 94, 0.6);
+    }
+    .badge span {
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 16px; }
+      h1 { font-size: 20px; }
+      .banner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>Compare Your Options</h1>
+    <p class="subtitle">
+      Enter the loan details for each option to see estimated monthly payments, total paid,
+      and total interest. Use this to compare federal loans, the MWU Institutional Loan, and
+      private lenders side by side.
+    </p>
+
+    <div class="banner">
+      <div class="banner-icon">📊</div>
+      <div class="banner-text">
+        <span class="banner-strong">Tip:</span> Use the
+        current MWU Institutional Loan interest rate and origination fee from the latest
+        financial aid disclosures. For private loans, plug in the rate and fee from your lender’s offer.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary" type="button" onclick="resetCalculator()">Reset</button>
+      <button class="btn-primary" type="button" onclick="runComparison()">
+        Run Comparison
+        <span>▶</span>
+      </button>
+    </div>
+
+    <div class="grid">
+      <!-- Option 1 -->
+      <div class="card" id="cardA">
+        <div class="pill">Option A</div>
+        <div class="card-title">
+          <span class="dot dot-a"></span>
+          <span>Federal / Other Loan</span>
+        </div>
+        <p class="hint">
+          Use this for a Direct Unsubsidized Loan or any other offer you want to compare.
+        </p>
+
+        <div class="field">
+          <label for="amountA">Loan amount ($)</label>
+          <input type="number" id="amountA" min="0" step="1000" placeholder="e.g., 40000">
+        </div>
+        <div class="field">
+          <label for="rateA">Interest rate (% APR)</label>
+          <input type="number" id="rateA" min="0" max="30" step="0.01" placeholder="e.g., 7.05">
+        </div>
+        <div class="field">
+          <label for="termA">Repayment term (years)</label>
+          <input type="number" id="termA" min="1" max="30" step="1" placeholder="e.g., 10">
+        </div>
+        <div class="field">
+          <label for="feeA">Origination fee (% of amount)</label>
+          <input type="number" id="feeA" min="0" max="20" step="0.01" placeholder="e.g., 1.00">
+        </div>
+
+        <div class="results" id="resultsA" style="display:none;">
+          <div class="results-row">
+            <div class="results-label">Monthly payment</div>
+            <div class="results-value" id="pmtA"></div>
+          </div>
+          <div class="results-row">
+            <div class="results-label">Total paid</div>
+            <div class="results-value" id="totalA"></div>
+          </div>
+          <div class="results-row">
+            <div class="results-label">Total interest</div>
+            <div class="results-value" id="intA"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Option 2: MWU Institutional -->
+      <div class="card" id="cardB">
+        <div class="pill pill-mwu">MWU Option</div>
+        <div class="card-title">
+          <span class="dot dot-b"></span>
+          <span>MWU Institutional Loan</span>
+        </div>
+        <p class="hint">
+          Fixed-rate, student-centered loan. Enter the current MWU rate. Origination fee is 0%.
+        </p>
+
+        <div class="field">
+          <label for="amountB">Loan amount ($)</label>
+          <input type="number" id="amountB" min="0" step="1000" placeholder="e.g., 40000">
+        </div>
+        <div class="field">
+          <label for="rateB">Interest rate (% APR)</label>
+          <input type="number" id="rateB" min="0" max="30" step="0.01" placeholder="Enter current MWU rate">
+        </div>
+        <div class="field">
+          <label for="termB">Repayment term (years)</label>
+          <input type="number" id="termB" min="1" max="30" step="1" placeholder="e.g., 10">
+        </div>
+        <div class="field">
+          <label for="feeB">Origination fee (% of amount)</label>
+          <input type="number" id="feeB" min="0" max="20" step="0.01" value="0">
+        </div>
+
+        <div class="results" id="resultsB" style="display:none;">
+          <div class="results-row">
+            <div class="results-label">Monthly payment</div>
+            <div class="results-value" id="pmtB"></div>
+          </div>
+          <div class="results-row">
+            <div class="results-label">Total paid</div>
+            <div class="results-value" id="totalB"></div>
+          </div>
+          <div class="results-row">
+            <div class="results-label">Total interest</div>
+            <div class="results-value" id="intB"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Option 3 -->
+      <div class="card" id="cardC">
+        <div class="pill">Option C</div>
+        <div class="card-title">
+          <span class="dot dot-c"></span>
+          <span>Private / Other Lender</span>
+        </div>
+        <p class="hint">
+          Use this for any private lender quote you receive. Be sure to include their origination fee.
+        </p>
+
+        <div class="field">
+          <label for="amountC">Loan amount ($)</label>
+          <input type="number" id="amountC" min="0" step="1000" placeholder="e.g., 40000">
+        </div>
+        <div class="field">
+          <label for="rateC">Interest rate (% APR)</label>
+          <input type="number" id="rateC" min="0" max="30" step="0.01" placeholder="e.g., 11.50">
+        </div>
+        <div class="field">
+          <label for="termC">Repayment term (years)</label>
+          <input type="number" id="termC" min="1" max="30" step="1" placeholder="e.g., 10">
+        </div>
+        <div class="field">
+          <label for="feeC">Origination fee (% of amount)</label>
+          <input type="number" id="feeC" min="0" max="20" step="0.01" placeholder="e.g., 4.00">
+        </div>
+
+        <div class="results" id="resultsC" style="display:none;">
+          <div class="results-row">
+            <div class="results-label">Monthly payment</div>
+            <div class="results-value" id="pmtC"></div>
+          </div>
+          <div class="results-row">
+            <div class="results-label">Total paid</div>
+            <div class="results-value" id="totalC"></div>
+          </div>
+          <div class="results-row">
+            <div class="results-label">Total interest</div>
+            <div class="results-value" id="intC"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary" id="summary" style="margin-top:16px; display:none;">
+      <div>
+        <div class="summary-title">Quick Takeaway</div>
+        <div class="summary-line" id="summaryLine"></div>
+      </div>
+      <div id="summaryBadge"></div>
+    </div>
+  </div>
+
+  <script>
+    function formatMoney(value) {
+      if (isNaN(value)) return "--";
+      return "$" + value.toLocaleString(undefined, {maximumFractionDigits: 0});
+    }
+
+    function computeOption(amount, rate, termYears, feePct) {
+      const principal = Number(amount);
+      const r = Number(rate) / 100 / 12;
+      const n = Number(termYears) * 12;
+      const feeFactor = 1 + (Number(feePct) || 0) / 100;
+      const financed = principal * feeFactor;
+
+      if (!principal || !termYears) return null;
+
+      let payment;
+      if (!r) {
+        payment = financed / n;
+      } else {
+        payment = financed * r / (1 - Math.pow(1 + r, -n));
+      }
+      const totalPaid = payment * n;
+      const totalInterest = totalPaid - principal;
+
+      return {
+        monthly: payment,
+        totalPaid,
+        totalInterest
+      };
+    }
+
+    function runComparison() {
+      const cards = {
+        A: document.getElementById("cardA"),
+        B: document.getElementById("cardB"),
+        C: document.getElementById("cardC")
+      };
+      Object.values(cards).forEach(c => c.classList.remove("best"));
+
+      const options = [
+        {
+          key: "A",
+          name: "Option A",
+          amount: document.getElementById("amountA").value,
+          rate: document.getElementById("rateA").value,
+          term: document.getElementById("termA").value,
+          fee: document.getElementById("feeA").value
+        },
+        {
+          key: "B",
+          name: "MWU Institutional Loan",
+          amount: document.getElementById("amountB").value,
+          rate: document.getElementById("rateB").value,
+          term: document.getElementById("termB").value,
+          fee: document.getElementById("feeB").value
+        },
+        {
+          key: "C",
+          name: "Option C",
+          amount: document.getElementById("amountC").value,
+          rate: document.getElementById("rateC").value,
+          term: document.getElementById("termC").value,
+          fee: document.getElementById("feeC").value
+        }
+      ];
+
+      const results = {};
+      let bestKey = null;
+      let bestTotal = Infinity;
+
+      options.forEach(opt => {
+        const res = computeOption(opt.amount, opt.rate, opt.term, opt.fee);
+        const resBox = document.getElementById("results" + opt.key);
+        if (res) {
+          resBox.style.display = "block";
+          document.getElementById("pmt" + opt.key).textContent =
+            formatMoney(res.monthly) + "/mo";
+          document.getElementById("total" + opt.key).textContent =
+            formatMoney(res.totalPaid);
+          document.getElementById("int" + opt.key).textContent =
+            formatMoney(res.totalInterest);
+          results[opt.key] = res;
+
+          if (res.totalPaid < bestTotal) {
+            bestTotal = res.totalPaid;
+            bestKey = opt.key;
+          }
+        } else {
+          resBox.style.display = "none";
+        }
+      });
+
+      const summary = document.getElementById("summary");
+      const summaryLine = document.getElementById("summaryLine");
+      const summaryBadge = document.getElementById("summaryBadge");
+
+      if (!bestKey) {
+        summary.style.display = "none";
+        return;
+      }
+
+      cards[bestKey].classList.add("best");
+
+      let bestName = options.find(o => o.key === bestKey).name;
+      summary.style.display = "flex";
+      summaryLine.textContent =
+        bestName + " currently has the lowest estimated total cost over the life of the loan.";
+
+      summaryBadge.innerHTML = `
+        <div class="badge">
+          <span>★</span>
+          <span>Lowest total paid: ${formatMoney(bestTotal)}</span>
+        </div>
+      `;
+    }
+
+    function resetCalculator() {
+      [
+        "amountA","rateA","termA","feeA",
+        "amountB","rateB","termB","feeB",
+        "amountC","rateC","termC","feeC"
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        if (id === "feeB") {
+          el.value = 0;
+        } else {
+          el.value = "";
+        }
+      });
+
+      ["A","B","C"].forEach(key => {
+        document.getElementById("results" + key).style.display = "none";
+        document.getElementById("card" + key).classList.remove("best");
+      });
+      document.getElementById("summary").style.display = "none";
+    }
+  </script>
+</body>
+</html>
