@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Credit Plan Builder</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#f4f7fb,#e6eef8);
+  margin: 0;
+  padding: 30px;
+}
+.container {
+  max-width: 850px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+h2 {
+  text-align: center;
+}
+select, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+button {
+  background: #1e73be;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  opacity: 0.9;
+}
+.strategies {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+.output {
+  display: none;
+  background: #f9fbff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+.download-btn {
+  display: none;
+  background: #28a745;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h2>Credit Plan Builder</h2>
+<p>Select your credit tier and choose 2–3 strategies to generate your personalized action plan.</p>
+
+<label><strong>Step 1: Select Your Score Range</strong></label>
+<select id="scoreRange">
+  <option value="">-- Select --</option>
+  <option value="720+">720+ (Strong Credit)</option>
+  <option value="660-719">660–719 (Average to Good)</option>
+  <option value="<660">&lt;660 (Rebuilding Needed)</option>
+</select>
+
+<br><br>
+
+<label><strong>Step 2: Choose 2–3 Strategies</strong></label>
+<div class="strategies">
+  <label><input type="checkbox" value="Set up autopay for all accounts"> Set up autopay</label>
+  <label><input type="checkbox" value="Reduce utilization below 30%"> Utilization <30%</label>
+  <label><input type="checkbox" value="Reduce utilization below 10%"> Utilization <10%</label>
+  <label><input type="checkbox" value="Open secured credit card"> Open secured card</label>
+  <label><input type="checkbox" value="Dispute errors on report"> Dispute report errors</label>
+  <label><input type="checkbox" value="Avoid hard inquiries for 6 months"> Avoid new inquiries</label>
+  <label><input type="checkbox" value="Resolve collection accounts"> Resolve collections</label>
+  <label><input type="checkbox" value="Use credit-builder loan"> Use credit-builder loan</label>
+</div>
+
+<br>
+
+<button onclick="generatePlan()">Generate My Plan</button>
+
+<div id="output" class="output"></div>
+<button id="downloadBtn" class="download-btn" onclick="downloadPlan()">Download My Plan (.txt)</button>
+
+</div>
+
+<script>
+function generatePlan() {
+  const score = document.getElementById("scoreRange").value;
+  const checked = Array.from(document.querySelectorAll('.strategies input:checked')).map(el => el.value);
+
+  if (!score) {
+    alert("Select your score range.");
+    return;
+  }
+
+  if (checked.length < 2 || checked.length > 3) {
+    alert("Select 2–3 strategies.");
+    return;
+  }
+
+  let focus = "";
+
+  if (score === "720+") {
+    focus = "Maintain strong habits and protect your score before borrowing.";
+  } else if (score === "660-719") {
+    focus = "Boost into the 700+ tier before applying for loans.";
+  } else {
+    focus = "Rebuild payment consistency and reduce risk indicators.";
+  }
+
+  const output = document.getElementById("output");
+  output.style.display = "block";
+  document.getElementById("downloadBtn").style.display = "block";
+
+  output.innerHTML =
+    "<h3>My Credit Action Plan</h3>" +
+    "<p><strong>Score Range:</strong> " + score + "</p>" +
+    "<p><strong>Primary Focus:</strong> " + focus + "</p>" +
+    "<p><strong>Selected Strategies:</strong></p>" +
+    "<ul>" + checked.map(item => "<li>" + item + "</li>").join("") + "</ul>" +
+    "<p><strong>Timeline:</strong> 3–12 months of consistent action.</p>";
+}
+
+function downloadPlan() {
+  const text = document.getElementById("output").innerText;
+  const blob = new Blob([text], {type: "text/plain"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "My_Credit_Action_Plan.txt";
+  link.click();
+}
+</script>
+
+</body>
+</html>
