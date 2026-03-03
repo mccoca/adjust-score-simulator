@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Credit Builder Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f3f4ff;
+      --card:#ffffff;
+      --border:#e5e7eb;
+      --text:#0f172a;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --accent2:#0ea5e9;
+      --good:#22c55e;
+      --warn:#f97316;
+      --bad:#ef4444;
+      --shadow: 0 10px 24px rgba(15,23,42,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; padding:24px;
+      font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+      color:var(--text);
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 45%, #eef2ff 100%);
+    }
+    .wrap{max-width:1000px;margin:0 auto}
+    h1{margin:0 0 6px;font-size:24px;font-weight:900}
+    .sub{margin:0 0 16px;font-size:13px;color:var(--muted);line-height:1.5}
+
+    .banner{
+      margin-bottom:16px;
+      padding:12px 14px;
+      border-radius:16px;
+      display:flex; gap:12px; align-items:flex-start;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#eff6ff;
+      box-shadow:0 10px 24px rgba(37,99,235,.35);
+    }
+    .banner .icon{
+      width:40px;height:40px;border-radius:999px;
+      background:rgba(15,23,42,.2);
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;flex:0 0 auto;
+    }
+    .banner .txt{font-size:12px;line-height:1.5}
+    .banner .txt strong{
+      display:block;font-size:11px;text-transform:uppercase;
+      letter-spacing:.08em;margin-bottom:2px
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap:16px;
+    }
+    @media (max-width: 900px){
+      body{padding:16px}
+      .grid{grid-template-columns:1fr}
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      box-shadow: var(--shadow);
+    }
+    .card h2{margin:0 0 6px;font-size:16px;font-weight:900}
+    .note{margin:0 0 10px;font-size:11px;color:var(--muted);line-height:1.5}
+
+    .stats{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:10px;
+      margin-top:8px;
+    }
+    .stat{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:10px;
+      background:#f9fafb;
+    }
+    .stat .label{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:800;
+      margin-bottom:4px;
+    }
+    .stat .val{
+      font-size:16px;
+      font-weight:900;
+    }
+    .small{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+
+    .scoreRow{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin:8px 0 10px;
+      flex-wrap:wrap;
+    }
+    .scorePill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      font-size:12px;
+    }
+    .scoreBubble{
+      font-weight:900;
+      padding:3px 10px;
+      border-radius:999px;
+      border:1px solid rgba(37,99,235,.35);
+      background:rgba(37,99,235,.12);
+    }
+    .tierTag{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:900;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(34,197,94,.35);
+      background:rgba(34,197,94,.12);
+      color:#166534;
+    }
+    .tierTag.mid{
+      border-color:rgba(249,115,22,.35);
+      background:rgba(249,115,22,.12);
+      color:#9a3412;
+    }
+    .tierTag.bad{
+      border-color:rgba(239,68,68,.35);
+      background:rgba(239,68,68,.12);
+      color:#991b1b;
+    }
+
+    .barWrap{margin-top:8px}
+    .barLabel{font-size:11px;color:var(--muted);margin-bottom:4px}
+    .barTrack{
+      height:10px;border-radius:999px;background:#e5e7eb;overflow:hidden;
+    }
+    .barFill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,#ef4444,#f97316,#facc15,#22c55e);
+      transition: width .25s ease;
+    }
+
+    .choices{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    .choice{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:10px 10px;
+      background:#ffffff;
+      cursor:pointer;
+      transition: transform .08s ease, box-shadow .15s ease, border-color .15s ease;
+      position:relative;
+    }
+    .choice:hover{
+      transform: translateY(-1px);
+      box-shadow:0 10px 18px rgba(15,23,42,.10);
+      border-color:#93c5fd;
+    }
+    .choiceTitle{
+      font-weight:900;
+      font-size:13px;
+      margin-bottom:4px;
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .impactChip{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:900;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(34,197,94,.35);
+      background:rgba(34,197,94,.12);
+      color:#166534;
+    }
+    .impactChip.warn{
+      border-color:rgba(249,115,22,.35);
+      background:rgba(249,115,22,.12);
+      color:#9a3412;
+    }
+    .impactChip.bad{
+      border-color:rgba(239,68,68,.35);
+      background:rgba(239,68,68,.12);
+      color:#991b1b;
+    }
+    .choiceDesc{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
+
+    .log{
+      margin-top:10px;
+      border:1px dashed #d1d5db;
+      border-radius:14px;
+      background:#f9fafb;
+      padding:10px;
+      min-height:130px;
+    }
+    .log h3{
+      margin:0 0 6px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .logItem{
+      font-size:12px;
+      line-height:1.5;
+      margin-bottom:6px;
+    }
+    .logItem b{font-weight:900}
+    .logItem .delta{
+      font-weight:900;
+      padding:2px 8px;
+      border-radius:999px;
+      margin-left:6px;
+      border:1px solid transparent;
+      display:inline-block;
+      font-size:11px;
+    }
+    .delta.pos{color:#166534;background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35)}
+    .delta.neu{color:#1e40af;background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.35)}
+    .delta.neg{color:#991b1b;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35)}
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      color:#f9fafb;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 8px 18px rgba(37,99,235,.28);
+    }
+    .btn.secondary{
+      background:#111827;
+      box-shadow:0 8px 18px rgba(17,24,39,.18);
+    }
+    .btn.ghost{
+      background:#ffffff;
+      color:#111827;
+      border:1px solid var(--border);
+      box-shadow:none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Credit Builder Game</h1>
+    <p class="sub">
+      Make choices and watch a simulated score respond. This is a learning game that mirrors the direction of common scoring behaviors
+      (payment history, utilization, new inquiries, and negative items) — not a real lender calculation.
+    </p>
+
+    <div class="banner">
+      <div class="icon">🎮</div>
+      <div class="txt">
+        <strong>Goal</strong>
+        Build habits that push you toward stronger tiers (and better borrowing outcomes): on-time payments, low utilization, fewer inquiries, and fewer negatives.
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: Dashboard -->
+      <div class="card">
+        <h2>Your Current Profile</h2>
+        <p class="note">
+          Start with the default profile and improve it through decisions. Try to reach 720+.
+        </p>
+
+        <div class="scoreRow">
+          <div class="scorePill">
+            Simulated score <span class="scoreBubble" id="score">680</span>
+          </div>
+          <span class="tierTag mid" id="tier">Good (680–719)</span>
+        </div>
+
+        <div class="barWrap">
+          <div class="barLabel">Score progress (300 → 850)</div>
+          <div class="barTrack"><div class="barFill" id="bar"></div></div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Utilization</div>
+            <div class="val" id="util">42%</div>
+            <div class="small">Aim: under 30% (strong: under 10%).</div>
+          </div>
+          <div class="stat">
+            <div class="label">Payment history risk</div>
+            <div class="val" id="payrisk">High</div>
+            <div class="small">Late payments are the biggest score hit.</div>
+          </div>
+          <div class="stat">
+            <div class="label">Collections</div>
+            <div class="val" id="coll">1</div>
+            <div class="small">Negative items can trigger stricter underwriting.</div>
+          </div>
+          <div class="stat">
+            <div class="label">Recent inquiries (12 mo)</div>
+            <div class="val" id="inq">3</div>
+            <div class="small">Too many can pull borderline scores down.</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" type="button" onclick="resetGame()">Reset</button>
+          <button class="btn ghost" type="button" onclick="randomEvent()">Random Month Event</button>
+          <button class="btn secondary" type="button" onclick="showHint()">Show Hint</button>
+        </div>
+
+        <div class="small" id="hint" style="display:none;margin-top:10px;">
+          <b>Hint:</b> The fastest “wins” usually come from reducing utilization and preventing late payments.
+          Avoid new hard inquiries while preparing for loan applications.
+        </div>
+      </div>
+
+      <!-- RIGHT: Choices + Log -->
+      <div class="card">
+        <h2>Choose Your Next Move</h2>
+        <p class="note">
+          Each choice adjusts one or more score drivers. Some help immediately; others hurt your next “month.”
+        </p>
+
+        <div class="choices" id="choices"></div>
+
+        <div class="log" aria-live="polite">
+          <h3>Decision Log</h3>
+          <div id="logItems"></div>
+        </div>
+
+        <div class="small">
+          Educational note: This game demonstrates the direction of impact (up/down) based on common scoring factors.
+          It is not a FICO/VantageScore calculator.
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Simple model: we track a few drivers and translate them to a score.
+  // This is intentionally educational (directional), not an exact scoring algorithm.
+
+  const baseState = {
+    score: 680,
+    utilization: 42,     // percent
+    lateRisk: 2,         // 0 low, 1 medium, 2 high
+    collections: 1,      // count
+    inquiries: 3,        // count in last 12 months
+    monthsOnTime: 0,     // streak
+  };
+
+  let state = {...baseState};
+  let log = [];
+
+  function clamp(n, lo, hi){ return Math.max(lo, Math.min(hi, n)); }
+
+  function tierLabel(score){
+    if (score >= 800) return {text:"Exceptional (800–850)", cls:"good"};
+    if (score >= 740) return {text:"Very Good (740–799)", cls:"good"};
+    if (score >= 680) return {text:"Good (680–739)", cls:"mid"};
+    if (score >= 580) return {text:"Fair (580–679)", cls:"mid"};
+    return {text:"Poor (<580)", cls:"bad"};
+  }
+
+  function scoreFromDrivers(){
+    // Start from a baseline and apply penalties/bonuses.
+    // Weighting is directional: late risk + collections hurt more than inquiries;
+    // utilization matters heavily; consistent on-time streak helps.
+    let s = 740;
+
+    // Utilization penalty
+    if (state.utilization <= 9) s += 18;
+    else if (state.utilization <= 29) s += 6;
+    else if (state.utilization <= 49) s -= 18;
+    else if (state.utilization <= 74) s -= 45;
+    else s -= 85;
+
+    // Late payment risk (proxy for payment history stability)
+    if (state.lateRisk === 2) s -= 55;
+    else if (state.lateRisk === 1) s -= 25;
+
+    // Collections
+    if (state.collections >= 1) s -= 70;
+    if (state.collections >= 2) s -= 30;
+
+    // Inquiries
+    if (state.inquiries >= 6) s -= 25;
+    else if (state.inquiries >= 4) s -= 12;
+    else if (state.inquiries <= 1) s += 4;
+
+    // On-time streak bonus (stability)
+    if (state.monthsOnTime >= 6) s += 14;
+    else if (state.monthsOnTime >= 3) s += 8;
+
+    // Clamp to 300-850 scale
+    state.score = clamp(Math.round(s), 300, 850);
+  }
+
+  function render(){
+    scoreFromDrivers();
+
+    document.getElementById("score").textContent = state.score;
+
+    const tier = tierLabel(state.score);
+    const tierEl = document.getElementById("tier");
+    tierEl.textContent = tier.text;
+    tierEl.className = "tierTag " + (tier.cls === "good" ? "" : tier.cls === "mid" ? "mid" : "bad");
+
+    document.getElementById("util").textContent = state.utilization + "%";
+    document.getElementById("payrisk").textContent = state.lateRisk === 2 ? "High" : state.lateRisk === 1 ? "Medium" : "Low";
+    document.getElementById("coll").textContent = String(state.collections);
+    document.getElementById("inq").textContent = String(state.inquiries);
+
+    const barPct = ((state.score - 300) / (850 - 300)) * 100;
+    document.getElementById("bar").style.width = clamp(barPct, 0, 100) + "%";
+
+    renderChoices();
+    renderLog();
+  }
+
+  function addLog(text, delta){
+    log.unshift({text, delta});
+    if (log.length > 8) log.pop();
+  }
+
+  function renderLog(){
+    const el = document.getElementById("logItems");
+    if (log.length === 0){
+      el.innerHTML = "<div class='logItem'>Make your first choice to begin.</div>";
+      return;
+    }
+    el.innerHTML = log.map(item => {
+      let cls = item.delta > 0 ? "pos" : item.delta < 0 ? "neg" : "neu";
+      let sign = item.delta > 0 ? "+" : "";
+      return `<div class="logItem"><b>${escapeHtml(item.text)}</b>
+        <span class="delta ${cls}">${sign}${item.delta} pts</span></div>`;
+    }).join("");
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, s => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[s]));
+  }
+
+  function applyChoice(choice){
+    // Apply driver changes
+    const before = state.score;
+
+    choice.apply();
+
+    // Simulate "month passes" if choice represents ongoing behavior
+    // (some actions improve risk over time)
+    if (choice.monthPasses){
+      state.monthsOnTime = clamp(state.monthsOnTime + 1, 0, 24);
+      // lateRisk gradually improves with consistent on-time months
+      if (state.monthsOnTime >= 3 && state.lateRisk > 0) state.lateRisk -= 1;
+    }
+
+    render();
+    const after = state.score;
+    addLog(choice.title, after - before);
+    renderLog();
+  }
+
+  function renderChoices(){
+    const choices = [];
+
+    // Core choices (matching your lesson content)
+    choices.push({
+      title: "Pay down card balance (reduce utilization)",
+      desc: "You cut your utilization by ~15%. This is often one of the fastest score improvements.",
+      chip: "Likely helps",
+      chipCls: "impactChip",
+      apply: () => { state.utilization = clamp(state.utilization - 15, 0, 100); },
+      monthPasses: false
+    });
+
+    choices.push({
+      title: "Set up autopay for all accounts",
+      desc: "Reduces missed payment risk. Preventing late payments is the single biggest protection move.",
+      chip: "Protects score",
+      chipCls: "impactChip",
+      apply: () => { state.lateRisk = clamp(state.lateRisk - 1, 0, 2); },
+      monthPasses: true
+    });
+
+    choices.push({
+      title: "Open another credit card right now",
+      desc: "Adds a hard inquiry and new account risk. May hurt short-term before helping long-term.",
+      chip: "Short-term risk",
+      chipCls: "impactChip warn",
+      apply: () => { state.inquiries = clamp(state.inquiries + 1, 0, 20); },
+      monthPasses: false
+    });
+
+    choices.push({
+      title: "Become an authorized user on a strong account",
+      desc: "If the primary user has low utilization and perfect history, this can add positive history.",
+      chip: "Can boost",
+      chipCls: "impactChip",
+      apply: () => {
+        state.utilization = clamp(state.utilization - 8, 0, 100);
+        state.lateRisk = clamp(state.lateRisk - 1, 0, 2);
+      },
+      monthPasses: false
+    });
+
+    choices.push({
+      title: "Dispute an error on your report (if it’s wrong)",
+      desc: "If an item is inaccurate, correcting it can immediately improve outcomes.",
+      chip: "High value",
+      chipCls: "impactChip",
+      apply: () => {
+        // Remove a collection (simulated) if one exists
+        if (state.collections > 0) state.collections -= 1;
+      },
+      monthPasses: false
+    });
+
+    choices.push({
+      title: "Ignore a collection account",
+      desc: "Negative items remain and can block approvals or trigger co-signer requirements.",
+      chip: "Hurts options",
+      chipCls: "impactChip bad",
+      apply: () => {
+        // Stagnation: increase risk slightly over time
+        state.lateRisk = clamp(state.lateRisk + 1, 0, 2);
+      },
+      monthPasses: true
+    });
+
+    choices.push({
+      title: "Max out a card for a big purchase",
+      desc: "Utilization spikes, which can drop scores quickly even if you pay on time.",
+      chip: "High negative",
+      chipCls: "impactChip bad",
+      apply: () => { state.utilization = clamp(state.utilization + 35, 0, 100); },
+      monthPasses: false
+    });
+
+    const container = document.getElementById("choices");
+    container.innerHTML = choices.map((c, idx) => `
+      <div class="choice" role="button" tabindex="0"
+           onclick="applyChoiceIndex(${idx})"
+           onkeydown="if(event.key==='Enter'||event.key===' ')applyChoiceIndex(${idx})">
+        <div class="choiceTitle">
+          <span>${escapeHtml(c.title)}</span>
+          <span class="${c.chipCls}">${escapeHtml(c.chip)}</span>
+        </div>
+        <p class="choiceDesc">${escapeHtml(c.desc)}</p>
+      </div>
+    `).join("");
+
+    // Store for onclick
+    window.__choices = choices;
+  }
+
+  window.applyChoiceIndex = function(i){
+    const c = window.__choices?.[i];
+    if (!c) return;
+    applyChoice(c);
+  };
+
+  function resetGame(){
+    state = {...baseState};
+    log = [];
+    document.getElementById("hint").style.display = "none";
+    render();
+  }
+
+  function randomEvent(){
+    // Simulate a month event:
+    // - on-time month helps
+    // - sometimes an "unexpected expense" raises utilization
+    const before = state.score;
+
+    const roll = Math.random();
+    let msg = "";
+    if (roll < 0.55){
+      state.monthsOnTime = clamp(state.monthsOnTime + 1, 0, 24);
+      if (state.monthsOnTime >= 3 && state.lateRisk > 0) state.lateRisk -= 1;
+      msg = "A month passes with on-time payments";
+    } else if (roll < 0.8){
+      state.utilization = clamp(state.utilization + 10, 0, 100);
+      msg = "Unexpected expense raises utilization";
+    } else {
+      // a small inquiry from rate shopping attempt
+      state.inquiries = clamp(state.inquiries + 1, 0, 20);
+      msg = "You apply for something new (hard inquiry added)";
+    }
+
+    render();
+    addLog(msg, state.score - before);
+    renderLog();
+  }
+
+  function showHint(){
+    const el = document.getElementById("hint");
+    el.style.display = el.style.display === "none" ? "block" : "none";
+  }
+
+  // init
+  render();
+</script>
+</body>
+</html>
