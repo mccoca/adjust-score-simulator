@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Loan Path Scenario Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --bg: #f3f4ff;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --muted: #6b7280;
+      --text: #0f172a;
+      --accent: #2563eb;
+      --accent2: #0ea5e9;
+      --good: #22c55e;
+      --warn: #f97316;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 45%, #eef2ff 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+    .subtitle {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .scenario-banner {
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #eff6ff;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.35);
+    }
+    .scenario-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .scenario-text {
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .scenario-strong {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 11px;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 800px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      body { padding: 16px; }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 14px 14px 12px;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.06);
+    }
+    .card h2 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .card-note {
+      margin: 0 0 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .field {
+      margin-bottom: 10px;
+    }
+    input[type="number"] {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      padding: 7px 9px;
+      font-size: 13px;
+      background: #f9fafb;
+      outline: none;
+    }
+    input[type="number"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(37,99,235,0.2);
+      background: #ffffff;
+    }
+
+    .slider-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+    }
+    .score-display {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .gap-pill {
+      margin-top: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      font-size: 11px;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn {
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #f9fafb;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      box-shadow: 0 8px 18px rgba(37,99,235,0.35);
+    }
+
+    .results-header {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .results-main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .option-card {
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      padding: 8px 10px 8px;
+      font-size: 12px;
+      position: relative;
+    }
+    .option-title {
+      font-weight: 700;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .option-chip {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,197,94,0.7);
+      background: rgba(22,163,74,0.12);
+      color: #166534;
+    }
+    .option-body {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .option-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin-bottom: 1px;
+    }
+    .option-label {
+      color: var(--muted);
+    }
+    .option-value {
+      font-weight: 700;
+    }
+    .option-danger {
+      border-color: #fed7d7;
+      background: #fef2f2;
+    }
+    .option-danger .option-chip {
+      border-color: rgba(239,68,68,0.7);
+      background: rgba(248,113,113,0.16);
+      color: #b91c1c;
+    }
+
+    .recommend {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed #e5e7eb;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .recommend strong {
+      color: #111827;
+    }
+
+    .badge-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,197,94,0.7);
+      background: rgba(34,197,94,0.12);
+      padding: 3px 7px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #166534;
+    }
+
+    .fine-print {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Scenario Builder: Which Loan Path Comes Next?</h1>
+    <p class="subtitle">
+      Example: You need <strong>$50,000</strong> for the year. Federal loans cover <strong>$20,500</strong>.
+      Your credit score is around <strong>710</strong>. This tool helps you see which “Step 2” makes
+      the most sense: MWU Institutional Loan or a private loan.
+    </p>
+
+    <div class="scenario-banner">
+      <div class="scenario-icon">🧭</div>
+      <div class="scenario-text">
+        <span class="scenario-strong">How to use this</span>
+        Adjust the numbers below to match your situation. Then compare what happens if you
+        use <strong>MWU Institutional Loan</strong> for your gap versus a <strong>private loan</strong>, and see
+        which path the strategy from Lesson 4 recommends.
+      </div>
+    </div>
+
+    <div class="layout">
+      <!-- Left: Inputs -->
+      <div class="card">
+        <h2>1. Define Your Scenario</h2>
+        <p class="card-note">
+          Start with the default example, or adjust it to match your own program costs.
+          This only models the <strong>credit-based portion</strong> after federal loans.
+        </p>
+
+        <div class="field">
+          <label for="totalNeed">Total amount needed this year ($)</label>
+          <input type="number" id="totalNeed" min="0" step="500" value="50000" />
+        </div>
+
+        <div class="field">
+          <label for="federalCover">Federal Direct Unsubsidized (this year) ($)</label>
+          <input type="number" id="federalCover" min="0" step="500" value="20500" />
+        </div>
+
+        <div class="field">
+          <label>Credit score (estimated)</label>
+          <div class="slider-row">
+            <input type="range" id="score" min="550" max="800" step="5" value="710" />
+            <div class="score-display">
+              <span id="scoreValue">710</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="term">Repayment term for comparison (years)</label>
+          <input type="number" id="term" min="5" max="20" step="1" value="10" />
+        </div>
+
+        <div class="field">
+          <label>Example rates for this scenario</label>
+          <div class="card-note">
+            These are <strong>illustrative</strong> rates based on typical ranges:
+            MWU Institutional is fixed; private loans are credit-tiered.
+          </div>
+          <div class="field" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;">
+            <div>
+              <span style="font-size:11px;color:var(--muted);">MWU Institutional APR</span>
+              <input type="number" id="mwuApr" min="0" max="20" step="0.1" value="7.0" />
+            </div>
+            <div>
+              <span style="font-size:11px;color:var(--muted);">Private Loan APR</span>
+              <input type="number" id="privApr" min="0" max="25" step="0.1" value="10.0" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <span class="gap-pill">
+            Gap to cover with credit-based loans:
+            <strong id="gapDisplay">$29,500</strong>
+          </span>
+        </div>
+
+        <button class="btn" type="button" onclick="runScenario()">
+          Update Scenario
+        </button>
+      </div>
+
+      <!-- Right: Results -->
+      <div class="card">
+        <h2>2. Compare Your Step 2 Options</h2>
+        <p class="card-note">
+          Both options assume you’ve already maxed your Federal Direct Unsubsidized Loans
+          for the year. This compares how you could cover the remaining gap.
+        </p>
+
+        <div class="results-header">Gap Amount & Score</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-size:13px;">
+            Gap to finance: <strong id="gapSummary">$29,500</strong>
+          </div>
+          <div class="badge-score" id="scoreTag">
+            Score: 710 (Moderate / 670–719 band)
+          </div>
+        </div>
+
+        <div class="results-header">Modeled Options</div>
+        <div class="results-main">
+          <!-- MWU Institutional Option -->
+          <div class="option-card" id="mwuCard">
+            <div class="option-title">
+              <span>Option A: MWU Institutional Loan</span>
+              <span class="option-chip" id="mwuChip">Recommended by strategy</span>
+            </div>
+            <div class="option-body">
+              Fixed-rate loan designed for MWU professional programs; no credit-tier pricing,
+              but minimum score required.
+            </div>
+            <div class="option-row">
+              <span class="option-label">APR (example)</span>
+              <span class="option-value" id="mwuAprLabel">7.0%</span>
+            </div>
+            <div class="option-row">
+              <span class="option-label">Estimated monthly payment</span>
+              <span class="option-value" id="mwuPmtLabel">—</span>
+            </div>
+            <div class="option-row">
+              <span class="option-label">Total interest over term</span>
+              <span class="option-value" id="mwuIntLabel">—</span>
+            </div>
+            <div class="option-row">
+              <span class="option-label">Credit requirement</span>
+              <span class="option-value">≥ 670 score</span>
+            </div>
+          </div>
+
+          <!-- Private Loan Option -->
+          <div class="option-card option-danger" id="privCard">
+            <div class="option-title">
+              <span>Option B: Private Loan</span>
+              <span class="option-chip" id="privChip">Higher cost example</span>
+            </div>
+            <div class="option-body">
+              Credit-tiered rate from a private lender (e.g., Sallie Mae, Discover, SoFi).
+              Strong scores may receive better offers.
+            </div>
+            <div class="option-row">
+              <span class="option-label">APR (example)</span>
+              <span class="option-value" id="privAprLabel">10.0%</span>
+            </div>
+            <div class="option-row">
+              <span class="option-label">Estimated monthly payment</span>
+              <span class="option-value" id="privPmtLabel">—</span>
+            </div>
+            <div class="option-row">
+              <span class="option-label">Total interest over term</span>
+              <span class="option-value" id="privIntLabel">—</span>
+            </div>
+            <div class="option-row">
+              <span class="option-label">Credit requirement</span>
+              <span class="option-value">Score-driven; may need co-signer &gt; 720 ideal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="recommend" id="recommendationText">
+          <strong>Strategy guidance:</strong> With a score around <strong>710</strong> (moderate / 670–719),
+          Lesson 4 suggests using <strong>MWU Institutional Loan</strong> as your primary Step 2,
+          and reserving private loans only if you still have a gap after that.
+        </div>
+
+        <div class="fine-print">
+          These calculations are for educational purposes only. APRs shown are sample values
+          consistent with typical private-loan tiers (e.g., 6–7% for excellent credit and
+          higher rates for lower scores). Actual offers vary by lender, year, and individual
+          profile. Always review real disclosures and consult Student Financial Services
+          before making borrowing decisions.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatMoney(val) {
+      if (!isFinite(val) || val <= 0) return "—";
+      return "$" + val.toLocaleString(undefined, { maximumFractionDigits: 0 });
+    }
+
+    function calcPayment(amount, apr, years) {
+      const r = apr / 100 / 12;
+      const n = years * 12;
+      if (!amount || !years || !apr) return { pmt: 0, interest: 0 };
+      if (r === 0) {
+        const p = amount / n;
+        return { pmt: p, interest: 0 };
+      }
+      const pmt = amount * r / (1 - Math.pow(1 + r, -n));
+      const total = pmt * n;
+      return { pmt, interest: total - amount };
+    }
+
+    function classifyScore(score) {
+      if (score >= 720) return "excellent";
+      if (score >= 670) return "moderate";
+      return "low";
+    }
+
+    function runScenario() {
+      const totalNeed = Number(document.getElementById("totalNeed").value || 0);
+      const federalCover = Number(document.getElementById("federalCover").value || 0);
+      const score = Number(document.getElementById("score").value || 0);
+      const termYears = Number(document.getElementById("term").value || 0);
+      const mwuApr = Number(document.getElementById("mwuApr").value || 0);
+      const privApr = Number(document.getElementById("privApr").value || 0);
+
+      const gap = Math.max(0, totalNeed - federalCover);
+
+      document.getElementById("gapDisplay").textContent = formatMoney(gap);
+      document.getElementById("gapSummary").textContent = formatMoney(gap);
+      document.getElementById("scoreValue").textContent = score;
+
+      // Score tag
+      const band = classifyScore(score);
+      const scoreTag = document.getElementById("scoreTag");
+      if (band === "excellent") {
+        scoreTag.textContent = "Score: " + score + " (Excellent / 720+)";
+      } else if (band === "moderate") {
+        scoreTag.textContent = "Score: " + score + " (Moderate / 670–719 band)";
+      } else {
+        scoreTag.textContent = "Score: " + score + " (Below 670 – co-signer likely)";
+      }
+
+      // Update APR labels
+      document.getElementById("mwuAprLabel").textContent = mwuApr.toFixed(1) + "%";
+      document.getElementById("privAprLabel").textContent = privApr.toFixed(1) + "%";
+
+      // Calculate payments
+      const mwu = calcPayment(gap, mwuApr, termYears);
+      const priv = calcPayment(gap, privApr, termYears);
+
+      document.getElementById("mwuPmtLabel").textContent = formatMoney(mwu.pmt) + " / mo";
+      document.getElementById("mwuIntLabel").textContent = formatMoney(mwu.interest);
+      document.getElementById("privPmtLabel").textContent = formatMoney(priv.pmt) + " / mo";
+      document.getElementById("privIntLabel").textContent = formatMoney(priv.interest);
+
+      // Recommendation logic based on Lesson 4
+      const mwuCard = document.getElementById("mwuCard");
+      const privCard = document.getElementById("privCard");
+      const mwuChip = document.getElementById("mwuChip");
+      const privChip = document.getElementById("privChip");
+      const recText = document.getElementById("recommendationText");
+
+      // Reset visual state
+      mwuCard.style.borderColor = "#e5e7eb";
+      privCard.style.borderColor = "#fed7d7";
+      mwuChip.textContent = "Based on MWU Institutional example";
+      privChip.textContent = "Higher cost example";
+
+      if (band === "excellent") {
+        // 720+ → compare and choose cheaper APR
+        if (mwuApr <= privApr) {
+          mwuCard.style.borderColor = "#22c55e";
+          mwuChip.textContent = "Often better at this APR";
+          recText.innerHTML =
+            "<strong>Strategy guidance:</strong> With a score around <strong>" + score +
+            "</strong>, federal loans still come first. At this APR, the <strong>MWU Institutional Loan</strong> is at least as competitive as private options. Compare real offers and choose the lower total cost.";
+        } else {
+          privCard.style.borderColor = "#22c55e";
+          privChip.textContent = "Potentially cheaper for you";
+          recText.innerHTML =
+            "<strong>Strategy guidance:</strong> With <strong>excellent credit</strong>, private lenders may offer lower APRs than the MWU Institutional Loan. After using federal loans, it can make sense to compare multiple private offers and select the one with the lowest total cost.";
+        }
+      } else if (band === "moderate") {
+        // 670–719 → Institutional usually recommended
+        mwuCard.style.borderColor = "#22c55e";
+        mwuChip.textContent = "Recommended by strategy";
+        recText.innerHTML =
+          "<strong>Strategy guidance:</strong> With a score around <strong>" + score +
+          "</strong> (670–719 band), Lesson 4 suggests using the <strong>MWU Institutional Loan</strong> as your main Step 2 after federal loans. Private loans are available, but often at higher APRs for this credit tier.";
+      } else {
+        // Below 670 → co-signer warnings
+        privCard.style.borderColor = "#f97316";
+        privChip.textContent = "Co-signer likely required";
+        recText.innerHTML =
+          "<strong>Strategy guidance:</strong> With a score below <strong>670</strong>, both MWU Institutional and private loans may require a strong co-signer. Focus on credit rebuilding where possible, and talk with Student Financial Services about realistic co-signer and timing options before committing.";
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      runScenario();
+      document.getElementById("score").addEventListener("input", runScenario);
+      document.getElementById("totalNeed").addEventListener("input", runScenario);
+      document.getElementById("federalCover").addEventListener("input", runScenario);
+      document.getElementById("term").addEventListener("input", runScenario);
+      document.getElementById("mwuApr").addEventListener("input", runScenario);
+      document.getElementById("privApr").addEventListener("input", runScenario);
+    });
+  </script>
+</body>
+</html>
