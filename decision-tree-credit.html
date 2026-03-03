@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>My Score Is… → Next Steps</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+:root{
+  --bg:#f3f4ff;
+  --card:#ffffff;
+  --border:#e5e7eb;
+  --text:#0f172a;
+  --muted:#6b7280;
+  --good:#22c55e;
+  --mid:#f97316;
+  --bad:#ef4444;
+  --accent:#2563eb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:24px;
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:radial-gradient(circle at top left,#e0f2fe 0,#f9fafb 45%,#eef2ff 100%);
+  color:var(--text);
+}
+.wrap{max-width:1100px;margin:0 auto}
+h1{margin:0 0 8px;font-size:26px;font-weight:900}
+.sub{margin:0 0 18px;font-size:14px;color:var(--muted);line-height:1.6}
+
+.tree{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+}
+
+.root{
+  background:linear-gradient(135deg,#2563eb,#0ea5e9);
+  color:white;
+  padding:16px 22px;
+  border-radius:16px;
+  font-weight:900;
+  font-size:18px;
+  box-shadow:0 10px 24px rgba(37,99,235,.35);
+}
+
+.branches{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:18px;
+  width:100%;
+}
+
+.node{
+  border-radius:18px;
+  border:1px solid var(--border);
+  background:var(--card);
+  padding:16px;
+  box-shadow:0 8px 18px rgba(15,23,42,.06);
+  cursor:pointer;
+  transition:.2s ease;
+}
+.node:hover{transform:translateY(-4px)}
+.node h2{
+  margin:0 0 6px;
+  font-size:18px;
+  font-weight:900;
+}
+.node p{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-weight:700;
+}
+.good{background:rgba(34,197,94,.15);color:#166534;border:1px solid rgba(34,197,94,.4)}
+.mid{background:rgba(249,115,22,.15);color:#9a3412;border:1px solid rgba(249,115,22,.4)}
+.bad{background:rgba(239,68,68,.15);color:#991b1b;border:1px solid rgba(239,68,68,.4)}
+
+.details{
+  margin-top:10px;
+  font-size:13px;
+  line-height:1.6;
+  display:none;
+}
+.details ul{
+  margin:6px 0 0 18px;
+  padding:0;
+}
+.details li{margin-bottom:6px}
+.timeline{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.footer{
+  margin-top:18px;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<h1>My Score Is… → Next Steps</h1>
+<p class="sub">
+Your credit score determines your loan eligibility, interest rate tier, and total borrowing cost.
+Click your score range below to see your precise action plan.
+</p>
+
+<div class="tree">
+  <div class="root">Start Here: What’s Your Score?</div>
+
+  <div class="branches">
+
+    <!-- 720+ -->
+    <div class="node" onclick="toggle(this)">
+      <h2>720+</h2>
+      <span class="badge good">Strong / Very Strong Credit</span>
+      <p>Top borrowing tier. Eligible for best private rates and MWU Institutional Loans.</p>
+
+      <div class="details">
+        <strong>What This Means:</strong>
+        <ul>
+          <li>Likely no co-signer needed.</li>
+          <li>Private lenders often offer lowest advertised APR tiers.</li>
+          <li>MWU Institutional Loan eligibility comfortably met (670+).</li>
+        </ul>
+
+        <strong>Your Strategy:</strong>
+        <ul>
+          <li>Keep utilization under 10% (never above 30%).</li>
+          <li>Maintain autopay on all accounts.</li>
+          <li>Avoid opening multiple new accounts before borrowing.</li>
+          <li>Preserve older accounts to maintain length of credit history.</li>
+        </ul>
+
+        <div class="timeline">
+        Even a small drop (740 → 710) may raise your APR and cost thousands over a multi-year borrowing cycle.
+        </div>
+      </div>
+    </div>
+
+    <!-- 660-719 -->
+    <div class="node" onclick="toggle(this)">
+      <h2>660–719</h2>
+      <span class="badge mid">Average → Good Credit</span>
+      <p>Common student range. Improvement here creates major savings.</p>
+
+      <div class="details">
+        <strong>What This Means:</strong>
+        <ul>
+          <li>670+ → Eligible for MWU Institutional Loans.</li>
+          <li>Private loan rates typically mid-range (varies by lender).</li>
+          <li>Borderline scores risk higher APR tiers.</li>
+        </ul>
+
+        <strong>Your Strategy:</strong>
+        <ul>
+          <li>Lower utilization below 30% (aim under 10%).</li>
+          <li>Set autopay to eliminate late-payment risk.</li>
+          <li>Consider authorized user status on strong account.</li>
+          <li>Limit hard inquiries before applying.</li>
+        </ul>
+
+        <div class="timeline">
+        Noticeable score gains often occur within 30–90 days when utilization drops.
+        </div>
+      </div>
+    </div>
+
+    <!-- Below 660 -->
+    <div class="node" onclick="toggle(this)">
+      <h2>Below 660</h2>
+      <span class="badge bad">Fair or Rebuilding Credit</span>
+      <p>Higher barriers. Focus shifts to rebuilding before borrowing.</p>
+
+      <div class="details">
+        <strong>What This Means:</strong>
+        <ul>
+          <li>May not meet MWU Institutional threshold.</li>
+          <li>Private lenders may require co-signer.</li>
+          <li>Higher APR tiers likely.</li>
+        </ul>
+
+        <strong>Your Strategy:</strong>
+        <ul>
+          <li>Open a secured credit card and use responsibly.</li>
+          <li>Consider a credit-builder installment loan.</li>
+          <li>Resolve or dispute collections.</li>
+          <li>Keep utilization below 30% (ideally under 10%).</li>
+        </ul>
+
+        <div class="timeline">
+        Typical rebuild timeline: 3–6 months for progress, 6–12 months for strong improvement.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+A 20–40 point increase can reduce APR tiers significantly. Over professional-school borrowing,
+that difference can translate into $10,000–$40,000+ in lifetime savings.
+Start early. Maintain control.
+</div>
+
+</div>
+
+<script>
+function toggle(el){
+  const details = el.querySelector('.details');
+  details.style.display = details.style.display === 'block' ? 'none' : 'block';
+}
+</script>
+
+</body>
+</html>
