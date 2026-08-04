@@ -1,566 +1,1163 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Compare Your Options – Loan Cost Calculator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compare Your Loan Options</title>
 
   <style>
     :root {
-      --bg: #f3f4ff;
-      --card: #ffffff;
-      --border: #e5e7eb;
-      --muted: #6b7280;
-      --text: #0f172a;
-      --accent: #2563eb;
-      --accent2: #0ea5e9;
-      --accent3: #22c55e;
-      --danger: #f97316;
+      --navy:#0f2747;
+      --blue:#2563eb;
+      --sky:#0ea5e9;
+      --green:#16a34a;
+      --green-light:#ecfdf5;
+      --purple:#7c3aed;
+      --purple-light:#f5f3ff;
+      --orange:#f97316;
+      --orange-light:#fff7ed;
+      --red:#dc2626;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#dbe3ee;
+      --card:#ffffff;
+      --bg:#f4f7fb;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
     }
+
     * {
-      box-sizing: border-box;
+      box-sizing:border-box;
     }
+
     body {
-      margin: 0;
-      padding: 24px;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 40%, #eef2ff 100%);
-      color: var(--text);
+      margin:0;
+      padding:24px;
+      color:var(--text);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left,#dbeafe 0,transparent 36%),
+        linear-gradient(135deg,#f8fafc,#eef2ff);
     }
+
+    button,
+    input,
+    select {
+      font:inherit;
+    }
+
     .wrap {
-      max-width: 980px;
-      margin: 0 auto;
+      max-width:1180px;
+      margin:0 auto;
     }
+
+    .hero {
+      padding:24px;
+      margin-bottom:18px;
+      color:white;
+      border-radius:24px;
+      background:linear-gradient(135deg,var(--navy),var(--blue),var(--sky));
+      box-shadow:0 18px 38px rgba(37,99,235,.24);
+    }
+
+    .eyebrow {
+      margin-bottom:6px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:.85;
+    }
+
     h1 {
-      margin: 0 0 4px;
-      font-size: 26px;
-      font-weight: 900;
-      letter-spacing: 0.01em;
-    }
-    .subtitle {
-      margin: 0 0 16px;
-      font-size: 14px;
-      color: var(--muted);
+      margin:0 0 8px;
+      font-size:clamp(26px,4vw,38px);
+      line-height:1.1;
     }
 
-    .banner {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #f9fafb;
-      padding: 16px 18px;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
-      box-shadow: 0 12px 25px rgba(15, 23, 42, 0.15);
-    }
-    .banner-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-    }
-    .banner-text {
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .banner-strong {
-      font-weight: 700;
+    .hero p {
+      max-width:900px;
+      margin:0;
+      color:#e0f2fe;
+      font-size:14px;
+      line-height:1.6;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-      margin-bottom: 18px;
+    .tip {
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      padding:14px 16px;
+      margin-bottom:18px;
+      color:#1e3a8a;
+      border:1px solid #93c5fd;
+      border-radius:17px;
+      background:#eff6ff;
     }
 
-    .card {
-      background: var(--card);
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      padding: 14px 14px 12px;
-      position: relative;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-    }
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
-    }
-    .card.best {
-      border-color: var(--accent3);
-      box-shadow: 0 14px 32px rgba(22, 163, 74, 0.25);
-    }
-    .pill {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      padding: 3px 9px;
-      font-size: 10px;
-      border-radius: 999px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      font-weight: 800;
-      background: #e0f2fe;
-      color: #0369a1;
-    }
-    .pill-mwu {
-      background: #dcfce7;
-      color: #166534;
+    .tip-icon {
+      display:grid;
+      width:36px;
+      height:36px;
+      flex:0 0 auto;
+      color:white;
+      font-weight:900;
+      place-items:center;
+      border-radius:50%;
+      background:var(--blue);
     }
 
-    .card-title {
-      font-size: 14px;
-      font-weight: 800;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-    }
-    .dot-a { background: var(--accent); }
-    .dot-b { background: var(--accent2); }
-    .dot-c { background: var(--danger); }
-
-    .hint {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 8px;
+    .tip p {
+      margin:0;
+      font-size:12px;
+      line-height:1.55;
     }
 
-    label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      margin-bottom: 3px;
-      color: var(--muted);
-    }
-    input[type="number"] {
-      width: 100%;
-      padding: 6px 8px;
-      border-radius: 10px;
-      border: 1px solid #d1d5db;
-      font-size: 13px;
-      outline: none;
-      background: #f9fafb;
-    }
-    input[type="number"]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
-      background: #ffffff;
-    }
-    .field {
-      margin-bottom: 8px;
+    .controls {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      padding:15px;
+      margin-bottom:15px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:white;
+      box-shadow:var(--shadow);
     }
 
-    .results {
-      margin-top: 8px;
-      border-top: 1px dashed #e5e7eb;
-      padding-top: 8px;
-      font-size: 12px;
-      color: var(--muted);
+    .field label,
+    .field-title {
+      display:block;
+      margin-bottom:5px;
+      color:#475569;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
     }
-    .results-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 2px;
+
+    input[type="number"],
+    select {
+      width:100%;
+      padding:9px 10px;
+      color:var(--text);
+      border:1px solid #cbd5e1;
+      border-radius:10px;
+      outline:none;
+      background:#f8fafc;
     }
-    .results-label {
-      font-weight: 600;
-    }
-    .results-value {
-      font-weight: 700;
-      color: var(--text);
+
+    input[type="number"]:focus,
+    select:focus {
+      border-color:var(--blue);
+      background:white;
+      box-shadow:0 0 0 3px rgba(37,99,235,.12);
     }
 
     .actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 10px;
-      gap: 8px;
+      display:flex;
+      justify-content:flex-end;
+      gap:9px;
+      margin-bottom:15px;
     }
+
     button {
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      padding: 7px 14px;
-      font-size: 13px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      letter-spacing: .03em;
+      padding:9px 15px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      cursor:pointer;
+      border:none;
+      border-radius:999px;
     }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #f9fafb;
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+
+    .primary {
+      color:white;
+      background:linear-gradient(135deg,var(--blue),var(--sky));
+      box-shadow:0 9px 20px rgba(37,99,235,.25);
     }
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #374151;
+
+    .secondary {
+      color:#334155;
+      border:1px solid #cbd5e1;
+      background:white;
+    }
+
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .loan-card {
+      display:flex;
+      flex-direction:column;
+      min-height:475px;
+      padding:15px;
+      border:2px solid var(--border);
+      border-radius:19px;
+      background:white;
+      box-shadow:var(--shadow);
+      transition:.18s ease;
+    }
+
+    .loan-card:hover {
+      transform:translateY(-3px);
+    }
+
+    .loan-card.lowest {
+      border-color:var(--green);
+      box-shadow:0 15px 30px rgba(22,163,74,.15);
+    }
+
+    .loan-card.caution {
+      border-color:#fdba74;
+    }
+
+    .card-top {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:8px;
+      margin-bottom:8px;
+    }
+
+    .loan-name {
+      font-size:15px;
+      font-weight:900;
+    }
+
+    .pill {
+      padding:4px 7px;
+      color:#475569;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      border:1px solid #cbd5e1;
+      border-radius:999px;
+      background:#f8fafc;
+    }
+
+    .pill.federal {
+      color:#1e40af;
+      border-color:#93c5fd;
+      background:#eff6ff;
+    }
+
+    .pill.mwu {
+      color:#166534;
+      border-color:#86efac;
+      background:var(--green-light);
+    }
+
+    .pill.access {
+      color:#5b21b6;
+      border-color:#c4b5fd;
+      background:var(--purple-light);
+    }
+
+    .pill.private {
+      color:#9a3412;
+      border-color:#fdba74;
+      background:var(--orange-light);
+    }
+
+    .description {
+      min-height:78px;
+      margin:0 0 12px;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.5;
+    }
+
+    .card-field {
+      margin-bottom:9px;
+    }
+
+    .card-field label {
+      display:block;
+      margin-bottom:4px;
+      color:#64748b;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .toggle {
+      display:flex;
+      gap:6px;
+    }
+
+    .toggle label {
+      position:relative;
+      flex:1;
+      margin:0;
+    }
+
+    .toggle input {
+      position:absolute;
+      opacity:0;
+    }
+
+    .toggle span {
+      display:block;
+      padding:8px;
+      text-align:center;
+      color:#475569;
+      font-size:10px;
+      font-weight:800;
+      cursor:pointer;
+      border:1px solid #cbd5e1;
+      border-radius:9px;
+      background:#f8fafc;
+    }
+
+    .toggle input:checked + span {
+      color:#1d4ed8;
+      border-color:#60a5fa;
+      background:#eff6ff;
+    }
+
+    .results {
+      display:none;
+      padding-top:10px;
+      margin-top:auto;
+      border-top:1px dashed #cbd5e1;
+    }
+
+    .result-row {
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      padding:5px 0;
+      font-size:10px;
+      border-bottom:1px solid #f1f5f9;
+    }
+
+    .result-row span {
+      color:var(--muted);
+    }
+
+    .result-row strong {
+      text-align:right;
+    }
+
+    .eligibility-note {
+      padding:9px;
+      margin-top:10px;
+      color:#475569;
+      font-size:9px;
+      line-height:1.45;
+      border-radius:10px;
+      background:#f8fafc;
     }
 
     .summary {
-      background: #0f172a;
-      color: #e5e7eb;
-      border-radius: 16px;
-      padding: 12px 14px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .summary-title {
-      font-size: 13px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 4px;
-    }
-    .summary-line {
-      font-size: 12px;
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      border-radius: 999px;
-      padding: 4px 9px;
-      font-size: 11px;
-      background: rgba(34, 197, 94, 0.15);
-      color: #bbf7d0;
-      border: 1px solid rgba(34, 197, 94, 0.6);
-    }
-    .badge span {
-      font-size: 13px;
+      display:none;
+      padding:16px;
+      margin-top:16px;
+      color:white;
+      border-radius:18px;
+      background:linear-gradient(135deg,#0f172a,#1e293b);
     }
 
-    @media (max-width: 640px) {
-      body { padding: 16px; }
-      h1 { font-size: 20px; }
-      .banner { flex-direction: column; align-items: flex-start; }
+    .summary h2 {
+      margin:0 0 5px;
+      font-size:15px;
+    }
+
+    .summary p {
+      margin:0;
+      color:#cbd5e1;
+      font-size:11px;
+      line-height:1.55;
+    }
+
+    .summary-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:9px;
+      margin-top:12px;
+    }
+
+    .summary-item {
+      padding:10px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:12px;
+      background:rgba(255,255,255,.06);
+    }
+
+    .summary-item span {
+      display:block;
+      color:#cbd5e1;
+      font-size:9px;
+      text-transform:uppercase;
+    }
+
+    .summary-item strong {
+      display:block;
+      margin-top:3px;
+      font-size:14px;
+    }
+
+    .disclaimer {
+      margin-top:14px;
+      color:var(--muted);
+      font-size:10px;
+      line-height:1.55;
+    }
+
+    @media(max-width:1000px) {
+      .grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .controls {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:650px) {
+      body {
+        padding:12px;
+      }
+
+      .hero {
+        padding:18px;
+      }
+
+      .grid,
+      .controls,
+      .summary-grid {
+        grid-template-columns:1fr;
+      }
+
+      .loan-card {
+        min-height:auto;
+      }
+
+      .actions {
+        flex-direction:column;
+      }
+
+      button {
+        width:100%;
+        justify-content:center;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <h1>Compare Your Options</h1>
-    <p class="subtitle">
-      Enter the loan details for each option to see estimated monthly payments, total paid,
-      and total interest. Use this to compare federal loans, the MWU Institutional Loan, and
-      private lenders side by side.
-    </p>
+  <main class="wrap">
 
-    <div class="banner">
-      <div class="banner-icon">📊</div>
-      <div class="banner-text">
-        <span class="banner-strong">Tip:</span> Use the
-        current MWU Institutional Loan interest rate and origination fee from the latest
-        financial aid disclosures. For private loans, plug in the rate and fee from your lender’s offer.
+    <section class="hero">
+      <div class="eyebrow">Interactive loan comparison</div>
+
+      <h1>Compare Your Loan Options</h1>
+
+      <p>
+        Compare estimated monthly payments and long-term repayment costs for a
+        Federal Direct Unsubsidized Loan, the MWU Loan, the MWU ACCESS Loan, and
+        a private education loan.
+      </p>
+    </section>
+
+    <section class="tip">
+      <div class="tip-icon">1</div>
+
+      <p>
+        Enter the amount you need to receive after fees. For the most useful
+        comparison, use the same loan amount and repayment term for all four
+        options. Interest rates and loan terms should come from current disclosures
+        or an actual lender offer.
+      </p>
+    </section>
+
+    <section class="controls">
+      <div class="field">
+        <label for="sharedAmount">Amount needed after fees</label>
+        <input id="sharedAmount" type="number" min="0" step="500" value="40000">
       </div>
-    </div>
+
+      <div class="field">
+        <label for="sharedTerm">Repayment term</label>
+        <select id="sharedTerm">
+          <option value="10" selected>10 years</option>
+          <option value="15">15 years</option>
+          <option value="20">20 years</option>
+          <option value="25">25 years</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="federalRate">Federal interest rate</label>
+        <input id="federalRate" type="number" min="0" max="30" step=".01" placeholder="Enter current rate">
+      </div>
+
+      <div class="field">
+        <label for="federalFee">Federal origination fee</label>
+        <input id="federalFee" type="number" min="0" max="20" step=".001" placeholder="Enter current fee">
+      </div>
+    </section>
 
     <div class="actions">
-      <button class="btn-secondary" type="button" onclick="resetCalculator()">Reset</button>
-      <button class="btn-primary" type="button" onclick="runComparison()">
+      <button class="secondary" type="button" onclick="resetCalculator()">
+        Reset
+      </button>
+
+      <button class="primary" type="button" onclick="runComparison()">
         Run Comparison
-        <span>▶</span>
       </button>
     </div>
 
-    <div class="grid">
-      <!-- Option 1 -->
-      <div class="card" id="cardA">
-        <div class="pill">Option A</div>
-        <div class="card-title">
-          <span class="dot dot-a"></span>
-          <span>Federal / Other Loan</span>
+    <section class="grid">
+
+      <!-- Federal -->
+
+      <article class="loan-card" id="cardFederal">
+        <div class="card-top">
+          <div class="loan-name">Federal Direct Unsubsidized</div>
+          <div class="pill federal">Federal foundation</div>
         </div>
-        <p class="hint">
-          Use this for a Direct Unsubsidized Loan or any other offer you want to compare.
+
+        <p class="description">
+          Federal loan with a fixed annual rate, federal repayment options and
+          borrower protections. Use available federal eligibility first.
         </p>
 
-        <div class="field">
-          <label for="amountA">Loan amount ($)</label>
-          <input type="number" id="amountA" min="0" step="1000" placeholder="e.g., 40000">
-        </div>
-        <div class="field">
-          <label for="rateA">Interest rate (% APR)</label>
-          <input type="number" id="rateA" min="0" max="30" step="0.01" placeholder="e.g., 7.05">
-        </div>
-        <div class="field">
-          <label for="termA">Repayment term (years)</label>
-          <input type="number" id="termA" min="1" max="30" step="1" placeholder="e.g., 10">
-        </div>
-        <div class="field">
-          <label for="feeA">Origination fee (% of amount)</label>
-          <input type="number" id="feeA" min="0" max="20" step="0.01" placeholder="e.g., 1.00">
+        <div class="card-field">
+          <label for="amountFederal">Net amount needed</label>
+          <input id="amountFederal" type="number" min="0" step="500" value="40000">
         </div>
 
-        <div class="results" id="resultsA" style="display:none;">
-          <div class="results-row">
-            <div class="results-label">Monthly payment</div>
-            <div class="results-value" id="pmtA"></div>
-          </div>
-          <div class="results-row">
-            <div class="results-label">Total paid</div>
-            <div class="results-value" id="totalA"></div>
-          </div>
-          <div class="results-row">
-            <div class="results-label">Total interest</div>
-            <div class="results-value" id="intA"></div>
-          </div>
+        <div class="card-field">
+          <label for="rateFederal">Interest rate</label>
+          <input id="rateFederal" type="number" min="0" max="30" step=".01" placeholder="Current federal rate">
         </div>
-      </div>
 
-      <!-- Option 2: MWU Institutional -->
-      <div class="card" id="cardB">
-        <div class="pill pill-mwu">MWU Option</div>
-        <div class="card-title">
-          <span class="dot dot-b"></span>
-          <span>MWU Institutional Loan</span>
+        <div class="card-field">
+          <label for="termFederal">Repayment term</label>
+          <input id="termFederal" type="number" min="1" max="30" step="1" value="10">
         </div>
-        <p class="hint">
-          Fixed-rate, student-centered loan. Enter the current MWU rate. Origination fee is 0%.
+
+        <div class="card-field">
+          <label for="feeFederal">Origination fee</label>
+          <input id="feeFederal" type="number" min="0" max="20" step=".001" placeholder="Current federal fee">
+        </div>
+
+        <div class="results" id="resultsFederal">
+          <div class="result-row">
+            <span>Amount borrowed</span>
+            <strong id="grossFederal"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Fee cost</span>
+            <strong id="feeCostFederal"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Monthly payment</span>
+            <strong id="paymentFederal"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Total interest</span>
+            <strong id="interestFederal"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Total repayment</span>
+            <strong id="totalFederal"></strong>
+          </div>
+        </div>
+
+        <div class="eligibility-note">
+          Federal Direct Unsubsidized Loans do not require a minimum credit score
+          or co-signer.
+        </div>
+      </article>
+
+      <!-- MWU -->
+
+      <article class="loan-card" id="cardMwu">
+        <div class="card-top">
+          <div class="loan-name">MWU Loan</div>
+          <div class="pill mwu">Primary MWU option</div>
+        </div>
+
+        <p class="description">
+          Fixed-rate institutional loan for eligible MWU students who meet the
+          complete underwriting requirements or qualify with an eligible co-signer.
         </p>
 
-        <div class="field">
-          <label for="amountB">Loan amount ($)</label>
-          <input type="number" id="amountB" min="0" step="1000" placeholder="e.g., 40000">
-        </div>
-        <div class="field">
-          <label for="rateB">Interest rate (% APR)</label>
-          <input type="number" id="rateB" min="0" max="30" step="0.01" placeholder="Enter current MWU rate">
-        </div>
-        <div class="field">
-          <label for="termB">Repayment term (years)</label>
-          <input type="number" id="termB" min="1" max="30" step="1" placeholder="e.g., 10">
-        </div>
-        <div class="field">
-          <label for="feeB">Origination fee (% of amount)</label>
-          <input type="number" id="feeB" min="0" max="20" step="0.01" value="0">
+        <div class="card-field">
+          <label for="amountMwu">Net amount needed</label>
+          <input id="amountMwu" type="number" min="0" step="500" value="40000">
         </div>
 
-        <div class="results" id="resultsB" style="display:none;">
-          <div class="results-row">
-            <div class="results-label">Monthly payment</div>
-            <div class="results-value" id="pmtB"></div>
-          </div>
-          <div class="results-row">
-            <div class="results-label">Total paid</div>
-            <div class="results-value" id="totalB"></div>
-          </div>
-          <div class="results-row">
-            <div class="results-label">Total interest</div>
-            <div class="results-value" id="intB"></div>
-          </div>
+        <div class="card-field">
+          <label for="rateMwu">Published fixed rate</label>
+          <input id="rateMwu" type="number" min="0" max="30" step=".01" value="7.00">
         </div>
-      </div>
 
-      <!-- Option 3 -->
-      <div class="card" id="cardC">
-        <div class="pill">Option C</div>
-        <div class="card-title">
-          <span class="dot dot-c"></span>
-          <span>Private / Other Lender</span>
+        <div class="card-field">
+          <label for="termMwu">Repayment term</label>
+          <input id="termMwu" type="number" min="1" max="30" step="1" value="10">
         </div>
-        <p class="hint">
-          Use this for any private lender quote you receive. Be sure to include their origination fee.
+
+        <div class="card-field">
+          <label>Automatic-payment discount</label>
+
+          <div class="toggle">
+            <label>
+              <input type="radio" name="mwuAutopay" value="yes">
+              <span>Apply −0.25%</span>
+            </label>
+
+            <label>
+              <input type="radio" name="mwuAutopay" value="no" checked>
+              <span>Do not apply</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="results" id="resultsMwu">
+          <div class="result-row">
+            <span>Effective interest rate</span>
+            <strong id="effectiveRateMwu"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Amount borrowed</span>
+            <strong id="grossMwu"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Monthly payment</span>
+            <strong id="paymentMwu"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Total interest</span>
+            <strong id="interestMwu"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Total repayment</span>
+            <strong id="totalMwu"></strong>
+          </div>
+        </div>
+
+        <div class="eligibility-note">
+          Independent applicants must meet the stated 660 FICO minimum and all
+          other underwriting requirements. The origination fee is 0%.
+        </div>
+      </article>
+
+      <!-- ACCESS -->
+
+      <article class="loan-card caution" id="cardAccess">
+        <div class="card-top">
+          <div class="loan-name">MWU ACCESS Loan</div>
+          <div class="pill access">Limited pathway</div>
+        </div>
+
+        <p class="description">
+          Institutional pathway for certain eligible students who cannot qualify
+          for the MWU Loan. Approval requires separate review and available funding.
         </p>
 
-        <div class="field">
-          <label for="amountC">Loan amount ($)</label>
-          <input type="number" id="amountC" min="0" step="1000" placeholder="e.g., 40000">
-        </div>
-        <div class="field">
-          <label for="rateC">Interest rate (% APR)</label>
-          <input type="number" id="rateC" min="0" max="30" step="0.01" placeholder="e.g., 11.50">
-        </div>
-        <div class="field">
-          <label for="termC">Repayment term (years)</label>
-          <input type="number" id="termC" min="1" max="30" step="1" placeholder="e.g., 10">
-        </div>
-        <div class="field">
-          <label for="feeC">Origination fee (% of amount)</label>
-          <input type="number" id="feeC" min="0" max="20" step="0.01" placeholder="e.g., 4.00">
+        <div class="card-field">
+          <label for="amountAccess">Net amount needed</label>
+          <input id="amountAccess" type="number" min="0" step="500" value="40000">
         </div>
 
-        <div class="results" id="resultsC" style="display:none;">
-          <div class="results-row">
-            <div class="results-label">Monthly payment</div>
-            <div class="results-value" id="pmtC"></div>
+        <div class="card-field">
+          <label for="rateAccess">Current fixed rate</label>
+          <input id="rateAccess" type="number" min="0" max="30" step=".01" value="9.00">
+        </div>
+
+        <div class="card-field">
+          <label for="termAccess">Repayment term</label>
+          <input id="termAccess" type="number" min="1" max="30" step="1" value="10">
+        </div>
+
+        <div class="card-field">
+          <label for="feeAccess">Origination fee</label>
+          <input id="feeAccess" type="number" min="0" max="20" step=".01" value="0" readonly>
+        </div>
+
+        <div class="results" id="resultsAccess">
+          <div class="result-row">
+            <span>Amount borrowed</span>
+            <strong id="grossAccess"></strong>
           </div>
-          <div class="results-row">
-            <div class="results-label">Total paid</div>
-            <div class="results-value" id="totalC"></div>
+
+          <div class="result-row">
+            <span>Monthly payment</span>
+            <strong id="paymentAccess"></strong>
           </div>
-          <div class="results-row">
-            <div class="results-label">Total interest</div>
-            <div class="results-value" id="intC"></div>
+
+          <div class="result-row">
+            <span>Total interest</span>
+            <strong id="interestAccess"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Total repayment</span>
+            <strong id="totalAccess"></strong>
           </div>
         </div>
+
+        <div class="eligibility-note">
+          ACCESS is not an automatic substitute for the MWU Loan. A qualifying
+          denial, additional documentation, institutional review and available
+          funding are required.
+        </div>
+      </article>
+
+      <!-- Private -->
+
+      <article class="loan-card" id="cardPrivate">
+        <div class="card-top">
+          <div class="loan-name">Private Education Loan</div>
+          <div class="pill private">Commercial lender</div>
+        </div>
+
+        <p class="description">
+          Enter an actual fixed-rate lender offer. Approval, interest rates, fees,
+          hardship options and co-signer terms vary by lender.
+        </p>
+
+        <div class="card-field">
+          <label for="amountPrivate">Net amount needed</label>
+          <input id="amountPrivate" type="number" min="0" step="500" value="40000">
+        </div>
+
+        <div class="card-field">
+          <label for="ratePrivate">Quoted interest rate</label>
+          <input id="ratePrivate" type="number" min="0" max="30" step=".01" placeholder="Enter lender quote">
+        </div>
+
+        <div class="card-field">
+          <label for="termPrivate">Repayment term</label>
+          <input id="termPrivate" type="number" min="1" max="30" step="1" value="10">
+        </div>
+
+        <div class="card-field">
+          <label for="feePrivate">Origination fee</label>
+          <input id="feePrivate" type="number" min="0" max="20" step=".01" value="0">
+        </div>
+
+        <div class="results" id="resultsPrivate">
+          <div class="result-row">
+            <span>Amount borrowed</span>
+            <strong id="grossPrivate"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Fee cost</span>
+            <strong id="feeCostPrivate"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Monthly payment</span>
+            <strong id="paymentPrivate"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Total interest</span>
+            <strong id="interestPrivate"></strong>
+          </div>
+
+          <div class="result-row">
+            <span>Total repayment</span>
+            <strong id="totalPrivate"></strong>
+          </div>
+        </div>
+
+        <div class="eligibility-note">
+          Use the actual rate, fee and term from the lender’s approval disclosure,
+          not the lowest rate shown in advertising.
+        </div>
+      </article>
+
+    </section>
+
+    <section class="summary" id="summary">
+      <h2>Comparison Result</h2>
+      <p id="summaryText"></p>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span>Lowest modeled repayment</span>
+          <strong id="lowestName"></strong>
+        </div>
+
+        <div class="summary-item">
+          <span>Estimated total repayment</span>
+          <strong id="lowestTotal"></strong>
+        </div>
+
+        <div class="summary-item">
+          <span>Difference from highest result</span>
+          <strong id="costDifference"></strong>
+        </div>
       </div>
+    </section>
+
+    <div class="disclaimer">
+      This calculator provides simplified educational estimates. It assumes fixed
+      rates, level monthly payments and repayment beginning immediately. It does not
+      model in-school interest accrual, capitalization, deferment, graduated
+      repayment, borrower benefits that may later be lost, or changes in variable
+      rates. The lowest modeled repayment is not automatically the best loan because
+      federal protections, hardship options, co-signer obligations and eligibility
+      requirements also matter.
     </div>
 
-    <div class="summary" id="summary" style="margin-top:16px; display:none;">
-      <div>
-        <div class="summary-title">Quick Takeaway</div>
-        <div class="summary-line" id="summaryLine"></div>
-      </div>
-      <div id="summaryBadge"></div>
-    </div>
-  </div>
+  </main>
 
   <script>
-    function formatMoney(value) {
-      if (isNaN(value)) return "--";
-      return "$" + value.toLocaleString(undefined, {maximumFractionDigits: 0});
+    function money(value) {
+      if (!Number.isFinite(value)) return "—";
+
+      return value.toLocaleString("en-US", {
+        style:"currency",
+        currency:"USD",
+        maximumFractionDigits:0
+      });
     }
 
-    function computeOption(amount, rate, termYears, feePct) {
-      const principal = Number(amount);
-      const r = Number(rate) / 100 / 12;
-      const n = Number(termYears) * 12;
-      const feeFactor = 1 + (Number(feePct) || 0) / 100;
-      const financed = principal * feeFactor;
+    function selectedRadio(name) {
+      const item = document.querySelector(
+        'input[name="' + name + '"]:checked'
+      );
 
-      if (!principal || !termYears) return null;
+      return item ? item.value : "";
+    }
 
-      let payment;
-      if (!r) {
-        payment = financed / n;
-      } else {
-        payment = financed * r / (1 - Math.pow(1 + r, -n));
+    function computeLoan(netAmount, annualRate, termYears, feePercent) {
+      const net = Number(netAmount);
+      const rate = Number(annualRate);
+      const years = Number(termYears);
+      const fee = Number(feePercent) || 0;
+
+      if (
+        !Number.isFinite(net) ||
+        !Number.isFinite(rate) ||
+        !Number.isFinite(years) ||
+        net <= 0 ||
+        years <= 0 ||
+        fee >= 100
+      ) {
+        return null;
       }
-      const totalPaid = payment * n;
-      const totalInterest = totalPaid - principal;
+
+      /*
+        If a fee is deducted from the disbursement, the borrower must borrow
+        more than the desired net proceeds:
+
+        gross loan × (1 − fee rate) = net proceeds
+      */
+
+      const feeRate = fee / 100;
+      const grossAmount = feeRate > 0
+        ? net / (1 - feeRate)
+        : net;
+
+      const feeCost = grossAmount - net;
+      const months = years * 12;
+      const monthlyRate = rate / 100 / 12;
+
+      let monthlyPayment;
+
+      if (monthlyRate === 0) {
+        monthlyPayment = grossAmount / months;
+      } else {
+        monthlyPayment =
+          grossAmount *
+          monthlyRate /
+          (1 - Math.pow(1 + monthlyRate, -months));
+      }
+
+      const totalRepayment = monthlyPayment * months;
+      const financeCost = totalRepayment - net;
 
       return {
-        monthly: payment,
-        totalPaid,
-        totalInterest
+        netAmount:net,
+        grossAmount:grossAmount,
+        feeCost:feeCost,
+        monthlyPayment:monthlyPayment,
+        totalRepayment:totalRepayment,
+        financeCost:financeCost,
+        rate:rate,
+        years:years
       };
     }
 
-    function runComparison() {
-      const cards = {
-        A: document.getElementById("cardA"),
-        B: document.getElementById("cardB"),
-        C: document.getElementById("cardC")
-      };
-      Object.values(cards).forEach(c => c.classList.remove("best"));
+    function displayResult(prefix, result, showFee) {
+      const box = document.getElementById("results" + prefix);
 
-      const options = [
-        {
-          key: "A",
-          name: "Option A",
-          amount: document.getElementById("amountA").value,
-          rate: document.getElementById("rateA").value,
-          term: document.getElementById("termA").value,
-          fee: document.getElementById("feeA").value
-        },
-        {
-          key: "B",
-          name: "MWU Institutional Loan",
-          amount: document.getElementById("amountB").value,
-          rate: document.getElementById("rateB").value,
-          term: document.getElementById("termB").value,
-          fee: document.getElementById("feeB").value
-        },
-        {
-          key: "C",
-          name: "Option C",
-          amount: document.getElementById("amountC").value,
-          rate: document.getElementById("rateC").value,
-          term: document.getElementById("termC").value,
-          fee: document.getElementById("feeC").value
-        }
-      ];
-
-      const results = {};
-      let bestKey = null;
-      let bestTotal = Infinity;
-
-      options.forEach(opt => {
-        const res = computeOption(opt.amount, opt.rate, opt.term, opt.fee);
-        const resBox = document.getElementById("results" + opt.key);
-        if (res) {
-          resBox.style.display = "block";
-          document.getElementById("pmt" + opt.key).textContent =
-            formatMoney(res.monthly) + "/mo";
-          document.getElementById("total" + opt.key).textContent =
-            formatMoney(res.totalPaid);
-          document.getElementById("int" + opt.key).textContent =
-            formatMoney(res.totalInterest);
-          results[opt.key] = res;
-
-          if (res.totalPaid < bestTotal) {
-            bestTotal = res.totalPaid;
-            bestKey = opt.key;
-          }
-        } else {
-          resBox.style.display = "none";
-        }
-      });
-
-      const summary = document.getElementById("summary");
-      const summaryLine = document.getElementById("summaryLine");
-      const summaryBadge = document.getElementById("summaryBadge");
-
-      if (!bestKey) {
-        summary.style.display = "none";
+      if (!result) {
+        box.style.display = "none";
         return;
       }
 
-      cards[bestKey].classList.add("best");
+      box.style.display = "block";
 
-      let bestName = options.find(o => o.key === bestKey).name;
-      summary.style.display = "flex";
-      summaryLine.textContent =
-        bestName + " currently has the lowest estimated total cost over the life of the loan.";
+      document.getElementById("gross" + prefix).textContent =
+        money(result.grossAmount);
 
-      summaryBadge.innerHTML = `
-        <div class="badge">
-          <span>★</span>
-          <span>Lowest total paid: ${formatMoney(bestTotal)}</span>
-        </div>
-      `;
+      document.getElementById("payment" + prefix).textContent =
+        money(result.monthlyPayment) + "/mo";
+
+      document.getElementById("interest" + prefix).textContent =
+        money(result.financeCost);
+
+      document.getElementById("total" + prefix).textContent =
+        money(result.totalRepayment);
+
+      if (showFee) {
+        document.getElementById("feeCost" + prefix).textContent =
+          money(result.feeCost);
+      }
+    }
+
+    function syncSharedInputs() {
+      const amount = document.getElementById("sharedAmount").value;
+      const term = document.getElementById("sharedTerm").value;
+      const federalRate = document.getElementById("federalRate").value;
+      const federalFee = document.getElementById("federalFee").value;
+
+      [
+        "amountFederal",
+        "amountMwu",
+        "amountAccess",
+        "amountPrivate"
+      ].forEach(function(id) {
+        document.getElementById(id).value = amount;
+      });
+
+      [
+        "termFederal",
+        "termMwu",
+        "termAccess",
+        "termPrivate"
+      ].forEach(function(id) {
+        document.getElementById(id).value = term;
+      });
+
+      document.getElementById("rateFederal").value = federalRate;
+      document.getElementById("feeFederal").value = federalFee;
+    }
+
+    function resetHighlights() {
+      [
+        "cardFederal",
+        "cardMwu",
+        "cardAccess",
+        "cardPrivate"
+      ].forEach(function(id) {
+        document.getElementById(id).classList.remove("lowest");
+      });
+    }
+
+    function runComparison() {
+      syncSharedInputs();
+      resetHighlights();
+
+      const mwuPublishedRate =
+        Number(document.getElementById("rateMwu").value) || 0;
+
+      const mwuEffectiveRate =
+        Math.max(
+          0,
+          mwuPublishedRate -
+          (selectedRadio("mwuAutopay") === "yes" ? .25 : 0)
+        );
+
+      document.getElementById("effectiveRateMwu").textContent =
+        mwuEffectiveRate.toFixed(2) + "%";
+
+      const options = [
+        {
+          key:"Federal",
+          name:"Federal Direct Unsubsidized Loan",
+          card:"cardFederal",
+          result:computeLoan(
+            document.getElementById("amountFederal").value,
+            document.getElementById("rateFederal").value,
+            document.getElementById("termFederal").value,
+            document.getElementById("feeFederal").value
+          ),
+          showFee:true
+        },
+
+        {
+          key:"Mwu",
+          name:"MWU Loan",
+          card:"cardMwu",
+          result:computeLoan(
+            document.getElementById("amountMwu").value,
+            mwuEffectiveRate,
+            document.getElementById("termMwu").value,
+            0
+          ),
+          showFee:false
+        },
+
+        {
+          key:"Access",
+          name:"MWU ACCESS Loan",
+          card:"cardAccess",
+          result:computeLoan(
+            document.getElementById("amountAccess").value,
+            document.getElementById("rateAccess").value,
+            document.getElementById("termAccess").value,
+            0
+          ),
+          showFee:false
+        },
+
+        {
+          key:"Private",
+          name:"Private Education Loan",
+          card:"cardPrivate",
+          result:computeLoan(
+            document.getElementById("amountPrivate").value,
+            document.getElementById("ratePrivate").value,
+            document.getElementById("termPrivate").value,
+            document.getElementById("feePrivate").value
+          ),
+          showFee:true
+        }
+      ];
+
+      options.forEach(function(option) {
+        displayResult(
+          option.key,
+          option.result,
+          option.showFee
+        );
+      });
+
+      const validOptions = options.filter(function(option) {
+        return option.result !== null;
+      });
+
+      if (!validOptions.length) {
+        document.getElementById("summary").style.display = "none";
+        return;
+      }
+
+      const sameAmountAndTerm = validOptions.every(function(option) {
+        return (
+          option.result.netAmount === validOptions[0].result.netAmount &&
+          option.result.years === validOptions[0].result.years
+        );
+      });
+
+      const summary = document.getElementById("summary");
+      summary.style.display = "block";
+
+      if (!sameAmountAndTerm) {
+        document.getElementById("summaryText").textContent =
+          "The entries use different loan amounts or repayment terms. Review each result individually; a lowest-cost comparison is not shown because the scenarios are not equivalent.";
+
+        document.getElementById("lowestName").textContent =
+          "Not comparable";
+
+        document.getElementById("lowestTotal").textContent =
+          "—";
+
+        document.getElementById("costDifference").textContent =
+          "—";
+
+        return;
+      }
+
+      validOptions.sort(function(a,b) {
+        return a.result.totalRepayment - b.result.totalRepayment;
+      });
+
+      const lowest = validOptions[0];
+      const highest = validOptions[validOptions.length - 1];
+      const difference =
+        highest.result.totalRepayment -
+        lowest.result.totalRepayment;
+
+      document
+        .getElementById(lowest.card)
+        .classList.add("lowest");
+
+      document.getElementById("summaryText").textContent =
+        lowest.name +
+        " produces the lowest estimated total repayment using the values entered. This is a cost comparison—not an eligibility decision or automatic recommendation.";
+
+      document.getElementById("lowestName").textContent =
+        lowest.name;
+
+      document.getElementById("lowestTotal").textContent =
+        money(lowest.result.totalRepayment);
+
+      document.getElementById("costDifference").textContent =
+        money(difference);
     }
 
     function resetCalculator() {
+      document.getElementById("sharedAmount").value = 40000;
+      document.getElementById("sharedTerm").value = 10;
+      document.getElementById("federalRate").value = "";
+      document.getElementById("federalFee").value = "";
+
+      document.getElementById("rateMwu").value = "7.00";
+      document.getElementById("rateAccess").value = "9.00";
+      document.getElementById("ratePrivate").value = "";
+      document.getElementById("feePrivate").value = "0";
+
+      document.querySelector(
+        'input[name="mwuAutopay"][value="no"]'
+      ).checked = true;
+
       [
-        "amountA","rateA","termA","feeA",
-        "amountB","rateB","termB","feeB",
-        "amountC","rateC","termC","feeC"
-      ].forEach(id => {
-        const el = document.getElementById(id);
-        if (id === "feeB") {
-          el.value = 0;
-        } else {
-          el.value = "";
-        }
+        "Federal",
+        "Mwu",
+        "Access",
+        "Private"
+      ].forEach(function(key) {
+        document.getElementById("results" + key).style.display = "none";
       });
 
-      ["A","B","C"].forEach(key => {
-        document.getElementById("results" + key).style.display = "none";
-        document.getElementById("card" + key).classList.remove("best");
-      });
+      resetHighlights();
+      syncSharedInputs();
+
       document.getElementById("summary").style.display = "none";
     }
+
+    document
+      .getElementById("sharedAmount")
+      .addEventListener("input", syncSharedInputs);
+
+    document
+      .getElementById("sharedTerm")
+      .addEventListener("change", syncSharedInputs);
+
+    document
+      .getElementById("federalRate")
+      .addEventListener("input", syncSharedInputs);
+
+    document
+      .getElementById("federalFee")
+      .addEventListener("input", syncSharedInputs);
+
+    syncSharedInputs();
   </script>
 </body>
 </html>
