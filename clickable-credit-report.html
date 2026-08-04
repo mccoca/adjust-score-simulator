@@ -1,533 +1,938 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Clickable Credit Report (Hover to Learn)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <title>Clickable Credit Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     :root{
-      --bg: #f3f4ff;
-      --card:#ffffff;
-      --border:#e5e7eb;
+      --navy:#0f2747;
+      --blue:#2563eb;
+      --sky:#0ea5e9;
+      --green:#16a34a;
+      --green-light:#ecfdf5;
+      --orange:#ea580c;
+      --orange-light:#fff7ed;
+      --red:#dc2626;
+      --red-light:#fef2f2;
+      --purple:#7c3aed;
+      --purple-light:#f5f3ff;
       --text:#0f172a;
-      --muted:#6b7280;
-      --accent:#2563eb;
-      --accent2:#0ea5e9;
-      --good:#22c55e;
-      --warn:#f97316;
-      --bad:#ef4444;
-      --pill:#eef2ff;
+      --muted:#64748b;
+      --border:#dbe3ee;
+      --card:#ffffff;
+      --bg:#f4f7fb;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
     }
-    *{box-sizing:border-box}
+
+    *{
+      box-sizing:border-box;
+    }
+
     body{
       margin:0;
       padding:24px;
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--text);
-      background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 45%, #eef2ff 100%);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left,#dbeafe 0,transparent 36%),
+        linear-gradient(135deg,#f8fafc,#eef2ff);
     }
-    .wrap{max-width:1024px;margin:0 auto}
-    h1{margin:0 0 6px;font-size:24px;font-weight:900;letter-spacing:.02em}
-    .sub{margin:0 0 16px;font-size:13px;color:var(--muted);line-height:1.5}
-    .banner{
-      margin: 0 0 16px;
-      padding:12px 14px;
-      border-radius:16px;
-      color:#eff6ff;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      box-shadow:0 10px 24px rgba(37,99,235,.35);
+
+    button{
+      font:inherit;
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+    }
+
+    .hero{
+      padding:24px;
+      margin-bottom:18px;
+      color:white;
+      border-radius:24px;
+      background:linear-gradient(135deg,var(--navy),var(--blue),var(--sky));
+      box-shadow:0 18px 38px rgba(37,99,235,.24);
+    }
+
+    .eyebrow{
+      margin-bottom:6px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:.85;
+    }
+
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(26px,4vw,38px);
+      line-height:1.1;
+    }
+
+    .hero p{
+      max-width:900px;
+      margin:0;
+      color:#e0f2fe;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .instructions{
       display:flex;
-      gap:12px;
       align-items:flex-start;
+      gap:12px;
+      padding:14px 16px;
+      margin-bottom:18px;
+      color:#1e3a8a;
+      border:1px solid #93c5fd;
+      border-radius:17px;
+      background:#eff6ff;
     }
-    .banner .icon{
-      width:40px;height:40px;border-radius:999px;
-      background:rgba(15,23,42,.2);
-      display:flex;align-items:center;justify-content:center;
-      font-size:22px;flex:0 0 auto;
+
+    .instructions-icon{
+      display:grid;
+      width:36px;
+      height:36px;
+      flex:0 0 auto;
+      color:white;
+      font-weight:900;
+      place-items:center;
+      border-radius:50%;
+      background:var(--blue);
     }
-    .banner .txt{font-size:12px;line-height:1.5}
-    .banner .txt strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+
+    .instructions p{
+      margin:0;
+      font-size:12px;
+      line-height:1.55;
+    }
 
     .layout{
       display:grid;
-      grid-template-columns: minmax(0,1.4fr) minmax(0,1fr);
+      grid-template-columns:minmax(0,1.35fr) minmax(290px,.75fr);
       gap:16px;
-    }
-    @media (max-width: 900px){
-      body{padding:16px}
-      .layout{grid-template-columns:1fr}
     }
 
     .card{
+      padding:17px;
+      border:1px solid var(--border);
+      border-radius:21px;
       background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:14px;
-      box-shadow:0 8px 18px rgba(15,23,42,.06);
+      box-shadow:var(--shadow);
     }
-    .card h2{
-      margin:0 0 4px;
-      font-size:16px;
-      font-weight:900;
-    }
-    .note{margin:0 0 10px;font-size:11px;color:var(--muted);line-height:1.5}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;
-      background:var(--pill);
-      border:1px solid #c7d2fe;
-      color:#1e40af;
-      font-size:11px;
-      margin-bottom:10px;
-      flex-wrap:wrap;
-    }
-    .pill b{font-weight:900}
 
-    /* Report mock */
-    .report{
-      border:1px solid var(--border);
-      border-radius:16px;
-      overflow:hidden;
+    .card h2{
+      margin:0 0 5px;
+      font-size:17px;
     }
-    .report-head{
-      padding:10px 12px;
-      background:linear-gradient(180deg,#ffffff,#f8fafc);
-      border-bottom:1px solid var(--border);
+
+    .card-note{
+      margin:0 0 12px;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.55;
+    }
+
+    .score-summary{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:11px 13px;
+      margin-bottom:12px;
+      border:1px solid #c7d2fe;
+      border-radius:15px;
+      background:linear-gradient(135deg,#eff6ff,#f5f3ff);
+    }
+
+    .score-summary-label{
+      color:#475569;
+      font-size:11px;
+    }
+
+    .score-summary-label strong{
+      display:block;
+      margin-top:2px;
+      color:#1e3a8a;
+      font-size:13px;
+    }
+
+    .score-badge{
+      padding:6px 11px;
+      font-size:15px;
+      font-weight:900;
+      border-radius:999px;
+      border:1px solid #fdba74;
+      background:var(--orange-light);
+      color:#9a3412;
+    }
+
+    .report{
+      overflow:visible;
+      border:1px solid var(--border);
+      border-radius:17px;
+      background:white;
+    }
+
+    .report-header{
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:10px;
-      flex-wrap:wrap;
+      padding:12px 13px;
+      border-bottom:1px solid var(--border);
+      background:#f8fafc;
+      border-radius:17px 17px 0 0;
     }
-    .report-head .title{
+
+    .report-title{
+      font-size:12px;
       font-weight:900;
-      font-size:13px;
-      letter-spacing:.04em;
+      letter-spacing:.07em;
       text-transform:uppercase;
     }
-    .score-box{
-      display:flex;align-items:center;gap:10px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid #d1d5db;
-      background:#f9fafb;
-      font-size:12px;
+
+    .report-subtitle{
+      color:var(--muted);
+      font-size:10px;
     }
-    .score{
-      font-weight:900;
-      font-size:14px;
-      padding:2px 8px;
-      border-radius:999px;
-      background:#eef2ff;
-      border:1px solid #c7d2fe;
+
+    .report-body{
+      padding:12px;
     }
-    .score.good{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.35)}
-    .score.mid{background:rgba(249,115,22,.14);border-color:rgba(249,115,22,.35)}
-    .score.bad{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.35)}
-    .report-body{padding:12px}
+
     .section{
-      border:1px solid #e5e7eb;
-      border-radius:14px;
-      padding:10px 10px 8px;
+      padding:11px;
       margin-bottom:10px;
-      background:#ffffff;
+      border:1px solid #e2e8f0;
+      border-radius:14px;
+      background:#fff;
     }
-    .section:last-child{margin-bottom:0}
-    .section-title{
-      display:flex;justify-content:space-between;align-items:baseline;
-      margin-bottom:6px;
-      gap:8px;flex-wrap:wrap;
+
+    .section:last-child{
+      margin-bottom:0;
     }
-    .section-title span{
-      font-weight:900;
-      font-size:12px;
+
+    .section-heading{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:8px;
+      margin-bottom:7px;
+    }
+
+    .section-heading strong{
+      font-size:11px;
       letter-spacing:.06em;
       text-transform:uppercase;
-      color:#111827;
     }
-    .section-title small{color:var(--muted);font-size:11px}
 
-    .row{
+    .section-heading span{
+      color:var(--muted);
+      font-size:10px;
+    }
+
+    .report-row{
       display:grid;
-      grid-template-columns: 1.1fr .8fr .7fr;
-      gap:8px;
-      padding:7px 8px;
-      border-radius:10px;
-      border:1px solid transparent;
-      background:#f9fafb;
-      font-size:12px;
+      grid-template-columns:1.35fr .65fr .7fr;
+      gap:9px;
+      align-items:center;
+      padding:9px;
       margin-bottom:6px;
+      font-size:11px;
+      border:1px solid transparent;
+      border-radius:11px;
+      background:#f8fafc;
       position:relative;
     }
-    .row:last-child{margin-bottom:0}
-    .row .label{font-weight:700}
-    .row .muted{color:var(--muted)}
-    .row .right{text-align:right}
 
-    /* Hover hotspots */
-    .hot{
-      cursor:pointer;
-      border-color:#bfdbfe;
-      background:#eff6ff;
-      transition: transform .08s ease, box-shadow .15s ease, border-color .15s ease;
-    }
-    .hot:hover{
-      transform: translateY(-1px);
-      box-shadow:0 8px 16px rgba(37,99,235,.14);
-      border-color: #60a5fa;
+    .report-row:last-child{
+      margin-bottom:0;
     }
 
-    /* Tooltip */
-    .tip{
-      position:absolute;
-      left:10px;
-      right:10px;
-      top:calc(100% + 8px);
-      background:#0b1220;
-      color:#e5e7eb;
-      border-radius:12px;
-      padding:10px 10px;
-      font-size:11px;
-      line-height:1.45;
-      box-shadow:0 10px 24px rgba(0,0,0,.22);
-      opacity:0;
-      pointer-events:none;
-      transform: translateY(-4px);
-      transition: opacity .12s ease, transform .12s ease;
-      z-index:10;
-    }
-    .row.hot:hover .tip,
-    .row.hot:focus-within .tip{
-      opacity:1;
-      transform: translateY(0);
-      pointer-events:auto;
-    }
-    .tip strong{
+    .report-row strong{
       display:block;
+      margin-bottom:2px;
       font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:#93c5fd;
-      margin-bottom:4px;
     }
-    .impact{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      margin-top:6px;
-      padding:4px 8px;
-      border-radius:999px;
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);
-    }
-    .impact.good{color:#bbf7d0}
-    .impact.warn{color:#fed7aa}
-    .impact.bad{color:#fecaca}
 
-    /* Side explainer */
-    .panel{
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-      background:#ffffff;
+    .muted{
+      color:var(--muted);
     }
-    .panel h3{
-      margin:0 0 6px;
-      font-size:14px;
+
+    .right{
+      text-align:right;
       font-weight:900;
     }
-    .panel p{
-      margin:0 0 10px;
-      font-size:12px;
+
+    .status-good{
+      color:var(--green);
+    }
+
+    .status-warning{
+      color:var(--orange);
+    }
+
+    .status-bad{
+      color:var(--red);
+    }
+
+    .hotspot{
+      width:100%;
+      text-align:inherit;
+      cursor:pointer;
+      border-color:#93c5fd;
+      background:#eff6ff;
+      transition:.15s ease;
+    }
+
+    .hotspot:hover,
+    .hotspot:focus{
+      transform:translateY(-1px);
+      border-color:#3b82f6;
+      outline:none;
+      box-shadow:0 9px 18px rgba(37,99,235,.13);
+    }
+
+    .hotspot.open{
+      border-color:var(--blue);
+      box-shadow:0 9px 18px rgba(37,99,235,.13);
+    }
+
+    .click-label{
+      display:inline-block;
+      margin-top:4px;
+      color:#2563eb;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .tooltip{
+      display:none;
+      grid-column:1 / -1;
+      padding:11px;
+      margin-top:3px;
+      color:#e2e8f0;
+      font-size:11px;
+      line-height:1.5;
+      border-radius:12px;
+      background:#0f172a;
+      box-shadow:0 12px 24px rgba(15,23,42,.22);
+    }
+
+    .hotspot.open .tooltip{
+      display:block;
+      animation:fadeIn .18s ease;
+    }
+
+    .tooltip-title{
+      margin-bottom:5px;
+      color:#93c5fd;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+    }
+
+    .impact{
+      display:inline-flex;
+      margin-top:7px;
+      padding:4px 8px;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      border-radius:999px;
+    }
+
+    .impact.high{
+      color:#fecaca;
+      border:1px solid rgba(248,113,113,.35);
+      background:rgba(239,68,68,.14);
+    }
+
+    .impact.medium{
+      color:#fed7aa;
+      border:1px solid rgba(251,146,60,.35);
+      background:rgba(249,115,22,.14);
+    }
+
+    .action-text{
+      margin-top:7px;
+      color:#cbd5e1;
+    }
+
+    .side-panel{
+      padding:13px;
+      margin-bottom:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:#f8fafc;
+    }
+
+    .side-panel:last-child{
+      margin-bottom:0;
+    }
+
+    .side-panel h3{
+      margin:0 0 7px;
+      font-size:13px;
+    }
+
+    .side-panel p{
+      margin:0 0 9px;
       color:var(--muted);
+      font-size:11px;
       line-height:1.5;
     }
-    .list{
+
+    .watch-list{
       display:grid;
       gap:8px;
       margin:0;
       padding:0;
       list-style:none;
     }
-    .li{
-      border:1px solid #e5e7eb;
-      border-radius:14px;
-      padding:9px 10px;
-      background:#f9fafb;
-      font-size:12px;
-      line-height:1.45;
-    }
-    .li b{font-weight:900;color:#111827}
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:3px 8px;
-      border-radius:999px;
-      border:1px solid rgba(34,197,94,.35);
-      background:rgba(34,197,94,.12);
-      color:#166534;
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      margin-top:6px;
-    }
-    .tag.warn{
-      border-color:rgba(249,115,22,.35);
-      background:rgba(249,115,22,.12);
-      color:#9a3412;
-    }
-    .tag.bad{
-      border-color:rgba(239,68,68,.35);
-      background:rgba(239,68,68,.12);
-      color:#991b1b;
+
+    .watch-item{
+      padding:10px;
+      font-size:11px;
+      line-height:1.5;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      background:white;
     }
 
-    .footer{
-      margin-top:10px;
+    .watch-item strong{
+      display:block;
+      margin-bottom:2px;
       font-size:11px;
-      color:var(--muted);
-      line-height:1.5;
+    }
+
+    .tag{
+      display:inline-flex;
+      margin-top:6px;
+      padding:4px 8px;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      border-radius:999px;
+    }
+
+    .tag.red{
+      color:#991b1b;
+      border:1px solid #fca5a5;
+      background:var(--red-light);
+    }
+
+    .tag.orange{
+      color:#9a3412;
+      border:1px solid #fdba74;
+      background:var(--orange-light);
+    }
+
+    .tag.green{
+      color:#166534;
+      border:1px solid #86efac;
+      background:var(--green-light);
+    }
+
+    .mwu-box{
+      padding:12px;
+      color:#5b21b6;
+      font-size:11px;
+      line-height:1.55;
+      border-left:4px solid var(--purple);
+      border-radius:0 13px 13px 0;
+      background:var(--purple-light);
+    }
+
+    .source-tip{
+      padding:12px;
+      margin-top:12px;
+      color:#334155;
+      font-size:10px;
+      line-height:1.55;
+      border:1px solid #e2e8f0;
+      border-radius:13px;
+      background:#f8fafc;
+    }
+
+    .source-tip strong{
+      color:#0f172a;
+    }
+
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(-3px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @media(max-width:900px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:650px){
+      body{
+        padding:12px;
+      }
+
+      .hero,
+      .card{
+        padding:16px;
+      }
+
+      .score-summary,
+      .report-header{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .report-row{
+        grid-template-columns:1fr;
+      }
+
+      .right{
+        text-align:left;
+      }
     }
   </style>
 </head>
-<body>
-  <div class="wrap">
-    <h1>Clickable Credit Report</h1>
-    <p class="sub">
-      Hover over the highlighted items to see how specific report details can affect a credit score.
-      This is a learning tool (not a real credit report).
-    </p>
 
-    <div class="banner">
-      <div class="icon">🧾</div>
-      <div class="txt">
-        <strong>Key idea</strong>
-        After July 1, 2026, more students will rely on credit-based funding. Knowing how to read a report helps you spot issues early and protect your borrowing options.
-      </div>
-    </div>
+<body>
+  <main class="wrap">
+
+    <section class="hero">
+      <div class="eyebrow">Interactive credit-report activity</div>
+
+      <h1>Clickable Credit Report</h1>
+
+      <p>
+        Select the highlighted report items to learn how payment history,
+        utilization, collections, and inquiries may affect your overall credit
+        profile and future education-loan applications.
+      </p>
+    </section>
+
+    <section class="instructions">
+      <div class="instructions-icon">1</div>
+
+      <p>
+        Review the sample report below. Click each highlighted row to see why it
+        matters and what action the borrower could take. This activity is
+        educational and does not calculate a real credit score.
+      </p>
+    </section>
 
     <div class="layout">
-      <!-- Left: Mock credit report -->
-      <div class="card">
-        <h2>Sample Report Snapshot</h2>
-        <p class="note">
-          Hover on the highlighted rows (missed payment, collection, utilization) to see what they mean and what to do next.
+
+      <section class="card">
+        <h2>Sample Credit Report Snapshot</h2>
+
+        <p class="card-note">
+          Credit reports contain the underlying account information. The numerical
+          score shown here is only a fictional example.
         </p>
 
-        <div class="pill">
-          Current example score: <b id="scoreText">705</b>
-          <span style="color:var(--muted)">•</span>
-          Goal for MWU Institutional Loan eligibility: <b>670+</b>
+        <div class="score-summary">
+          <div class="score-summary-label">
+            Fictional example score
+            <strong>Above the MWU Loan minimum, but approval is not guaranteed</strong>
+          </div>
+
+          <div class="score-badge">705</div>
         </div>
 
-        <div class="report" role="region" aria-label="Sample credit report">
-          <div class="report-head">
-            <div class="title">Credit Report Summary</div>
-            <div class="score-box" aria-label="Estimated score box">
-              <span class="muted" style="color:var(--muted)">Estimated score</span>
-              <span class="score mid" id="scoreBadge">705</span>
+        <div class="report">
+          <div class="report-header">
+            <div>
+              <div class="report-title">Credit Report Summary</div>
+              <div class="report-subtitle">
+                Sample information for educational use
+              </div>
+            </div>
+
+            <div class="report-subtitle">
+              MWU Loan stated minimum: <strong>660 FICO</strong>
             </div>
           </div>
 
           <div class="report-body">
+
             <!-- Payment History -->
-            <div class="section">
-              <div class="section-title">
-                <span>Payment History</span>
-                <small>Largest impact factor</small>
+
+            <section class="section">
+              <div class="section-heading">
+                <strong>Payment History</strong>
+                <span>Largest standard FICO category</span>
               </div>
 
-              <div class="row hot" tabindex="0" aria-label="Missed payment row (hover for details)">
+              <button
+                type="button"
+                class="report-row hotspot"
+                aria-expanded="false"
+                onclick="toggleHotspot(this)"
+              >
                 <div>
-                  <div class="label">Credit Card — Capital Example</div>
-                  <div class="muted">Status: 30 days late (reported)</div>
+                  <strong>Credit Card — Example Bank</strong>
+                  <span class="muted">Reported 30 days late</span>
+                  <span class="click-label">Click to learn</span>
                 </div>
-                <div class="muted">Last 12 mo</div>
-                <div class="right" style="font-weight:900;color:var(--bad)">1 late</div>
 
-                <div class="tip" role="tooltip">
-                  <strong>Missed Payment (Late)</strong>
-                  Payment history is the biggest factor in common scoring models. A reported late payment can meaningfully lower a score and may affect approvals and rates.
-                  <div class="impact bad">Impact: High (negative)</div>
-                  <div style="margin-top:6px;color:#cbd5e1">
-                    What to do: set autopay, bring accounts current, and avoid any new late payments. If the late mark is incorrect, dispute it with the bureau(s).
+                <div class="muted">
+                  Last 12 months
+                </div>
+
+                <div class="right status-bad">
+                  1 late payment
+                </div>
+
+                <div class="tooltip">
+                  <div class="tooltip-title">Late Payment</div>
+
+                  Payment history is the largest category in a standard FICO Score.
+                  A reported late payment may lower a score and affect lender
+                  underwriting. There is no universal point loss because the impact
+                  depends on the complete credit profile, severity, age of the late
+                  payment, and scoring model.
+
+                  <div class="impact high">Potentially high negative impact</div>
+
+                  <div class="action-text">
+                    <strong>Possible action:</strong> Bring the account current,
+                    prevent future late payments, and dispute the entry only if it
+                    is inaccurate.
                   </div>
                 </div>
-              </div>
+              </button>
 
-              <div class="row">
+              <div class="report-row">
                 <div>
-                  <div class="label">Auto Loan — Reliable Auto</div>
-                  <div class="muted">Status: Current</div>
+                  <strong>Auto Loan — Example Auto Finance</strong>
+                  <span class="muted">Status: Current</span>
                 </div>
-                <div class="muted">Last 12 mo</div>
-                <div class="right" style="font-weight:900;color:var(--good)">On-time</div>
+
+                <div class="muted">
+                  Last 12 months
+                </div>
+
+                <div class="right status-good">
+                  On time
+                </div>
               </div>
-            </div>
+            </section>
 
             <!-- Utilization -->
-            <div class="section">
-              <div class="section-title">
-                <span>Revolving Utilization</span>
-                <small>How much of your limits you’re using</small>
+
+            <section class="section">
+              <div class="section-heading">
+                <strong>Revolving Credit Utilization</strong>
+                <span>Balances compared with limits</span>
               </div>
 
-              <div class="row hot" tabindex="0" aria-label="Credit utilization row (hover for details)">
+              <button
+                type="button"
+                class="report-row hotspot"
+                aria-expanded="false"
+                onclick="toggleHotspot(this)"
+              >
                 <div>
-                  <div class="label">Total credit card utilization</div>
-                  <div class="muted">Balance $2,400 / Limit $6,000</div>
+                  <strong>Total Credit-Card Utilization</strong>
+                  <span class="muted">$2,400 balance / $6,000 limit</span>
+                  <span class="click-label">Click to learn</span>
                 </div>
-                <div class="muted">Utilization</div>
-                <div class="right" style="font-weight:900;color:var(--warn)">40%</div>
 
-                <div class="tip" role="tooltip">
-                  <strong>Credit Utilization</strong>
-                  Using a high percentage of your available credit can lower your score even if you pay on time.
-                  Many borrowers aim to keep utilization under 30% (and often under 10% for the strongest scores).
-                  <div class="impact warn">Impact: Medium to high</div>
-                  <div style="margin-top:6px;color:#cbd5e1">
-                    What to do: pay balances down before the statement closes, spread spending across cards, or request a limit increase (without adding new debt).
+                <div class="muted">
+                  Overall utilization
+                </div>
+
+                <div class="right status-warning">
+                  40%
+                </div>
+
+                <div class="tooltip">
+                  <div class="tooltip-title">Credit Utilization</div>
+
+                  High utilization may negatively affect a score even when payments
+                  are made on time. Scoring models may consider both overall
+                  utilization and utilization on each individual revolving account.
+
+                  <div class="impact medium">Potentially moderate to high impact</div>
+
+                  <div class="action-text">
+                    <strong>Possible action:</strong> Reduce revolving balances.
+                    Staying below 30% is a common planning benchmark, while lower
+                    utilization may be more favorable. No specific percentage
+                    guarantees a score increase.
                   </div>
                 </div>
-              </div>
+              </button>
 
-              <div class="row">
+              <div class="report-row">
                 <div>
-                  <div class="label">Card A</div>
-                  <div class="muted">Balance $1,200 / Limit $3,000</div>
+                  <strong>Card A</strong>
+                  <span class="muted">$1,200 balance / $3,000 limit</span>
                 </div>
-                <div class="muted">Utilization</div>
-                <div class="right" style="font-weight:900;color:#111827">40%</div>
-              </div>
-            </div>
 
-            <!-- Collections / Public Records -->
-            <div class="section">
-              <div class="section-title">
-                <span>Collections / Negative Items</span>
-                <small>Can affect approvals</small>
+                <div class="muted">
+                  Individual-card utilization
+                </div>
+
+                <div class="right status-warning">
+                  40%
+                </div>
+              </div>
+            </section>
+
+            <!-- Collections -->
+
+            <section class="section">
+              <div class="section-heading">
+                <strong>Collection Accounts</strong>
+                <span>Reported separately from public records</span>
               </div>
 
-              <div class="row hot" tabindex="0" aria-label="Collection account row (hover for details)">
+              <button
+                type="button"
+                class="report-row hotspot"
+                aria-expanded="false"
+                onclick="toggleHotspot(this)"
+              >
                 <div>
-                  <div class="label">Collection — Utility Provider</div>
-                  <div class="muted">Reported: $380 • Open</div>
+                  <strong>Collection — Example Utility Provider</strong>
+                  <span class="muted">$380 reported balance</span>
+                  <span class="click-label">Click to learn</span>
                 </div>
-                <div class="muted">Age</div>
-                <div class="right" style="font-weight:900;color:var(--bad)">In collections</div>
 
-                <div class="tip" role="tooltip">
-                  <strong>Collection Account</strong>
-                  Collections can significantly harm credit outcomes and may trigger stricter underwriting or the need for a co-signer with some lenders.
-                  <div class="impact bad">Impact: High (negative)</div>
-                  <div style="margin-top:6px;color:#cbd5e1">
-                    What to do: confirm it’s legitimate, resolve it if appropriate, and dispute if it’s inaccurate. Keep documentation.
+                <div class="muted">
+                  Account status
+                </div>
+
+                <div class="right status-bad">
+                  Open collection
+                </div>
+
+                <div class="tooltip">
+                  <div class="tooltip-title">Collection Account</div>
+
+                  A collection account may affect scoring and may create additional
+                  underwriting concerns. The effect depends on factors such as age,
+                  amount, status, scoring model, and the lender's policies.
+
+                  <div class="impact high">Potentially significant concern</div>
+
+                  <div class="action-text">
+                    <strong>Possible action:</strong> Confirm that the account is
+                    accurate and belongs to you. Dispute inaccurate information.
+                    If the debt is legitimate, review resolution options and retain
+                    all documentation.
                   </div>
                 </div>
+              </button>
+            </section>
+
+            <!-- Public Records -->
+
+            <section class="section">
+              <div class="section-heading">
+                <strong>Public Records</strong>
+                <span>Legal filings when reportable</span>
               </div>
 
-              <div class="row">
+              <div class="report-row">
                 <div>
-                  <div class="label">Public Records</div>
-                  <div class="muted">None reported</div>
+                  <strong>Bankruptcy Information</strong>
+                  <span class="muted">None reported</span>
                 </div>
-                <div class="muted">Status</div>
-                <div class="right" style="font-weight:900;color:var(--good)">Clear</div>
+
+                <div class="muted">
+                  Public record
+                </div>
+
+                <div class="right status-good">
+                  Clear
+                </div>
               </div>
-            </div>
+            </section>
 
             <!-- Inquiries -->
-            <div class="section">
-              <div class="section-title">
-                <span>Inquiries</span>
-                <small>Recent applications for credit</small>
+
+            <section class="section">
+              <div class="section-heading">
+                <strong>Credit Inquiries</strong>
+                <span>Recent applications for credit</span>
               </div>
 
-              <div class="row">
+              <button
+                type="button"
+                class="report-row hotspot"
+                aria-expanded="false"
+                onclick="toggleHotspot(this)"
+              >
                 <div>
-                  <div class="label">Hard inquiry — Bank Card</div>
-                  <div class="muted">Date: 2 months ago</div>
+                  <strong>Hard Inquiry — Bank Card</strong>
+                  <span class="muted">Application submitted 2 months ago</span>
+                  <span class="click-label">Click to learn</span>
                 </div>
-                <div class="muted">Type</div>
-                <div class="right" style="font-weight:900;color:#111827">Hard</div>
-              </div>
 
-              <div class="row">
-                <div>
-                  <div class="label">Hard inquiry — Auto</div>
-                  <div class="muted">Date: 10 months ago</div>
+                <div class="muted">
+                  Inquiry type
                 </div>
-                <div class="muted">Type</div>
-                <div class="right" style="font-weight:900;color:#111827">Hard</div>
+
+                <div class="right">
+                  Hard inquiry
+                </div>
+
+                <div class="tooltip">
+                  <div class="tooltip-title">Hard Inquiry</div>
+
+                  Hard inquiries may have a small temporary effect on a score.
+                  There is no universal number of inquiries that automatically
+                  causes denial. Lenders consider the timing, type of application,
+                  scoring model, and complete credit profile.
+
+                  <div class="impact medium">Usually limited but cumulative</div>
+
+                  <div class="action-text">
+                    <strong>Possible action:</strong> Avoid unnecessary credit
+                    applications while preparing for education-loan underwriting.
+                    Reviewing your own credit is generally a soft inquiry and does
+                    not lower your score.
+                  </div>
+                </div>
+              </button>
+
+              <div class="report-row">
+                <div>
+                  <strong>Hard Inquiry — Auto Financing</strong>
+                  <span class="muted">Application submitted 10 months ago</span>
+                </div>
+
+                <div class="muted">
+                  Inquiry type
+                </div>
+
+                <div class="right">
+                  Hard inquiry
+                </div>
               </div>
-            </div>
+            </section>
+
           </div>
         </div>
 
-        <div class="footer">
-          Tip: Use <b>one report</b> source (AnnualCreditReport.com) + <b>one score</b> source (Experian, your bank, Discover Scorecard, etc.).
-          Reports show what’s happening; scores show how lenders interpret it.
+        <div class="source-tip">
+          <strong>Recommended approach:</strong> Review all three reports through
+          AnnualCreditReport.com, where free online reports are currently available
+          weekly. Then use a reputable score-monitoring tool such as Experian,
+          Credit Karma, CreditWise, or a service provided by your bank or credit
+          union. Check which scoring model and bureau the tool uses.
         </div>
-      </div>
+      </section>
 
-      <!-- Right: Explainers -->
-      <div class="card">
-        <h2>What You’re Learning</h2>
-        <p class="note">
-          These three “hot spots” are common reasons students get surprised by higher rates or co-signer requirements.
+      <aside class="card">
+        <h2>What to Watch For</h2>
+
+        <p class="card-note">
+          These report details can affect both scoring and lender underwriting.
         </p>
 
-        <div class="panel">
-          <h3>3 High-Impact Items to Watch</h3>
-          <p>
-            Hover the report items on the left. Then use the guidance below to build your action plan.
-          </p>
+        <div class="side-panel">
+          <h3>High-Impact Areas</h3>
 
-          <ul class="list">
-            <li class="li">
-              <b>Missed Payment</b><br/>
-              A late payment can be one of the biggest score hits and may affect approvals.
-              <div class="tag bad">Fix: autopay + never repeat</div>
+          <ul class="watch-list">
+            <li class="watch-item">
+              <strong>Late Payments</strong>
+              Review every account for incorrect 30-, 60-, or 90-day delinquencies.
+              <div class="tag red">Protect payment history</div>
             </li>
-            <li class="li">
-              <b>Collection Account</b><br/>
-              Collections can raise red flags for lenders and reduce loan options.
-              <div class="tag bad">Fix: verify + resolve or dispute</div>
+
+            <li class="watch-item">
+              <strong>Credit Utilization</strong>
+              Review both individual-card and overall revolving utilization.
+              <div class="tag orange">Reduce balances</div>
             </li>
-            <li class="li">
-              <b>High Utilization</b><br/>
-              Even with on-time payments, high utilization can pull scores down.
-              <div class="tag warn">Fix: keep under 30% (aim under 10%)</div>
+
+            <li class="watch-item">
+              <strong>Collections</strong>
+              Confirm ownership, balance, dates, and reporting accuracy.
+              <div class="tag red">Verify before acting</div>
+            </li>
+
+            <li class="watch-item">
+              <strong>Hard Inquiries</strong>
+              Make sure each inquiry corresponds to an application you recognize.
+              <div class="tag orange">Limit unnecessary applications</div>
+            </li>
+
+            <li class="watch-item">
+              <strong>Accurate Positive History</strong>
+              Confirm that current accounts and on-time payments are being reported.
+              <div class="tag green">Preserve strong history</div>
             </li>
           </ul>
         </div>
 
-        <div class="footer">
-          This activity teaches you how to spot problems early, so you can improve your credit before applying for credit-based education loans.
+        <div class="side-panel">
+          <h3>MWU Loan Reminder</h3>
+
+          <div class="mwu-box">
+            The MWU Loan has a stated minimum independent-borrower FICO score of
+            <strong>660</strong>. Reaching 660 does not guarantee approval. The
+            complete review may also consider payment history, credit depth,
+            utilization, collections, defaults, delinquencies, and other program
+            requirements.
+          </div>
         </div>
-      </div>
+
+        <div class="side-panel">
+          <h3>If You Find an Error</h3>
+
+          <p>
+            Gather supporting records and dispute the inaccurate item with every
+            credit bureau reporting it. You may also contact the company that
+            supplied the information.
+          </p>
+
+          <div class="tag green">
+            Dispute inaccurate information only
+          </div>
+        </div>
+      </aside>
+
     </div>
-  </div>
+  </main>
 
   <script>
-    // Simple score badge color based on the sample score shown
-    (function(){
-      const score = 705;
-      const scoreText = document.getElementById("scoreText");
-      const scoreBadge = document.getElementById("scoreBadge");
-      scoreText.textContent = score;
-      scoreBadge.textContent = score;
+    function toggleHotspot(selected){
+      const isOpen = selected.classList.contains("open");
 
-      scoreBadge.classList.remove("good","mid","bad");
-      if (score >= 740) scoreBadge.classList.add("good");
-      else if (score >= 670) scoreBadge.classList.add("mid");
-      else scoreBadge.classList.add("bad");
-    })();
+      document
+        .querySelectorAll(".hotspot")
+        .forEach(function(item){
+          item.classList.remove("open");
+          item.setAttribute("aria-expanded","false");
+        });
+
+      if(!isOpen){
+        selected.classList.add("open");
+        selected.setAttribute("aria-expanded","true");
+      }
+    }
   </script>
 </body>
 </html>
