@@ -1,148 +1,1477 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Credit Plan Builder</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#f4f7fb,#e6eef8);
-  margin: 0;
-  padding: 30px;
-}
-.container {
-  max-width: 850px;
-  margin: auto;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-h2 {
-  text-align: center;
-}
-select, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-button {
-  background: #1e73be;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-button:hover {
-  opacity: 0.9;
-}
-.strategies {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 10px;
-}
-.output {
-  display: none;
-  background: #f9fbff;
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 20px;
-}
-.download-btn {
-  display: none;
-  background: #28a745;
-  margin-top: 10px;
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credit Action Plan Builder</title>
+
+  <style>
+    :root{
+      --navy:#0f2747;
+      --blue:#2563eb;
+      --sky:#0ea5e9;
+      --green:#16a34a;
+      --green-light:#ecfdf5;
+      --orange:#ea580c;
+      --orange-light:#fff7ed;
+      --red:#dc2626;
+      --red-light:#fef2f2;
+      --purple:#7c3aed;
+      --purple-light:#f5f3ff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#dbe3ee;
+      --surface:#ffffff;
+      --background:#f4f7fb;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      padding:24px;
+      color:var(--text);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left,#dbeafe 0,transparent 36%),
+        linear-gradient(135deg,#f8fafc,#eef2ff);
+    }
+
+    input,
+    select,
+    textarea,
+    button{
+      font:inherit;
+    }
+
+    .wrap{
+      max-width:1080px;
+      margin:0 auto;
+    }
+
+    .hero{
+      padding:24px;
+      margin-bottom:18px;
+      color:white;
+      border-radius:24px;
+      background:linear-gradient(135deg,var(--navy),var(--blue),var(--sky));
+      box-shadow:0 18px 38px rgba(37,99,235,.24);
+    }
+
+    .eyebrow{
+      margin-bottom:6px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:.85;
+    }
+
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(26px,4vw,38px);
+      line-height:1.1;
+    }
+
+    .hero p{
+      max-width:900px;
+      margin:0;
+      color:#e0f2fe;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .notice{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      padding:14px 16px;
+      margin-bottom:18px;
+      color:#1e3a8a;
+      border:1px solid #93c5fd;
+      border-radius:17px;
+      background:#eff6ff;
+    }
+
+    .notice-icon{
+      display:grid;
+      width:36px;
+      height:36px;
+      flex:0 0 auto;
+      color:white;
+      font-weight:900;
+      place-items:center;
+      border-radius:50%;
+      background:var(--blue);
+    }
+
+    .notice p{
+      margin:0;
+      font-size:12px;
+      line-height:1.55;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(320px,.9fr) minmax(0,1.1fr);
+      gap:16px;
+    }
+
+    .card{
+      padding:18px;
+      border:1px solid var(--border);
+      border-radius:21px;
+      background:var(--surface);
+      box-shadow:var(--shadow);
+    }
+
+    .card h2{
+      margin:0 0 5px;
+      font-size:17px;
+    }
+
+    .card-note{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.55;
+    }
+
+    .step{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      margin:17px 0 10px;
+      padding-top:15px;
+      border-top:1px solid var(--border);
+    }
+
+    .step:first-of-type{
+      margin-top:0;
+      padding-top:0;
+      border-top:none;
+    }
+
+    .step-number{
+      display:grid;
+      width:28px;
+      height:28px;
+      flex:0 0 auto;
+      color:white;
+      font-size:11px;
+      font-weight:900;
+      place-items:center;
+      border-radius:50%;
+      background:var(--blue);
+    }
+
+    .step-title{
+      font-size:12px;
+      font-weight:900;
+    }
+
+    label,
+    .field-label{
+      display:block;
+      margin-bottom:5px;
+      color:#475569;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    select,
+    input[type="date"],
+    input[type="text"],
+    input[type="number"],
+    textarea{
+      width:100%;
+      padding:10px 11px;
+      color:var(--text);
+      border:1px solid #cbd5e1;
+      border-radius:11px;
+      outline:none;
+      background:#f8fafc;
+    }
+
+    select:focus,
+    input:focus,
+    textarea:focus{
+      border-color:var(--blue);
+      background:white;
+      box-shadow:0 0 0 3px rgba(37,99,235,.12);
+    }
+
+    textarea{
+      min-height:85px;
+      resize:vertical;
+    }
+
+    .two-column{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:9px;
+    }
+
+    .strategy-counter{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      margin-bottom:9px;
+      color:#475569;
+      font-size:10px;
+      border:1px solid var(--border);
+      border-radius:11px;
+      background:#f8fafc;
+    }
+
+    .strategy-counter strong{
+      color:#1e40af;
+    }
+
+    .strategies{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:9px;
+    }
+
+    .strategy{
+      position:relative;
+    }
+
+    .strategy input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .strategy-content{
+      display:block;
+      min-height:104px;
+      padding:11px;
+      cursor:pointer;
+      border:1px solid #cbd5e1;
+      border-radius:14px;
+      background:#f8fafc;
+      transition:.15s ease;
+    }
+
+    .strategy-content:hover{
+      transform:translateY(-1px);
+      border-color:#60a5fa;
+      box-shadow:0 8px 16px rgba(37,99,235,.09);
+    }
+
+    .strategy input:checked + .strategy-content{
+      color:#1e40af;
+      border-color:#60a5fa;
+      background:#eff6ff;
+      box-shadow:inset 0 0 0 1px #60a5fa;
+    }
+
+    .strategy-title{
+      display:block;
+      margin-bottom:4px;
+      color:#0f172a;
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .strategy-copy{
+      color:var(--muted);
+      font-size:9px;
+      line-height:1.45;
+    }
+
+    .strategy-category{
+      display:inline-flex;
+      margin-top:7px;
+      padding:3px 7px;
+      color:#5b21b6;
+      font-size:8px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      border:1px solid #c4b5fd;
+      border-radius:999px;
+      background:var(--purple-light);
+    }
+
+    .validation{
+      display:none;
+      padding:10px;
+      margin-top:10px;
+      color:#991b1b;
+      font-size:10px;
+      line-height:1.5;
+      border-left:4px solid var(--red);
+      border-radius:0 11px 11px 0;
+      background:var(--red-light);
+    }
+
+    .button-row{
+      display:flex;
+      gap:9px;
+      margin-top:16px;
+    }
+
+    button{
+      flex:1;
+      padding:11px 14px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      cursor:pointer;
+      border:none;
+      border-radius:999px;
+    }
+
+    .primary{
+      color:white;
+      background:linear-gradient(135deg,var(--blue),var(--sky));
+      box-shadow:0 9px 20px rgba(37,99,235,.25);
+    }
+
+    .secondary{
+      color:#334155;
+      border:1px solid #cbd5e1;
+      background:white;
+    }
+
+    .download{
+      color:white;
+      background:linear-gradient(135deg,#15803d,#22c55e);
+      box-shadow:0 9px 20px rgba(22,163,74,.21);
+    }
+
+    .empty-state{
+      display:grid;
+      min-height:460px;
+      padding:24px;
+      color:var(--muted);
+      text-align:center;
+      place-items:center;
+      border:2px dashed #cbd5e1;
+      border-radius:17px;
+      background:#f8fafc;
+    }
+
+    .empty-state strong{
+      display:block;
+      margin-bottom:5px;
+      color:#334155;
+      font-size:15px;
+    }
+
+    .plan{
+      display:none;
+    }
+
+    .plan-header{
+      padding:16px;
+      margin-bottom:12px;
+      color:white;
+      border-radius:17px;
+      background:linear-gradient(135deg,#0f172a,#1e293b);
+    }
+
+    .plan-eyebrow{
+      margin-bottom:3px;
+      color:#93c5fd;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+    }
+
+    .plan-header h3{
+      margin:0 0 5px;
+      font-size:21px;
+    }
+
+    .plan-header p{
+      margin:0;
+      color:#cbd5e1;
+      font-size:10px;
+      line-height:1.5;
+    }
+
+    .profile-box{
+      padding:13px;
+      margin-bottom:11px;
+      color:#5b21b6;
+      font-size:10px;
+      line-height:1.55;
+      border-left:4px solid var(--purple);
+      border-radius:0 13px 13px 0;
+      background:var(--purple-light);
+    }
+
+    .plan-section{
+      padding:13px;
+      margin-bottom:10px;
+      border:1px solid var(--border);
+      border-radius:15px;
+      background:#f8fafc;
+    }
+
+    .plan-section h4{
+      margin:0 0 8px;
+      color:#334155;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .plan-list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      counter-reset:plan;
+    }
+
+    .plan-item{
+      position:relative;
+      padding:11px 11px 11px 41px;
+      margin-bottom:8px;
+      font-size:10px;
+      line-height:1.5;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      background:white;
+      counter-increment:plan;
+    }
+
+    .plan-item:last-child{
+      margin-bottom:0;
+    }
+
+    .plan-item::before{
+      content:counter(plan);
+      position:absolute;
+      top:11px;
+      left:11px;
+      display:grid;
+      width:21px;
+      height:21px;
+      color:white;
+      font-size:9px;
+      font-weight:900;
+      place-items:center;
+      border-radius:50%;
+      background:var(--blue);
+    }
+
+    .plan-item strong{
+      display:block;
+      margin-bottom:3px;
+      color:#0f172a;
+      font-size:11px;
+    }
+
+    .timeline-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+
+    .timeline-item{
+      padding:10px;
+      border:1px solid #e2e8f0;
+      border-radius:11px;
+      background:white;
+    }
+
+    .timeline-item strong{
+      display:block;
+      margin-bottom:3px;
+      font-size:10px;
+    }
+
+    .timeline-item span{
+      color:var(--muted);
+      font-size:9px;
+      line-height:1.4;
+    }
+
+    .mwu-note{
+      padding:12px;
+      color:#9a3412;
+      font-size:10px;
+      line-height:1.55;
+      border-left:4px solid var(--orange);
+      border-radius:0 12px 12px 0;
+      background:var(--orange-light);
+    }
+
+    .fine-print{
+      margin-top:11px;
+      color:var(--muted);
+      font-size:9px;
+      line-height:1.55;
+    }
+
+    @media(max-width:900px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .empty-state{
+        min-height:250px;
+      }
+    }
+
+    @media(max-width:650px){
+      body{
+        padding:12px;
+      }
+
+      .hero,
+      .card{
+        padding:16px;
+      }
+
+      .strategies,
+      .two-column,
+      .timeline-grid{
+        grid-template-columns:1fr;
+      }
+
+      .button-row{
+        flex-direction:column;
+      }
+    }
+
+    @media print{
+      body{
+        padding:0;
+        background:white;
+      }
+
+      .hero,
+      .notice,
+      .builder-card,
+      .empty-state,
+      .download-actions{
+        display:none !important;
+      }
+
+      .layout{
+        display:block;
+      }
+
+      .card{
+        border:none;
+        box-shadow:none;
+      }
+
+      .plan{
+        display:block !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="container">
+  <main class="wrap">
 
-<h2>Credit Plan Builder</h2>
-<p>Select your credit tier and choose 2–3 strategies to generate your personalized action plan.</p>
+    <section class="hero">
+      <div class="eyebrow">Personalized credit-planning activity</div>
 
-<label><strong>Step 1: Select Your Score Range</strong></label>
-<select id="scoreRange">
-  <option value="">-- Select --</option>
-  <option value="720+">720+ (Strong Credit)</option>
-  <option value="660-719">660–719 (Average to Good)</option>
-  <option value="<660">&lt;660 (Rebuilding Needed)</option>
-</select>
+      <h1>Credit Action Plan Builder</h1>
 
-<br><br>
+      <p>
+        Select your current credit pathway and choose two or three actions that
+        address the information in your credit reports. The tool will create a
+        personalized plan you can save and revisit before applying for education
+        financing.
+      </p>
+    </section>
 
-<label><strong>Step 2: Choose 2–3 Strategies</strong></label>
-<div class="strategies">
-  <label><input type="checkbox" value="Set up autopay for all accounts"> Set up autopay</label>
-  <label><input type="checkbox" value="Reduce utilization below 30%"> Utilization <30%</label>
-  <label><input type="checkbox" value="Reduce utilization below 10%"> Utilization <10%</label>
-  <label><input type="checkbox" value="Open secured credit card"> Open secured card</label>
-  <label><input type="checkbox" value="Dispute errors on report"> Dispute report errors</label>
-  <label><input type="checkbox" value="Avoid hard inquiries for 6 months"> Avoid new inquiries</label>
-  <label><input type="checkbox" value="Resolve collection accounts"> Resolve collections</label>
-  <label><input type="checkbox" value="Use credit-builder loan"> Use credit-builder loan</label>
-</div>
+    <section class="notice">
+      <div class="notice-icon">!</div>
 
-<br>
+      <p>
+        Credit improvement is not guaranteed to produce a specific score by a
+        specific date. Focus on improving the underlying information lenders may
+        evaluate: payment history, balances, utilization, negative items, credit
+        depth, recent applications, and monthly obligations.
+      </p>
+    </section>
 
-<button onclick="generatePlan()">Generate My Plan</button>
+    <div class="layout">
 
-<div id="output" class="output"></div>
-<button id="downloadBtn" class="download-btn" onclick="downloadPlan()">Download My Plan (.txt)</button>
+      <!-- Builder -->
 
-</div>
+      <section class="card builder-card">
+        <h2>Build Your Plan</h2>
 
-<script>
-function generatePlan() {
-  const score = document.getElementById("scoreRange").value;
-  const checked = Array.from(document.querySelectorAll('.strategies input:checked')).map(el => el.value);
+        <p class="card-note">
+          Choose goals that address real issues in your reports—not generic actions
+          that do not apply to your situation.
+        </p>
 
-  if (!score) {
-    alert("Select your score range.");
-    return;
-  }
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-title">Identify your current pathway</div>
+        </div>
 
-  if (checked.length < 2 || checked.length > 3) {
-    alert("Select 2–3 strategies.");
-    return;
-  }
+        <label for="scoreRange">Current credit-score range</label>
 
-  let focus = "";
+        <select id="scoreRange">
+          <option value="">Select a range</option>
+          <option value="strong">720+ — Strong credit profile</option>
+          <option value="developing">660–719 — Developing to strong</option>
+          <option value="rebuilding">Below 660 — Building or rebuilding</option>
+          <option value="unknown">I do not know my score yet</option>
+        </select>
 
-  if (score === "720+") {
-    focus = "Maintain strong habits and protect your score before borrowing.";
-  } else if (score === "660-719") {
-    focus = "Boost into the 700+ tier before applying for loans.";
-  } else {
-    focus = "Rebuild payment consistency and reduce risk indicators.";
-  }
+        <div class="two-column" style="margin-top:10px;">
+          <div>
+            <label for="scoreModel">Score source or model</label>
+            <input
+              id="scoreModel"
+              type="text"
+              placeholder="Example: Experian FICO 8"
+            >
+          </div>
 
-  const output = document.getElementById("output");
-  output.style.display = "block";
-  document.getElementById("downloadBtn").style.display = "block";
+          <div>
+            <label for="currentUtilization">Current utilization, if known</label>
+            <input
+              id="currentUtilization"
+              type="number"
+              min="0"
+              max="100"
+              step="1"
+              placeholder="Example: 42"
+            >
+          </div>
+        </div>
 
-  output.innerHTML =
-    "<h3>My Credit Action Plan</h3>" +
-    "<p><strong>Score Range:</strong> " + score + "</p>" +
-    "<p><strong>Primary Focus:</strong> " + focus + "</p>" +
-    "<p><strong>Selected Strategies:</strong></p>" +
-    "<ul>" + checked.map(item => "<li>" + item + "</li>").join("") + "</ul>" +
-    "<p><strong>Timeline:</strong> 3–12 months of consistent action.</p>";
-}
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-title">Choose two or three priority strategies</div>
+        </div>
 
-function downloadPlan() {
-  const text = document.getElementById("output").innerText;
-  const blob = new Blob([text], {type: "text/plain"});
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "My_Credit_Action_Plan.txt";
-  link.click();
-}
-</script>
+        <div class="strategy-counter">
+          <span>Select only the actions that apply to your report.</span>
+          <strong><span id="selectedCount">0</span> of 3 selected</strong>
+        </div>
 
+        <div class="strategies">
+
+          <label class="strategy">
+            <input
+              type="checkbox"
+              name="strategy"
+              value="autopay"
+            >
+
+            <span class="strategy-content">
+              <span class="strategy-title">
+                Establish automatic minimum payments
+              </span>
+
+              <span class="strategy-copy">
+                Add autopay, account alerts, and a checking-account cushion to
+                reduce the risk of accidental late payments.
+              </span>
+
+              <span class="strategy-category">Payment history</span>
+            </span>
+          </label>
+
+          <label class="strategy">
+            <input
+              type="checkbox"
+              name="strategy"
+              value="utilization"
+            >
+
+            <span class="strategy-content">
+              <span class="strategy-title">
+                Reduce revolving balances
+              </span>
+
+              <span class="strategy-copy">
+                Create a specific payment target for the card or cards with the
+                highest utilization.
+              </span>
+
+              <span class="strategy-category">Amounts owed</span>
+            </span>
+          </label>
+
+          <label class="strategy">
+            <input
+              type="checkbox"
+              name="strategy"
+              value="reportErrors"
+            >
+
+            <span class="strategy-content">
+              <span class="strategy-title">
+                Correct inaccurate report information
+              </span>
+
+              <span class="strategy-copy">
+                Gather documentation and dispute inaccurate, duplicated,
+                incomplete, or fraudulent information.
+              </span>
+
+              <span class="strategy-category">Report accuracy</span>
+            </span>
+          </label>
+
+          <label class="strategy">
+            <input
+              type="checkbox"
+              name="strategy"
+              value="collections"
+            >
+
+            <span class="strategy-content">
+              <span class="strategy-title">
+                Review a collection account
+              </span>
+
+              <span class="strategy-copy">
+                Verify ownership, balance, dates, and reporting before deciding
+                whether to dispute or resolve the debt.
+              </span>
+
+              <span class="strategy-category">Negative items</span>
+            </span>
+          </label>
+
+          <label class="strategy">
+            <input
+              type="checkbox"
+              name="strategy"
+              value="limitApplications"
+            >
+
+            <span class="strategy-content">
+              <span class="strategy-title">
+                Limit unnecessary new applications
+              </span>
+
+              <span class="strategy-copy">
+                Avoid opening credit cards or personal loans that do not serve a
+                clear purpose before education-loan underwriting.
+              </span>
+
+              <span class="strategy-category">New credit</span>
+            </span>
+          </label>
+
+          <label class="strategy">
+            <input
+              type="checkbox"
+              name="strategy"
+              value="securedCard"
+            >
+
+            <span class="strategy-content">
+              <span class="strategy-title">
+                Establish credit with one secured card
+              </span>
+
+              <span class="strategy-copy">
+                Appropriate primarily for students with limited revolving-credit
+                history who can manage the account without carrying debt.
+              </span>
+
+              <span class="strategy-category">Credit building</span>
+            </span>
+          </label>
+
+          <label class="strategy">
+            <input
+              type="checkbox"
+              name="strategy"
+              value="bringCurrent"
+            >
+
+            <span class="strategy-content">
+              <span class="strategy-title">
+                Bring delinquent accounts current
+              </span>
+
+              <span class="strategy-copy">
+                Contact creditors, understand the amount required, and prevent
+                additional late reporting.
+              </span>
+
+              <span class="strategy-category">Payment history</span>
+            </span>
+          </label>
+
+          <label class="strategy">
+            <input
+              type="checkbox"
+              name="strategy"
+              value="monitor"
+            >
+
+            <span class="strategy-content">
+              <span class="strategy-title">
+                Monitor all three credit reports
+              </span>
+
+              <span class="strategy-copy">
+                Review Equifax, Experian, and TransUnion for updates, unfamiliar
+                accounts, and changes to balances or status.
+              </span>
+
+              <span class="strategy-category">Monitoring</span>
+            </span>
+          </label>
+
+        </div>
+
+        <div class="validation" id="strategyValidation">
+          Select two or three strategies.
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-title">Make the plan measurable</div>
+        </div>
+
+        <div class="two-column">
+          <div>
+            <label for="targetDate">Target review date</label>
+            <input id="targetDate" type="date">
+          </div>
+
+          <div>
+            <label for="monthlyAmount">Monthly debt-reduction amount</label>
+            <input
+              id="monthlyAmount"
+              type="number"
+              min="0"
+              step="25"
+              placeholder="Optional"
+            >
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <label for="notes">Personal notes or account details</label>
+
+          <textarea
+            id="notes"
+            placeholder="Example: Reduce Card A from $2,400 to $1,500 and avoid new charges."
+          ></textarea>
+        </div>
+
+        <div class="button-row">
+          <button
+            type="button"
+            class="secondary"
+            onclick="resetBuilder()"
+          >
+            Reset
+          </button>
+
+          <button
+            type="button"
+            class="primary"
+            onclick="generatePlan()"
+          >
+            Generate My Plan
+          </button>
+        </div>
+      </section>
+
+      <!-- Output -->
+
+      <section class="card">
+
+        <div class="empty-state" id="emptyState">
+          <div>
+            <strong>Your action plan will appear here.</strong>
+            Select a credit pathway, choose two or three strategies, and generate
+            your personalized plan.
+          </div>
+        </div>
+
+        <div class="plan" id="plan">
+
+          <div class="plan-header">
+            <div class="plan-eyebrow">Personalized financial-readiness plan</div>
+            <h3>My Credit Action Plan</h3>
+            <p id="planDate"></p>
+          </div>
+
+          <div class="profile-box" id="profileSummary"></div>
+
+          <section class="plan-section">
+            <h4>My Priority Actions</h4>
+            <ol class="plan-list" id="planActions"></ol>
+          </section>
+
+          <section class="plan-section">
+            <h4>My Review Timeline</h4>
+
+            <div class="timeline-grid">
+              <div class="timeline-item">
+                <strong>Now</strong>
+                <span>
+                  Complete selected actions and gather documentation.
+                </span>
+              </div>
+
+              <div class="timeline-item">
+                <strong>Monthly</strong>
+                <span>
+                  Review balances, due dates, autopay, utilization, and account status.
+                </span>
+              </div>
+
+              <div class="timeline-item">
+                <strong id="reviewDateLabel">Target review</strong>
+                <span>
+                  Recheck reports, score trends, and readiness for financing.
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <section class="plan-section" id="notesSection">
+            <h4>My Notes</h4>
+            <div id="planNotes" style="font-size:10px;line-height:1.55;"></div>
+          </section>
+
+          <div class="mwu-note" id="mwuGuidance"></div>
+
+          <div class="download-actions button-row">
+            <button
+              type="button"
+              class="secondary"
+              onclick="window.print()"
+            >
+              Print / Save PDF
+            </button>
+
+            <button
+              type="button"
+              class="download"
+              onclick="downloadPlan()"
+            >
+              Download Plan
+            </button>
+          </div>
+
+          <div class="fine-print">
+            This plan provides educational guidance and does not predict a credit
+            score, loan approval, interest rate, co-signer requirement, or MWU Loan
+            eligibility. Credit-report updates and score changes depend on creditor
+            reporting, the complete credit file, and the scoring model used.
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const actionLibrary = {
+      autopay: {
+        title: "Protect payment history",
+        description:
+          "Set automatic minimum payments and account alerts for every open credit account. Continue reviewing statements and maintain sufficient funds in the payment account.",
+        measure:
+          "Confirm that autopay is active before the next payment due date."
+      },
+
+      utilization: {
+        title: "Reduce revolving balances",
+        description:
+          "Identify the cards with the highest individual utilization and reduce balances without adding new charges. Lower utilization is generally more favorable, but no percentage guarantees a score increase.",
+        measure:
+          "Track each card's balance and credit limit after every billing cycle."
+      },
+
+      reportErrors: {
+        title: "Correct inaccurate credit-report information",
+        description:
+          "Gather supporting records and dispute inaccurate, incomplete, duplicated, or fraudulent information with each bureau reporting it and with the information provider.",
+        measure:
+          "Record the dispute date, confirmation number, and investigation result."
+      },
+
+      collections: {
+        title: "Review a reported collection",
+        description:
+          "Verify that the account belongs to you, confirm the balance and dates, and determine whether the information is accurate before deciding how to respond.",
+        measure:
+          "Keep validation letters, agreements, receipts, and dispute results."
+      },
+
+      limitApplications: {
+        title: "Limit unnecessary new credit",
+        description:
+          "Avoid credit-card, personal-loan, and retail-account applications that do not serve a clear financial purpose before education-loan underwriting.",
+        measure:
+          "Use soft-credit prequalification when available and track any hard inquiries."
+      },
+
+      securedCard: {
+        title: "Establish revolving-credit history carefully",
+        description:
+          "Research one secured card that reports to the nationwide credit bureaus. Use it for one affordable recurring expense and pay the statement balance in full.",
+        measure:
+          "Confirm reporting, fees, due date, and statement-balance payment each month."
+      },
+
+      bringCurrent: {
+        title: "Bring delinquent accounts current",
+        description:
+          "Contact the creditor, confirm the amount needed to restore the account, and establish a realistic payment arrangement when necessary.",
+        measure:
+          "Document the agreement and verify that no additional late payments are reported."
+      },
+
+      monitor: {
+        title: "Monitor all three credit reports",
+        description:
+          "Review Equifax, Experian, and TransUnion for unfamiliar accounts, incorrect balances, new inquiries, delinquencies, and collection updates.",
+        measure:
+          "Create a recurring calendar reminder and save the date of each review."
+      }
+    };
+
+    const pathwayGuidance = {
+      strong: {
+        title: "Strong credit profile",
+        text:
+          "Your focus is preservation and comparison shopping. Continue protecting payment history, controlling balances, and avoiding unnecessary new accounts. Compare actual private-loan offers with the MWU Loan rather than assuming one option is automatically less expensive.",
+        mwu:
+          "<strong>MWU financing note:</strong> Your selected range is above the MWU Loan's stated 660 minimum. Approval is still subject to complete underwriting, and a private lender may offer different pricing or terms."
+      },
+
+      developing: {
+        title: "Developing to strong credit profile",
+        text:
+          "Your selected range meets or approaches stronger lending tiers. Focus on the specific weaknesses in your reports rather than chasing an arbitrary number.",
+        mwu:
+          "<strong>MWU financing note:</strong> A score of 660 or higher meets the stated MWU Loan score minimum, but approval is not guaranteed. Payment history, utilization, collections, credit depth, defaults, delinquencies, and other requirements may also be reviewed."
+      },
+
+      rebuilding: {
+        title: "Building or rebuilding credit profile",
+        text:
+          "Focus first on stabilizing payment history, reducing balances, reviewing negative information, and avoiding unnecessary new debt. Begin well before financing is needed.",
+        mwu:
+          "<strong>MWU financing note:</strong> A score below 660 may limit independent MWU Loan eligibility. Review qualified co-signer options and understand that the MWU ACCESS Loan is a separate, limited pathway following a qualifying MWU Loan denial and additional review."
+      },
+
+      unknown: {
+        title: "Credit baseline not yet established",
+        text:
+          "Your first priority is reviewing all three credit reports and checking a reputable credit score so that your action plan addresses actual information rather than assumptions.",
+        mwu:
+          "<strong>MWU financing note:</strong> The MWU Loan has a stated minimum independent-borrower FICO score of 660, but a score is only one part of the complete underwriting process."
+      }
+    };
+
+    function escapeHtml(value){
+      return String(value).replace(/[&<>"']/g,function(character){
+        return {
+          "&":"&amp;",
+          "<":"&lt;",
+          ">":"&gt;",
+          '"':"&quot;",
+          "'":"&#039;"
+        }[character];
+      });
+    }
+
+    function selectedStrategies(){
+      return Array.from(
+        document.querySelectorAll(
+          'input[name="strategy"]:checked'
+        )
+      ).map(function(input){
+        return input.value;
+      });
+    }
+
+    function updateCounter(changedInput){
+      let selected = selectedStrategies();
+
+      if(selected.length > 3 && changedInput){
+        changedInput.checked = false;
+        selected = selectedStrategies();
+
+        showValidation(
+          "Choose no more than three priority strategies. A focused plan is more useful than a long wish list."
+        );
+      } else {
+        hideValidation();
+      }
+
+      document.getElementById("selectedCount").textContent =
+        selected.length;
+    }
+
+    function showValidation(message){
+      const box = document.getElementById("strategyValidation");
+      box.textContent = message;
+      box.style.display = "block";
+    }
+
+    function hideValidation(){
+      document.getElementById("strategyValidation").style.display =
+        "none";
+    }
+
+    function formatDate(dateValue){
+      if(!dateValue){
+        return "No target date selected";
+      }
+
+      const parts = dateValue.split("-");
+
+      const date = new Date(
+        Number(parts[0]),
+        Number(parts[1]) - 1,
+        Number(parts[2])
+      );
+
+      return date.toLocaleDateString("en-US",{
+        year:"numeric",
+        month:"long",
+        day:"numeric"
+      });
+    }
+
+    function generatePlan(){
+      const pathway =
+        document.getElementById("scoreRange").value;
+
+      const selected =
+        selectedStrategies();
+
+      if(!pathway){
+        showValidation(
+          "Select your current credit-score range or choose “I do not know my score yet.”"
+        );
+
+        return;
+      }
+
+      if(selected.length < 2 || selected.length > 3){
+        showValidation(
+          "Select two or three strategies that address your current credit profile."
+        );
+
+        return;
+      }
+
+      hideValidation();
+
+      const scoreModel =
+        document.getElementById("scoreModel").value.trim();
+
+      const utilization =
+        document.getElementById("currentUtilization").value;
+
+      const targetDate =
+        document.getElementById("targetDate").value;
+
+      const monthlyAmount =
+        document.getElementById("monthlyAmount").value;
+
+      const notes =
+        document.getElementById("notes").value.trim();
+
+      const pathwayInfo =
+        pathwayGuidance[pathway];
+
+      let profileDetails =
+        "<strong>" +
+        escapeHtml(pathwayInfo.title) +
+        ":</strong> " +
+        escapeHtml(pathwayInfo.text);
+
+      if(scoreModel){
+        profileDetails +=
+          "<br><br><strong>Score source:</strong> " +
+          escapeHtml(scoreModel);
+      }
+
+      if(utilization !== ""){
+        profileDetails +=
+          "<br><strong>Recorded utilization:</strong> " +
+          escapeHtml(utilization) +
+          "%";
+      }
+
+      document.getElementById("profileSummary").innerHTML =
+        profileDetails;
+
+      document.getElementById("planActions").innerHTML =
+        selected.map(function(key){
+          const action = actionLibrary[key];
+
+          let additionalMeasure = "";
+
+          if(
+            key === "utilization" &&
+            monthlyAmount !== ""
+          ){
+            additionalMeasure =
+              "<br><strong>Planned monthly payment:</strong> " +
+              escapeHtml(
+                Number(monthlyAmount).toLocaleString("en-US",{
+                  style:"currency",
+                  currency:"USD",
+                  maximumFractionDigits:0
+                })
+              );
+          }
+
+          return (
+            '<li class="plan-item">' +
+              "<strong>" +
+                escapeHtml(action.title) +
+              "</strong>" +
+              escapeHtml(action.description) +
+              "<br><strong>How I will measure it:</strong> " +
+              escapeHtml(action.measure) +
+              additionalMeasure +
+            "</li>"
+          );
+        }).join("");
+
+      const generatedDate =
+        new Date().toLocaleDateString("en-US",{
+          year:"numeric",
+          month:"long",
+          day:"numeric"
+        });
+
+      document.getElementById("planDate").textContent =
+        "Created " +
+        generatedDate +
+        " • Target review: " +
+        formatDate(targetDate);
+
+      document.getElementById("reviewDateLabel").textContent =
+        targetDate
+          ? formatDate(targetDate)
+          : "Target review";
+
+      document.getElementById("mwuGuidance").innerHTML =
+        pathwayInfo.mwu;
+
+      const notesSection =
+        document.getElementById("notesSection");
+
+      if(notes){
+        notesSection.style.display = "block";
+
+        document.getElementById("planNotes").textContent =
+          notes;
+      } else {
+        notesSection.style.display = "none";
+      }
+
+      document.getElementById("emptyState").style.display =
+        "none";
+
+      document.getElementById("plan").style.display =
+        "block";
+
+      document.getElementById("plan").scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+    }
+
+    function buildPlainTextPlan(){
+      const pathway =
+        document.getElementById("scoreRange").value;
+
+      const selected =
+        selectedStrategies();
+
+      const scoreModel =
+        document.getElementById("scoreModel").value.trim();
+
+      const utilization =
+        document.getElementById("currentUtilization").value;
+
+      const targetDate =
+        document.getElementById("targetDate").value;
+
+      const monthlyAmount =
+        document.getElementById("monthlyAmount").value;
+
+      const notes =
+        document.getElementById("notes").value.trim();
+
+      const pathwayInfo =
+        pathwayGuidance[pathway];
+
+      const lines = [];
+
+      lines.push("MY CREDIT ACTION PLAN");
+      lines.push("=====================");
+      lines.push("");
+
+      lines.push(
+        "Created: " +
+        new Date().toLocaleDateString("en-US")
+      );
+
+      lines.push(
+        "Target review: " +
+        formatDate(targetDate)
+      );
+
+      lines.push("");
+      lines.push("CREDIT PATHWAY");
+      lines.push(pathwayInfo.title);
+      lines.push(pathwayInfo.text);
+
+      if(scoreModel){
+        lines.push("Score source: " + scoreModel);
+      }
+
+      if(utilization !== ""){
+        lines.push(
+          "Recorded utilization: " +
+          utilization +
+          "%"
+        );
+      }
+
+      lines.push("");
+      lines.push("PRIORITY ACTIONS");
+
+      selected.forEach(function(key,index){
+        const action = actionLibrary[key];
+
+        lines.push("");
+        lines.push(
+          (index + 1) +
+          ". " +
+          action.title
+        );
+
+        lines.push(action.description);
+
+        lines.push(
+          "How I will measure it: " +
+          action.measure
+        );
+
+        if(
+          key === "utilization" &&
+          monthlyAmount !== ""
+        ){
+          lines.push(
+            "Planned monthly debt reduction: $" +
+            Number(monthlyAmount).toLocaleString("en-US")
+          );
+        }
+      });
+
+      if(notes){
+        lines.push("");
+        lines.push("PERSONAL NOTES");
+        lines.push(notes);
+      }
+
+      lines.push("");
+      lines.push("MWU FINANCING GUIDANCE");
+      lines.push(
+        pathwayInfo.mwu.replace(/<[^>]+>/g,"")
+      );
+
+      lines.push("");
+      lines.push("IMPORTANT");
+      lines.push(
+        "This plan does not predict a credit score, loan approval, interest rate, co-signer requirement, or MWU Loan eligibility."
+      );
+
+      return lines.join("\n");
+    }
+
+    function downloadPlan(){
+      const text =
+        buildPlainTextPlan();
+
+      const blob =
+        new Blob(
+          [text],
+          {type:"text/plain;charset=utf-8"}
+        );
+
+      const link =
+        document.createElement("a");
+
+      link.href =
+        URL.createObjectURL(blob);
+
+      link.download =
+        "My_Credit_Action_Plan.txt";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(function(){
+        URL.revokeObjectURL(link.href);
+      },1000);
+    }
+
+    function resetBuilder(){
+      document.getElementById("scoreRange").value = "";
+      document.getElementById("scoreModel").value = "";
+      document.getElementById("currentUtilization").value = "";
+      document.getElementById("targetDate").value = "";
+      document.getElementById("monthlyAmount").value = "";
+      document.getElementById("notes").value = "";
+
+      document
+        .querySelectorAll('input[name="strategy"]')
+        .forEach(function(input){
+          input.checked = false;
+        });
+
+      document.getElementById("selectedCount").textContent =
+        "0";
+
+      document.getElementById("plan").style.display =
+        "none";
+
+      document.getElementById("emptyState").style.display =
+        "grid";
+
+      hideValidation();
+    }
+
+    document
+      .querySelectorAll('input[name="strategy"]')
+      .forEach(function(input){
+        input.addEventListener("change",function(){
+          updateCounter(this);
+        });
+      });
+  </script>
 </body>
 </html>
