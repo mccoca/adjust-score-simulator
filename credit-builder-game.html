@@ -1,638 +1,1181 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Credit Builder Game</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <title>Credit Builder Decision Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     :root{
-      --bg:#f3f4ff;
-      --card:#ffffff;
-      --border:#e5e7eb;
+      --navy:#0f2747;
+      --blue:#2563eb;
+      --sky:#0ea5e9;
+      --green:#16a34a;
+      --green-light:#ecfdf5;
+      --orange:#ea580c;
+      --orange-light:#fff7ed;
+      --red:#dc2626;
+      --red-light:#fef2f2;
+      --purple:#7c3aed;
+      --purple-light:#f5f3ff;
       --text:#0f172a;
-      --muted:#6b7280;
-      --accent:#2563eb;
-      --accent2:#0ea5e9;
-      --good:#22c55e;
-      --warn:#f97316;
-      --bad:#ef4444;
-      --shadow: 0 10px 24px rgba(15,23,42,.08);
+      --muted:#64748b;
+      --border:#dbe3ee;
+      --card:#ffffff;
+      --bg:#f4f7fb;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
     }
-    *{box-sizing:border-box}
+
+    *{
+      box-sizing:border-box;
+    }
+
     body{
-      margin:0; padding:24px;
-      font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+      margin:0;
+      padding:24px;
       color:var(--text);
-      background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 45%, #eef2ff 100%);
-    }
-    .wrap{max-width:1000px;margin:0 auto}
-    h1{margin:0 0 6px;font-size:24px;font-weight:900}
-    .sub{margin:0 0 16px;font-size:13px;color:var(--muted);line-height:1.5}
-
-    .banner{
-      margin-bottom:16px;
-      padding:12px 14px;
-      border-radius:16px;
-      display:flex; gap:12px; align-items:flex-start;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#eff6ff;
-      box-shadow:0 10px 24px rgba(37,99,235,.35);
-    }
-    .banner .icon{
-      width:40px;height:40px;border-radius:999px;
-      background:rgba(15,23,42,.2);
-      display:flex;align-items:center;justify-content:center;
-      font-size:22px;flex:0 0 auto;
-    }
-    .banner .txt{font-size:12px;line-height:1.5}
-    .banner .txt strong{
-      display:block;font-size:11px;text-transform:uppercase;
-      letter-spacing:.08em;margin-bottom:2px
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left,#dbeafe 0,transparent 36%),
+        linear-gradient(135deg,#f8fafc,#eef2ff);
     }
 
-    .grid{
+    button{
+      font:inherit;
+    }
+
+    .wrap{
+      max-width:1120px;
+      margin:0 auto;
+    }
+
+    .hero{
+      padding:24px;
+      margin-bottom:18px;
+      color:white;
+      border-radius:24px;
+      background:linear-gradient(135deg,var(--navy),var(--blue),var(--sky));
+      box-shadow:0 18px 38px rgba(37,99,235,.24);
+    }
+
+    .eyebrow{
+      margin-bottom:6px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:.85;
+    }
+
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(26px,4vw,38px);
+      line-height:1.1;
+    }
+
+    .hero p{
+      max-width:900px;
+      margin:0;
+      color:#e0f2fe;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .notice{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      padding:14px 16px;
+      margin-bottom:18px;
+      color:#1e3a8a;
+      border:1px solid #93c5fd;
+      border-radius:17px;
+      background:#eff6ff;
+    }
+
+    .notice-icon{
       display:grid;
-      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
-      gap:16px;
+      width:36px;
+      height:36px;
+      flex:0 0 auto;
+      color:white;
+      font-weight:900;
+      place-items:center;
+      border-radius:50%;
+      background:var(--blue);
     }
-    @media (max-width: 900px){
-      body{padding:16px}
-      .grid{grid-template-columns:1fr}
+
+    .notice p{
+      margin:0;
+      font-size:12px;
+      line-height:1.55;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(320px,.85fr) minmax(0,1.15fr);
+      gap:16px;
     }
 
     .card{
+      padding:18px;
+      border:1px solid var(--border);
+      border-radius:21px;
       background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:14px;
-      box-shadow: var(--shadow);
+      box-shadow:var(--shadow);
     }
-    .card h2{margin:0 0 6px;font-size:16px;font-weight:900}
-    .note{margin:0 0 10px;font-size:11px;color:var(--muted);line-height:1.5}
 
-    .stats{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:10px;
-      margin-top:8px;
+    .card h2{
+      margin:0 0 5px;
+      font-size:17px;
     }
-    .stat{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:10px;
-      background:#f9fafb;
-    }
-    .stat .label{
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
+
+    .card-note{
+      margin:0 0 13px;
       color:var(--muted);
-      font-weight:800;
-      margin-bottom:4px;
+      font-size:11px;
+      line-height:1.55;
     }
-    .stat .val{
-      font-size:16px;
-      font-weight:900;
-    }
-    .small{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
 
-    .scoreRow{
+    .profile-header{
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:10px;
-      margin:8px 0 10px;
-      flex-wrap:wrap;
-    }
-    .scorePill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:#f9fafb;
-      font-size:12px;
-    }
-    .scoreBubble{
-      font-weight:900;
-      padding:3px 10px;
-      border-radius:999px;
-      border:1px solid rgba(37,99,235,.35);
-      background:rgba(37,99,235,.12);
-    }
-    .tierTag{
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      font-weight:900;
-      padding:3px 8px;
-      border-radius:999px;
-      border:1px solid rgba(34,197,94,.35);
-      background:rgba(34,197,94,.12);
-      color:#166534;
-    }
-    .tierTag.mid{
-      border-color:rgba(249,115,22,.35);
-      background:rgba(249,115,22,.12);
-      color:#9a3412;
-    }
-    .tierTag.bad{
-      border-color:rgba(239,68,68,.35);
-      background:rgba(239,68,68,.12);
-      color:#991b1b;
+      margin-bottom:12px;
     }
 
-    .barWrap{margin-top:8px}
-    .barLabel{font-size:11px;color:var(--muted);margin-bottom:4px}
-    .barTrack{
-      height:10px;border-radius:999px;background:#e5e7eb;overflow:hidden;
+    .readiness{
+      padding:6px 10px;
+      color:#9a3412;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      border:1px solid #fdba74;
+      border-radius:999px;
+      background:var(--orange-light);
     }
-    .barFill{
+
+    .readiness.strong{
+      color:#166534;
+      border-color:#86efac;
+      background:var(--green-light);
+    }
+
+    .readiness.developing{
+      color:#991b1b;
+      border-color:#fca5a5;
+      background:var(--red-light);
+    }
+
+    .meter{
+      margin-bottom:14px;
+    }
+
+    .meter-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:5px;
+      color:var(--muted);
+      font-size:10px;
+      font-weight:800;
+    }
+
+    .meter-track{
+      height:12px;
+      overflow:hidden;
+      border-radius:999px;
+      background:#e2e8f0;
+    }
+
+    .meter-fill{
+      width:45%;
       height:100%;
-      width:0%;
       border-radius:999px;
       background:linear-gradient(90deg,#ef4444,#f97316,#facc15,#22c55e);
-      transition: width .25s ease;
+      transition:width .3s ease;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:9px;
+    }
+
+    .stat{
+      padding:11px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#f8fafc;
+    }
+
+    .stat-label{
+      margin-bottom:4px;
+      color:var(--muted);
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .stat-value{
+      font-size:15px;
+      font-weight:900;
+    }
+
+    .stat-copy{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:9px;
+      line-height:1.4;
+    }
+
+    .mwu-box{
+      padding:12px;
+      margin-top:12px;
+      color:#5b21b6;
+      font-size:10px;
+      line-height:1.55;
+      border-left:4px solid var(--purple);
+      border-radius:0 13px 13px 0;
+      background:var(--purple-light);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:13px;
+    }
+
+    .btn{
+      padding:9px 13px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      cursor:pointer;
+      border:none;
+      border-radius:999px;
+    }
+
+    .btn.primary{
+      color:white;
+      background:linear-gradient(135deg,var(--blue),var(--sky));
+      box-shadow:0 9px 18px rgba(37,99,235,.23);
+    }
+
+    .btn.secondary{
+      color:#334155;
+      border:1px solid #cbd5e1;
+      background:white;
+    }
+
+    .btn.dark{
+      color:white;
+      background:#0f172a;
+    }
+
+    .hint{
+      display:none;
+      padding:11px;
+      margin-top:10px;
+      color:#334155;
+      font-size:10px;
+      line-height:1.55;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      background:#f8fafc;
     }
 
     .choices{
       display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-      margin-top:10px;
+      gap:9px;
     }
+
     .choice{
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:10px 10px;
-      background:#ffffff;
+      width:100%;
+      padding:11px;
+      text-align:left;
       cursor:pointer;
-      transition: transform .08s ease, box-shadow .15s ease, border-color .15s ease;
-      position:relative;
+      border:1px solid var(--border);
+      border-radius:15px;
+      background:white;
+      transition:.15s ease;
     }
-    .choice:hover{
-      transform: translateY(-1px);
-      box-shadow:0 10px 18px rgba(15,23,42,.10);
-      border-color:#93c5fd;
+
+    .choice:hover,
+    .choice:focus{
+      transform:translateY(-1px);
+      border-color:#60a5fa;
+      outline:none;
+      box-shadow:0 9px 18px rgba(37,99,235,.11);
     }
-    .choiceTitle{
-      font-weight:900;
-      font-size:13px;
-      margin-bottom:4px;
+
+    .choice-top{
       display:flex;
       justify-content:space-between;
+      align-items:flex-start;
       gap:8px;
-      flex-wrap:wrap;
+      margin-bottom:4px;
     }
-    .impactChip{
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
+
+    .choice-title{
+      font-size:12px;
       font-weight:900;
-      padding:3px 8px;
-      border-radius:999px;
-      border:1px solid rgba(34,197,94,.35);
-      background:rgba(34,197,94,.12);
+    }
+
+    .choice-chip{
+      padding:4px 7px;
       color:#166534;
+      font-size:8px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      border:1px solid #86efac;
+      border-radius:999px;
+      background:var(--green-light);
     }
-    .impactChip.warn{
-      border-color:rgba(249,115,22,.35);
-      background:rgba(249,115,22,.12);
+
+    .choice-chip.caution{
       color:#9a3412;
+      border-color:#fdba74;
+      background:var(--orange-light);
     }
-    .impactChip.bad{
-      border-color:rgba(239,68,68,.35);
-      background:rgba(239,68,68,.12);
+
+    .choice-chip.negative{
       color:#991b1b;
+      border-color:#fca5a5;
+      background:var(--red-light);
     }
-    .choiceDesc{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
 
-    .log{
-      margin-top:10px;
-      border:1px dashed #d1d5db;
-      border-radius:14px;
-      background:#f9fafb;
-      padding:10px;
-      min-height:130px;
-    }
-    .log h3{
-      margin:0 0 6px;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+    .choice-desc{
+      margin:0;
       color:var(--muted);
-    }
-    .logItem{
-      font-size:12px;
+      font-size:10px;
       line-height:1.5;
-      margin-bottom:6px;
     }
-    .logItem b{font-weight:900}
-    .logItem .delta{
-      font-weight:900;
-      padding:2px 8px;
-      border-radius:999px;
-      margin-left:6px;
-      border:1px solid transparent;
-      display:inline-block;
-      font-size:11px;
-    }
-    .delta.pos{color:#166534;background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35)}
-    .delta.neu{color:#1e40af;background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.35)}
-    .delta.neg{color:#991b1b;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35)}
 
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
+    .feedback{
+      display:none;
+      padding:13px;
+      margin-top:12px;
+      border-radius:14px;
+      font-size:11px;
+      line-height:1.55;
     }
-    .btn{
-      border:none;
-      cursor:pointer;
-      border-radius:999px;
-      padding:8px 14px;
-      font-size:12px;
+
+    .feedback.positive{
+      display:block;
+      color:#166534;
+      border-left:4px solid var(--green);
+      background:var(--green-light);
+    }
+
+    .feedback.neutral{
+      display:block;
+      color:#9a3412;
+      border-left:4px solid var(--orange);
+      background:var(--orange-light);
+    }
+
+    .feedback.negative{
+      display:block;
+      color:#991b1b;
+      border-left:4px solid var(--red);
+      background:var(--red-light);
+    }
+
+    .decision-log{
+      min-height:135px;
+      padding:12px;
+      margin-top:12px;
+      border:1px dashed #cbd5e1;
+      border-radius:14px;
+      background:#f8fafc;
+    }
+
+    .decision-log h3{
+      margin:0 0 8px;
+      color:var(--muted);
+      font-size:10px;
       font-weight:900;
-      letter-spacing:.06em;
+      letter-spacing:.07em;
       text-transform:uppercase;
-      color:#f9fafb;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      box-shadow:0 8px 18px rgba(37,99,235,.28);
     }
-    .btn.secondary{
-      background:#111827;
-      box-shadow:0 8px 18px rgba(17,24,39,.18);
+
+    .log-item{
+      padding:7px 0;
+      font-size:10px;
+      line-height:1.45;
+      border-bottom:1px solid #e2e8f0;
     }
-    .btn.ghost{
-      background:#ffffff;
-      color:#111827;
-      border:1px solid var(--border);
-      box-shadow:none;
+
+    .log-item:last-child{
+      border-bottom:none;
+    }
+
+    .log-item strong{
+      display:block;
+      margin-bottom:2px;
+      color:#0f172a;
+    }
+
+    .impact-label{
+      display:inline-flex;
+      margin-top:4px;
+      padding:3px 7px;
+      font-size:8px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      border-radius:999px;
+    }
+
+    .impact-label.positive{
+      color:#166534;
+      border:1px solid #86efac;
+      background:var(--green-light);
+    }
+
+    .impact-label.mixed{
+      color:#9a3412;
+      border:1px solid #fdba74;
+      background:var(--orange-light);
+    }
+
+    .impact-label.negative{
+      color:#991b1b;
+      border:1px solid #fca5a5;
+      background:var(--red-light);
+    }
+
+    .fine-print{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:9px;
+      line-height:1.55;
+    }
+
+    @media(max-width:900px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:600px){
+      body{
+        padding:12px;
+      }
+
+      .hero,
+      .card{
+        padding:16px;
+      }
+
+      .stats{
+        grid-template-columns:1fr;
+      }
+
+      .profile-header,
+      .choice-top{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .actions{
+        flex-direction:column;
+      }
+
+      .btn{
+        width:100%;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <h1>Credit Builder Game</h1>
-    <p class="sub">
-      Make choices and watch a simulated score respond. This is a learning game that mirrors the direction of common scoring behaviors
-      (payment history, utilization, new inquiries, and negative items) — not a real lender calculation.
-    </p>
+  <main class="wrap">
 
-    <div class="banner">
-      <div class="icon">🎮</div>
-      <div class="txt">
-        <strong>Goal</strong>
-        Build habits that push you toward stronger tiers (and better borrowing outcomes): on-time payments, low utilization, fewer inquiries, and fewer negatives.
-      </div>
-    </div>
+    <section class="hero">
+      <div class="eyebrow">Interactive credit-building activity</div>
 
-    <div class="grid">
-      <!-- LEFT: Dashboard -->
-      <div class="card">
-        <h2>Your Current Profile</h2>
-        <p class="note">
-          Start with the default profile and improve it through decisions. Try to reach 720+.
-        </p>
+      <h1>Credit Builder Decision Game</h1>
 
-        <div class="scoreRow">
-          <div class="scorePill">
-            Simulated score <span class="scoreBubble" id="score">680</span>
+      <p>
+        Make financial decisions and watch the underlying credit profile become
+        stronger or weaker. This activity demonstrates the likely direction of
+        common credit behaviors. It does not calculate a real FICO or VantageScore.
+      </p>
+    </section>
+
+    <section class="notice">
+      <div class="notice-icon">!</div>
+
+      <p>
+        Real credit models do not assign a guaranteed number of points to a specific
+        action. The same decision may affect two people differently depending on
+        their complete credit files, reporting dates, scoring models, and prior history.
+      </p>
+    </section>
+
+    <div class="layout">
+
+      <!-- Dashboard -->
+
+      <section class="card">
+        <div class="profile-header">
+          <div>
+            <h2>Your Simulated Credit Profile</h2>
+            <p class="card-note">
+              Strengthen the underlying factors lenders may review.
+            </p>
           </div>
-          <span class="tierTag mid" id="tier">Good (680–719)</span>
+
+          <div class="readiness" id="readiness">
+            Developing profile
+          </div>
         </div>
 
-        <div class="barWrap">
-          <div class="barLabel">Score progress (300 → 850)</div>
-          <div class="barTrack"><div class="barFill" id="bar"></div></div>
+        <div class="meter">
+          <div class="meter-top">
+            <span>Overall credit readiness</span>
+            <strong id="readinessText">Developing</strong>
+          </div>
+
+          <div class="meter-track">
+            <div class="meter-fill" id="meterFill"></div>
+          </div>
         </div>
 
         <div class="stats">
+
           <div class="stat">
-            <div class="label">Utilization</div>
-            <div class="val" id="util">42%</div>
-            <div class="small">Aim: under 30% (strong: under 10%).</div>
+            <div class="stat-label">Payment history</div>
+            <div class="stat-value" id="paymentValue">Needs attention</div>
+            <div class="stat-copy">
+              Prevent new late payments and bring accounts current.
+            </div>
           </div>
+
           <div class="stat">
-            <div class="label">Payment history risk</div>
-            <div class="val" id="payrisk">High</div>
-            <div class="small">Late payments are the biggest score hit.</div>
+            <div class="stat-label">Credit utilization</div>
+            <div class="stat-value" id="utilizationValue">42%</div>
+            <div class="stat-copy">
+              Lower revolving balances are generally more favorable.
+            </div>
           </div>
+
           <div class="stat">
-            <div class="label">Collections</div>
-            <div class="val" id="coll">1</div>
-            <div class="small">Negative items can trigger stricter underwriting.</div>
+            <div class="stat-label">Collections</div>
+            <div class="stat-value" id="collectionValue">1 reported</div>
+            <div class="stat-copy">
+              Verify ownership, balance, dates, and reporting accuracy.
+            </div>
           </div>
+
           <div class="stat">
-            <div class="label">Recent inquiries (12 mo)</div>
-            <div class="val" id="inq">3</div>
-            <div class="small">Too many can pull borderline scores down.</div>
+            <div class="stat-label">Recent applications</div>
+            <div class="stat-value" id="inquiryValue">3 inquiries</div>
+            <div class="stat-copy">
+              Avoid unnecessary new applications before financing.
+            </div>
           </div>
+
+          <div class="stat">
+            <div class="stat-label">Credit history</div>
+            <div class="stat-value" id="historyValue">Limited</div>
+            <div class="stat-copy">
+              Time and well-managed accounts can strengthen the profile.
+            </div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">Monthly debt pressure</div>
+            <div class="stat-value" id="debtValue">Moderate</div>
+            <div class="stat-copy">
+              New obligations may affect affordability and underwriting.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mwu-box">
+          <strong>MWU reminder:</strong> The MWU Loan has a stated minimum
+          independent-borrower FICO score of 660. Reaching that score does not
+          guarantee approval. Payment history, utilization, collections, credit
+          depth, defaults, delinquencies, and other requirements may also be reviewed.
         </div>
 
         <div class="actions">
-          <button class="btn" type="button" onclick="resetGame()">Reset</button>
-          <button class="btn ghost" type="button" onclick="randomEvent()">Random Month Event</button>
-          <button class="btn secondary" type="button" onclick="showHint()">Show Hint</button>
+          <button class="btn primary" type="button" onclick="resetGame()">
+            Reset Profile
+          </button>
+
+          <button class="btn secondary" type="button" onclick="advanceMonth()">
+            Advance One Month
+          </button>
+
+          <button class="btn dark" type="button" onclick="toggleHint()">
+            Show Hint
+          </button>
         </div>
 
-        <div class="small" id="hint" style="display:none;margin-top:10px;">
-          <b>Hint:</b> The fastest “wins” usually come from reducing utilization and preventing late payments.
-          Avoid new hard inquiries while preparing for loan applications.
+        <div class="hint" id="hint">
+          Focus first on preventing late payments and lowering revolving balances.
+          Do not open unnecessary accounts merely to chase a score. A stable,
+          manageable credit profile is more valuable than a quick fix.
         </div>
-      </div>
+      </section>
 
-      <!-- RIGHT: Choices + Log -->
-      <div class="card">
+      <!-- Choices -->
+
+      <section class="card">
         <h2>Choose Your Next Move</h2>
-        <p class="note">
-          Each choice adjusts one or more score drivers. Some help immediately; others hurt your next “month.”
+
+        <p class="card-note">
+          Each choice changes the simulated credit profile. Some decisions may help,
+          hurt, or create a mixed result depending on the circumstances.
         </p>
 
         <div class="choices" id="choices"></div>
 
-        <div class="log" aria-live="polite">
+        <div class="feedback" id="feedback"></div>
+
+        <div class="decision-log">
           <h3>Decision Log</h3>
-          <div id="logItems"></div>
+          <div id="logItems">
+            <div class="log-item">
+              Choose an action to begin.
+            </div>
+          </div>
         </div>
 
-        <div class="small">
-          Educational note: This game demonstrates the direction of impact (up/down) based on common scoring factors.
-          It is not a FICO/VantageScore calculator.
+        <div class="fine-print">
+          This game is directional only. It does not predict a specific credit score,
+          lender approval, private-loan rate, co-signer requirement, or MWU Loan
+          eligibility. The MWU ACCESS Loan is a separate, limited pathway following
+          a qualifying MWU Loan denial and additional institutional review.
         </div>
-      </div>
+      </section>
+
     </div>
-  </div>
+  </main>
 
-<script>
-  // Simple model: we track a few drivers and translate them to a score.
-  // This is intentionally educational (directional), not an exact scoring algorithm.
+  <script>
+    const initialState = {
+      paymentRisk: 2,
+      utilization: 42,
+      collections: 1,
+      inquiries: 3,
+      creditHistory: 1,
+      debtPressure: 1,
+      positiveMonths: 0
+    };
 
-  const baseState = {
-    score: 680,
-    utilization: 42,     // percent
-    lateRisk: 2,         // 0 low, 1 medium, 2 high
-    collections: 1,      // count
-    inquiries: 3,        // count in last 12 months
-    monthsOnTime: 0,     // streak
-  };
+    let state = {...initialState};
+    let log = [];
 
-  let state = {...baseState};
-  let log = [];
-
-  function clamp(n, lo, hi){ return Math.max(lo, Math.min(hi, n)); }
-
-  function tierLabel(score){
-    if (score >= 800) return {text:"Exceptional (800–850)", cls:"good"};
-    if (score >= 740) return {text:"Very Good (740–799)", cls:"good"};
-    if (score >= 680) return {text:"Good (680–739)", cls:"mid"};
-    if (score >= 580) return {text:"Fair (580–679)", cls:"mid"};
-    return {text:"Poor (<580)", cls:"bad"};
-  }
-
-  function scoreFromDrivers(){
-    // Start from a baseline and apply penalties/bonuses.
-    // Weighting is directional: late risk + collections hurt more than inquiries;
-    // utilization matters heavily; consistent on-time streak helps.
-    let s = 740;
-
-    // Utilization penalty
-    if (state.utilization <= 9) s += 18;
-    else if (state.utilization <= 29) s += 6;
-    else if (state.utilization <= 49) s -= 18;
-    else if (state.utilization <= 74) s -= 45;
-    else s -= 85;
-
-    // Late payment risk (proxy for payment history stability)
-    if (state.lateRisk === 2) s -= 55;
-    else if (state.lateRisk === 1) s -= 25;
-
-    // Collections
-    if (state.collections >= 1) s -= 70;
-    if (state.collections >= 2) s -= 30;
-
-    // Inquiries
-    if (state.inquiries >= 6) s -= 25;
-    else if (state.inquiries >= 4) s -= 12;
-    else if (state.inquiries <= 1) s += 4;
-
-    // On-time streak bonus (stability)
-    if (state.monthsOnTime >= 6) s += 14;
-    else if (state.monthsOnTime >= 3) s += 8;
-
-    // Clamp to 300-850 scale
-    state.score = clamp(Math.round(s), 300, 850);
-  }
-
-  function render(){
-    scoreFromDrivers();
-
-    document.getElementById("score").textContent = state.score;
-
-    const tier = tierLabel(state.score);
-    const tierEl = document.getElementById("tier");
-    tierEl.textContent = tier.text;
-    tierEl.className = "tierTag " + (tier.cls === "good" ? "" : tier.cls === "mid" ? "mid" : "bad");
-
-    document.getElementById("util").textContent = state.utilization + "%";
-    document.getElementById("payrisk").textContent = state.lateRisk === 2 ? "High" : state.lateRisk === 1 ? "Medium" : "Low";
-    document.getElementById("coll").textContent = String(state.collections);
-    document.getElementById("inq").textContent = String(state.inquiries);
-
-    const barPct = ((state.score - 300) / (850 - 300)) * 100;
-    document.getElementById("bar").style.width = clamp(barPct, 0, 100) + "%";
-
-    renderChoices();
-    renderLog();
-  }
-
-  function addLog(text, delta){
-    log.unshift({text, delta});
-    if (log.length > 8) log.pop();
-  }
-
-  function renderLog(){
-    const el = document.getElementById("logItems");
-    if (log.length === 0){
-      el.innerHTML = "<div class='logItem'>Make your first choice to begin.</div>";
-      return;
+    function clamp(value,min,max){
+      return Math.max(min,Math.min(max,value));
     }
-    el.innerHTML = log.map(item => {
-      let cls = item.delta > 0 ? "pos" : item.delta < 0 ? "neg" : "neu";
-      let sign = item.delta > 0 ? "+" : "";
-      return `<div class="logItem"><b>${escapeHtml(item.text)}</b>
-        <span class="delta ${cls}">${sign}${item.delta} pts</span></div>`;
-    }).join("");
-  }
 
-  function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g, s => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[s]));
-  }
+    function readinessScore(){
+      let score = 100;
 
-  function applyChoice(choice){
-    // Apply driver changes
-    const before = state.score;
+      score -= state.paymentRisk * 22;
 
-    choice.apply();
+      if(state.utilization >= 75){
+        score -= 30;
+      } else if(state.utilization >= 50){
+        score -= 23;
+      } else if(state.utilization >= 30){
+        score -= 14;
+      } else if(state.utilization >= 10){
+        score -= 6;
+      }
 
-    // Simulate "month passes" if choice represents ongoing behavior
-    // (some actions improve risk over time)
-    if (choice.monthPasses){
-      state.monthsOnTime = clamp(state.monthsOnTime + 1, 0, 24);
-      // lateRisk gradually improves with consistent on-time months
-      if (state.monthsOnTime >= 3 && state.lateRisk > 0) state.lateRisk -= 1;
+      score -= state.collections * 18;
+
+      if(state.inquiries >= 6){
+        score -= 14;
+      } else if(state.inquiries >= 4){
+        score -= 9;
+      } else if(state.inquiries >= 2){
+        score -= 4;
+      }
+
+      if(state.creditHistory === 0){
+        score -= 12;
+      } else if(state.creditHistory === 1){
+        score -= 7;
+      }
+
+      score -= state.debtPressure * 8;
+
+      if(state.positiveMonths >= 6){
+        score += 8;
+      } else if(state.positiveMonths >= 3){
+        score += 4;
+      }
+
+      return clamp(score,5,100);
+    }
+
+    function readinessLevel(value){
+      if(value >= 72){
+        return {
+          text:"Strong",
+          badge:"Strong profile",
+          cls:"strong"
+        };
+      }
+
+      if(value >= 45){
+        return {
+          text:"Developing",
+          badge:"Developing profile",
+          cls:""
+        };
+      }
+
+      return {
+        text:"Needs attention",
+        badge:"Needs attention",
+        cls:"developing"
+      };
+    }
+
+    function paymentLabel(){
+      if(state.paymentRisk === 0) return "Stable";
+      if(state.paymentRisk === 1) return "Some concern";
+      return "Needs attention";
+    }
+
+    function historyLabel(){
+      if(state.creditHistory >= 3) return "Established";
+      if(state.creditHistory === 2) return "Growing";
+      if(state.creditHistory === 1) return "Limited";
+      return "Very limited";
+    }
+
+    function debtLabel(){
+      if(state.debtPressure === 0) return "Low";
+      if(state.debtPressure === 1) return "Moderate";
+      return "High";
+    }
+
+    function render(){
+      const score = readinessScore();
+      const level = readinessLevel(score);
+
+      document.getElementById("meterFill").style.width =
+        score + "%";
+
+      document.getElementById("readinessText").textContent =
+        level.text;
+
+      const readiness = document.getElementById("readiness");
+      readiness.textContent = level.badge;
+      readiness.className =
+        "readiness" + (level.cls ? " " + level.cls : "");
+
+      document.getElementById("paymentValue").textContent =
+        paymentLabel();
+
+      document.getElementById("utilizationValue").textContent =
+        state.utilization + "%";
+
+      document.getElementById("collectionValue").textContent =
+        state.collections === 0
+          ? "None reported"
+          : state.collections + " reported";
+
+      document.getElementById("inquiryValue").textContent =
+        state.inquiries + (state.inquiries === 1 ? " inquiry" : " inquiries");
+
+      document.getElementById("historyValue").textContent =
+        historyLabel();
+
+      document.getElementById("debtValue").textContent =
+        debtLabel();
+
+      renderChoices();
+      renderLog();
+    }
+
+    function addLog(title,impact,explanation){
+      log.unshift({
+        title,
+        impact,
+        explanation
+      });
+
+      if(log.length > 8){
+        log.pop();
+      }
+    }
+
+    function renderLog(){
+      const container = document.getElementById("logItems");
+
+      if(log.length === 0){
+        container.innerHTML =
+          '<div class="log-item">Choose an action to begin.</div>';
+        return;
+      }
+
+      container.innerHTML = log.map(function(item){
+        return `
+          <div class="log-item">
+            <strong>${escapeHtml(item.title)}</strong>
+            ${escapeHtml(item.explanation)}
+            <div class="impact-label ${item.impact}">
+              ${item.impact === "positive"
+                ? "Likely positive direction"
+                : item.impact === "negative"
+                ? "Likely negative direction"
+                : "Mixed or conditional"}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function showFeedback(choice){
+      const feedback = document.getElementById("feedback");
+
+      feedback.className =
+        "feedback " +
+        (choice.impact === "positive"
+          ? "positive"
+          : choice.impact === "negative"
+          ? "negative"
+          : "neutral");
+
+      feedback.innerHTML =
+        "<strong>" +
+        escapeHtml(choice.title) +
+        "</strong><br>" +
+        escapeHtml(choice.feedback);
+    }
+
+    function applyChoice(index){
+      const choice = window.gameChoices[index];
+
+      if(!choice) return;
+
+      choice.apply();
+      addLog(
+        choice.title,
+        choice.impact,
+        choice.logText
+      );
+
+      showFeedback(choice);
+      render();
+    }
+
+    function renderChoices(){
+      const choices = [
+
+        {
+          title:"Pay down revolving balances",
+          chip:"Likely helpful",
+          chipClass:"",
+          desc:
+            "Reduce utilization without opening a new account.",
+          impact:"positive",
+          feedback:
+            "Lower reported revolving balances are generally more favorable. The effect may appear after the creditor reports the updated balance.",
+          logText:
+            "Utilization decreased after revolving balances were reduced.",
+          apply:function(){
+            state.utilization =
+              clamp(state.utilization - 15,0,100);
+
+            if(state.debtPressure > 0){
+              state.debtPressure -= 1;
+            }
+          }
+        },
+
+        {
+          title:"Set automatic minimum payments",
+          chip:"Protects history",
+          chipClass:"",
+          desc:
+            "Reduce the risk of an accidental late payment.",
+          impact:"positive",
+          feedback:
+            "Autopay can help prevent missed due dates, but statements and checking-account balances still need to be monitored.",
+          logText:
+            "Payment risk decreased because automatic minimum payments were established.",
+          apply:function(){
+            state.paymentRisk =
+              clamp(state.paymentRisk - 1,0,2);
+          }
+        },
+
+        {
+          title:"Open a secured card for one planned expense",
+          chip:"Conditional",
+          chipClass:"caution",
+          desc:
+            "Useful for a thin file only when the account is affordable and reports to the bureaus.",
+          impact:"mixed",
+          feedback:
+            "A secured card may help establish revolving history, but it also creates a new account and possible inquiry. It should be opened only when it fills a real credit-building need.",
+          logText:
+            "Credit history may improve over time, but a new account was also added.",
+          apply:function(){
+            state.creditHistory =
+              clamp(state.creditHistory + 1,0,3);
+
+            state.inquiries =
+              clamp(state.inquiries + 1,0,20);
+          }
+        },
+
+        {
+          title:"Take out a personal loan only to improve credit mix",
+          chip:"Usually unnecessary",
+          chipClass:"negative",
+          desc:
+            "Adds debt, a payment obligation, and potentially an inquiry.",
+          impact:"negative",
+          feedback:
+            "Credit mix is only one scoring factor. Opening unnecessary high-cost debt can increase monthly obligations and make future underwriting more difficult.",
+          logText:
+            "A new debt obligation and inquiry were added without a genuine borrowing need.",
+          apply:function(){
+            state.inquiries =
+              clamp(state.inquiries + 1,0,20);
+
+            state.debtPressure =
+              clamp(state.debtPressure + 1,0,2);
+          }
+        },
+
+        {
+          title:"Dispute information that is genuinely inaccurate",
+          chip:"Appropriate action",
+          chipClass:"",
+          desc:
+            "Correct an account, balance, late payment, or collection that is wrong.",
+          impact:"positive",
+          feedback:
+            "Disputes should be used to correct inaccurate, incomplete, duplicated, or fraudulent information—not to remove accurate negative history.",
+          logText:
+            "An inaccurate negative item was corrected after documentation and review.",
+          apply:function(){
+            if(state.collections > 0){
+              state.collections -= 1;
+            } else if(state.paymentRisk > 0){
+              state.paymentRisk -= 1;
+            }
+          }
+        },
+
+        {
+          title:"Ignore a legitimate collection",
+          chip:"Unresolved concern",
+          chipClass:"negative",
+          desc:
+            "The account remains available for scoring and underwriting review.",
+          impact:"negative",
+          feedback:
+            "A collection should first be verified. If legitimate, review resolution options and preserve documentation. Lenders and scoring models do not all treat collections identically.",
+          logText:
+            "A collection remained unresolved and may continue to affect underwriting.",
+          apply:function(){
+            state.debtPressure =
+              clamp(state.debtPressure + 1,0,2);
+          }
+        },
+
+        {
+          title:"Close an old no-fee credit card",
+          chip:"Mixed result",
+          chipClass:"caution",
+          desc:
+            "May reduce available credit and increase utilization.",
+          impact:"mixed",
+          feedback:
+            "Closing an old account may reduce available credit and raise utilization. Keeping it open may be useful when it has no fee and does not create overspending risk.",
+          logText:
+            "Available revolving credit decreased, which increased utilization.",
+          apply:function(){
+            state.utilization =
+              clamp(state.utilization + 10,0,100);
+
+            state.creditHistory =
+              clamp(state.creditHistory - 1,0,3);
+          }
+        },
+
+        {
+          title:"Carry a balance because you think it builds credit",
+          chip:"Costs interest",
+          chipClass:"negative",
+          desc:
+            "Carrying interest-bearing debt does not improve credit more than paying as agreed.",
+          impact:"negative",
+          feedback:
+            "You do not need to carry a balance to build credit. Paying the statement balance in full avoids interest while still establishing payment activity.",
+          logText:
+            "Debt and utilization remained higher without creating an added credit benefit.",
+          apply:function(){
+            state.utilization =
+              clamp(state.utilization + 8,0,100);
+
+            state.debtPressure =
+              clamp(state.debtPressure + 1,0,2);
+          }
+        },
+
+        {
+          title:"Become an authorized user on a well-managed account",
+          chip:"Conditional",
+          chipClass:"caution",
+          desc:
+            "Results depend on the account, issuer reporting, utilization, and payment history.",
+          impact:"mixed",
+          feedback:
+            "Authorized-user status may help some credit files, but the result is not guaranteed. A high-balance or poorly managed account could be unhelpful.",
+          logText:
+            "Positive account history may be added, subject to issuer reporting and scoring treatment.",
+          apply:function(){
+            state.creditHistory =
+              clamp(state.creditHistory + 1,0,3);
+
+            state.utilization =
+              clamp(state.utilization - 5,0,100);
+          }
+        },
+
+        {
+          title:"Apply for three new cards before a loan application",
+          chip:"Poor timing",
+          chipClass:"negative",
+          desc:
+            "Creates several new accounts and hard inquiries close to underwriting.",
+          impact:"negative",
+          feedback:
+            "Multiple recent applications may add inquiries, lower average account age, and create uncertainty during loan underwriting.",
+          logText:
+            "Several inquiries and new accounts were added before education financing.",
+          apply:function(){
+            state.inquiries =
+              clamp(state.inquiries + 3,0,20);
+
+            state.creditHistory =
+              clamp(state.creditHistory - 1,0,3);
+          }
+        }
+
+      ];
+
+      window.gameChoices = choices;
+
+      document.getElementById("choices").innerHTML =
+        choices.map(function(choice,index){
+          return `
+            <button
+              type="button"
+              class="choice"
+              onclick="applyChoice(${index})"
+            >
+              <div class="choice-top">
+                <div class="choice-title">
+                  ${escapeHtml(choice.title)}
+                </div>
+
+                <div class="choice-chip ${choice.chipClass}">
+                  ${escapeHtml(choice.chip)}
+                </div>
+              </div>
+
+              <p class="choice-desc">
+                ${escapeHtml(choice.desc)}
+              </p>
+            </button>
+          `;
+        }).join("");
+    }
+
+    function advanceMonth(){
+      const feedback = document.getElementById("feedback");
+
+      state.positiveMonths =
+        clamp(state.positiveMonths + 1,0,24);
+
+      if(state.paymentRisk > 0 && state.positiveMonths % 3 === 0){
+        state.paymentRisk -= 1;
+      }
+
+      if(state.inquiries > 0 && state.positiveMonths % 6 === 0){
+        state.inquiries -= 1;
+      }
+
+      feedback.className = "feedback neutral";
+      feedback.innerHTML =
+        "<strong>One month passed</strong><br>" +
+        "Positive credit history develops over time. The simulated profile may improve gradually, but no specific point increase is guaranteed.";
+
+      addLog(
+        "One month of account activity",
+        "mixed",
+        "Time passed with no new negative activity. Credit improvement remains gradual and profile-specific."
+      );
+
+      render();
+    }
+
+    function resetGame(){
+      state = {...initialState};
+      log = [];
+
+      document.getElementById("feedback").className =
+        "feedback";
+
+      document.getElementById("feedback").innerHTML =
+        "";
+
+      document.getElementById("hint").style.display =
+        "none";
+
+      render();
+    }
+
+    function toggleHint(){
+      const hint = document.getElementById("hint");
+
+      hint.style.display =
+        hint.style.display === "block"
+          ? "none"
+          : "block";
+    }
+
+    function escapeHtml(value){
+      return String(value).replace(
+        /[&<>"']/g,
+        function(character){
+          return {
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+          }[character];
+        }
+      );
     }
 
     render();
-    const after = state.score;
-    addLog(choice.title, after - before);
-    renderLog();
-  }
-
-  function renderChoices(){
-    const choices = [];
-
-    // Core choices (matching your lesson content)
-    choices.push({
-      title: "Pay down card balance (reduce utilization)",
-      desc: "You cut your utilization by ~15%. This is often one of the fastest score improvements.",
-      chip: "Likely helps",
-      chipCls: "impactChip",
-      apply: () => { state.utilization = clamp(state.utilization - 15, 0, 100); },
-      monthPasses: false
-    });
-
-    choices.push({
-      title: "Set up autopay for all accounts",
-      desc: "Reduces missed payment risk. Preventing late payments is the single biggest protection move.",
-      chip: "Protects score",
-      chipCls: "impactChip",
-      apply: () => { state.lateRisk = clamp(state.lateRisk - 1, 0, 2); },
-      monthPasses: true
-    });
-
-    choices.push({
-      title: "Open another credit card right now",
-      desc: "Adds a hard inquiry and new account risk. May hurt short-term before helping long-term.",
-      chip: "Short-term risk",
-      chipCls: "impactChip warn",
-      apply: () => { state.inquiries = clamp(state.inquiries + 1, 0, 20); },
-      monthPasses: false
-    });
-
-    choices.push({
-      title: "Become an authorized user on a strong account",
-      desc: "If the primary user has low utilization and perfect history, this can add positive history.",
-      chip: "Can boost",
-      chipCls: "impactChip",
-      apply: () => {
-        state.utilization = clamp(state.utilization - 8, 0, 100);
-        state.lateRisk = clamp(state.lateRisk - 1, 0, 2);
-      },
-      monthPasses: false
-    });
-
-    choices.push({
-      title: "Dispute an error on your report (if it’s wrong)",
-      desc: "If an item is inaccurate, correcting it can immediately improve outcomes.",
-      chip: "High value",
-      chipCls: "impactChip",
-      apply: () => {
-        // Remove a collection (simulated) if one exists
-        if (state.collections > 0) state.collections -= 1;
-      },
-      monthPasses: false
-    });
-
-    choices.push({
-      title: "Ignore a collection account",
-      desc: "Negative items remain and can block approvals or trigger co-signer requirements.",
-      chip: "Hurts options",
-      chipCls: "impactChip bad",
-      apply: () => {
-        // Stagnation: increase risk slightly over time
-        state.lateRisk = clamp(state.lateRisk + 1, 0, 2);
-      },
-      monthPasses: true
-    });
-
-    choices.push({
-      title: "Max out a card for a big purchase",
-      desc: "Utilization spikes, which can drop scores quickly even if you pay on time.",
-      chip: "High negative",
-      chipCls: "impactChip bad",
-      apply: () => { state.utilization = clamp(state.utilization + 35, 0, 100); },
-      monthPasses: false
-    });
-
-    const container = document.getElementById("choices");
-    container.innerHTML = choices.map((c, idx) => `
-      <div class="choice" role="button" tabindex="0"
-           onclick="applyChoiceIndex(${idx})"
-           onkeydown="if(event.key==='Enter'||event.key===' ')applyChoiceIndex(${idx})">
-        <div class="choiceTitle">
-          <span>${escapeHtml(c.title)}</span>
-          <span class="${c.chipCls}">${escapeHtml(c.chip)}</span>
-        </div>
-        <p class="choiceDesc">${escapeHtml(c.desc)}</p>
-      </div>
-    `).join("");
-
-    // Store for onclick
-    window.__choices = choices;
-  }
-
-  window.applyChoiceIndex = function(i){
-    const c = window.__choices?.[i];
-    if (!c) return;
-    applyChoice(c);
-  };
-
-  function resetGame(){
-    state = {...baseState};
-    log = [];
-    document.getElementById("hint").style.display = "none";
-    render();
-  }
-
-  function randomEvent(){
-    // Simulate a month event:
-    // - on-time month helps
-    // - sometimes an "unexpected expense" raises utilization
-    const before = state.score;
-
-    const roll = Math.random();
-    let msg = "";
-    if (roll < 0.55){
-      state.monthsOnTime = clamp(state.monthsOnTime + 1, 0, 24);
-      if (state.monthsOnTime >= 3 && state.lateRisk > 0) state.lateRisk -= 1;
-      msg = "A month passes with on-time payments";
-    } else if (roll < 0.8){
-      state.utilization = clamp(state.utilization + 10, 0, 100);
-      msg = "Unexpected expense raises utilization";
-    } else {
-      // a small inquiry from rate shopping attempt
-      state.inquiries = clamp(state.inquiries + 1, 0, 20);
-      msg = "You apply for something new (hard inquiry added)";
-    }
-
-    render();
-    addLog(msg, state.score - before);
-    renderLog();
-  }
-
-  function showHint(){
-    const el = document.getElementById("hint");
-    el.style.display = el.style.display === "none" ? "block" : "none";
-  }
-
-  // init
-  render();
-</script>
+  </script>
 </body>
 </html>
