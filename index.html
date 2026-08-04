@@ -1,369 +1,1047 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Adjust the Score Simulator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credit Profile Simulator</title>
+
   <style>
     :root{
-      --bg:#f6f7fb;
+      --navy:#0f2747;
+      --blue:#2563eb;
+      --sky:#0ea5e9;
+      --green:#16a34a;
+      --green-light:#ecfdf5;
+      --yellow:#eab308;
+      --orange:#ea580c;
+      --orange-light:#fff7ed;
+      --red:#dc2626;
+      --red-light:#fef2f2;
+      --purple:#7c3aed;
+      --purple-light:#f5f3ff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#dbe3ee;
       --card:#ffffff;
-      --border:#e5e7eb;
-      --muted:#6b7280;
-      --text:#111827;
-      --accent:#0f172a;
-
-      --good:#16a34a;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-
-      --track:#d1d5db;
+      --track:#e2e8f0;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
     }
-    *{box-sizing:border-box}
+
+    *{
+      box-sizing:border-box;
+    }
+
     body{
       margin:0;
-      font-family: Arial, Helvetica, sans-serif;
-      color:var(--text);
-      background:linear-gradient(180deg,#ffffff, var(--bg));
       padding:24px;
+      color:var(--text);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left,#dbeafe 0,transparent 36%),
+        linear-gradient(135deg,#f8fafc,#eef2ff);
     }
-    .wrap{max-width:980px;margin:0 auto}
-    .header{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:18px 20px;
+
+    input,
+    button{
+      font:inherit;
     }
-    h1{margin:0 0 6px 0;font-size:24px}
-    p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
-    .pillRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .pill{border:1px solid var(--border);background:#f9fafb;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;color:#374151}
-    .grid{display:grid;gap:14px;margin-top:14px}
+
+    .wrap{
+      max-width:1050px;
+      margin:0 auto;
+    }
+
+    .hero{
+      padding:24px;
+      margin-bottom:18px;
+      color:white;
+      border-radius:24px;
+      background:linear-gradient(135deg,var(--navy),var(--blue),var(--sky));
+      box-shadow:0 18px 38px rgba(37,99,235,.24);
+    }
+
+    .eyebrow{
+      margin-bottom:6px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:.85;
+    }
+
+    h1{
+      margin:0 0 8px;
+      font-size:clamp(26px,4vw,38px);
+      line-height:1.1;
+    }
+
+    .hero p{
+      max-width:900px;
+      margin:0;
+      color:#e0f2fe;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .notice{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      padding:14px 16px;
+      margin-bottom:18px;
+      color:#1e3a8a;
+      border:1px solid #93c5fd;
+      border-radius:17px;
+      background:#eff6ff;
+    }
+
+    .notice-icon{
+      display:grid;
+      width:36px;
+      height:36px;
+      flex:0 0 auto;
+      color:white;
+      font-weight:900;
+      place-items:center;
+      border-radius:50%;
+      background:var(--blue);
+    }
+
+    .notice p{
+      margin:0;
+      font-size:12px;
+      line-height:1.55;
+    }
+
+    .grid{
+      display:grid;
+      gap:14px;
+    }
+
     .card{
-      background:var(--card);
+      padding:18px;
       border:1px solid var(--border);
-      border-radius:16px;
-      padding:16px 18px;
+      border-radius:21px;
+      background:var(--card);
+      box-shadow:var(--shadow);
     }
-    .kicker{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.3px}
-    .score{font-size:44px;font-weight:900;margin-top:4px}
-    .band{font-weight:900;margin-top:4px}
-    .note{font-size:12px;color:var(--muted);margin-top:8px}
-    .rowTop{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-    .label{font-weight:900}
-    .pct{color:var(--muted);font-weight:800}
-    .val{font-size:13px;color:var(--text)}
-    input[type="range"]{
-      width:100%;
-      margin-top:10px;
-      -webkit-appearance:none;
-      height:10px;
+
+    .card h2{
+      margin:0 0 5px;
+      font-size:17px;
+    }
+
+    .card-note{
+      margin:0;
+      color:var(--muted);
+      font-size:11px;
+      line-height:1.55;
+    }
+
+    .profile-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .readiness-badge{
+      padding:6px 10px;
+      color:#9a3412;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      border:1px solid #fdba74;
+      border-radius:999px;
+      background:var(--orange-light);
+    }
+
+    .readiness-badge.strong{
+      color:#166534;
+      border-color:#86efac;
+      background:var(--green-light);
+    }
+
+    .readiness-badge.attention{
+      color:#991b1b;
+      border-color:#fca5a5;
+      background:var(--red-light);
+    }
+
+    .readiness-score{
+      margin-top:3px;
+      font-size:38px;
+      font-weight:900;
+      line-height:1;
+    }
+
+    .readiness-label{
+      margin-top:5px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .meter-wrap{
+      margin-top:14px;
+    }
+
+    .meter-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:6px;
+      color:var(--muted);
+      font-size:10px;
+      font-weight:800;
+    }
+
+    .meter-track{
+      height:14px;
+      overflow:hidden;
       border-radius:999px;
       background:var(--track);
-      outline:none;
     }
-    input[type="range"]::-webkit-slider-thumb{
-      -webkit-appearance:none;
-      appearance:none;
-      width:20px;height:20px;border-radius:50%;
-      background:var(--accent);
-      cursor:pointer;
-      border:2px solid #fff;
-      box-shadow:0 2px 8px rgba(0,0,0,.15);
-    }
-    input[type="range"]::-moz-range-thumb{
-      width:20px;height:20px;border-radius:50%;
-      background:var(--accent);
-      cursor:pointer;border:2px solid #fff;
-      box-shadow:0 2px 8px rgba(0,0,0,.15);
-    }
-    details{border:1px solid var(--border);border-radius:16px;background:var(--card)}
-    summary{cursor:pointer;padding:12px 14px;font-weight:900}
-    details .inner{padding:0 14px 14px 14px}
 
-    /* Toggle */
-    .toggleRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
-    .toggle{
-      display:flex;align-items:center;gap:10px;
-      border:1px solid var(--border);
-      background:#f9fafb;
-      border-radius:12px;
-      padding:10px 12px;
-      width:fit-content;
-    }
-    .toggle input{transform:scale(1.2)}
-    .toggle strong{font-size:13px}
-    .toggle span{font-size:12px;color:var(--muted);font-weight:700}
-
-    /* Score Range Bar */
-    .rangeWrap{margin-top:12px}
-    .rangeBar{
-      position:relative;
-      height:14px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:
-        linear-gradient(90deg,
-          #ef4444 0%,
-          #f59e0b 35%,
-          #16a34a 55%,
-          #0ea5e9 75%,
-          #7c3aed 100%);
-      overflow:hidden;
-    }
-    .rangeFill{
-      position:absolute;left:0;top:0;height:100%;
+    .meter-fill{
       width:0%;
-      background:rgba(255,255,255,0.55);
-      mix-blend-mode:overlay;
-    }
-    .marker{
-      position:absolute;top:50%;
-      width:12px;height:12px;border-radius:50%;
-      transform:translate(-50%,-50%);
-      background:#111827;
-      border:2px solid #fff;
-      box-shadow:0 2px 8px rgba(0,0,0,.20);
-      left:0%;
-    }
-    .rangeLabels{
-      display:flex;justify-content:space-between;gap:8px;
-      margin-top:8px;font-size:11px;color:var(--muted);font-weight:800;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(
+        90deg,
+        var(--red),
+        var(--orange),
+        var(--yellow),
+        var(--green)
+      );
+      transition:width .2s ease;
     }
 
-    /* Utilization Meter */
-    .meter{
-      height:12px;border-radius:999px;border:1px solid var(--border);
-      background:#f3f4f6;overflow:hidden;margin-top:10px;position:relative;
+    .status-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:9px;
+      margin-top:14px;
     }
-    .meterFill{
-      height:100%;width:0%;
-      background:var(--good);
-      transition:width .05s linear;
-    }
-    .meterLine{
-      position:absolute;top:0;height:100%;width:2px;background:#111827;
-      left:30%;
-      opacity:.5;
-    }
-    .meterText{
-      margin-top:6px;font-size:12px;color:var(--muted);font-weight:800;
-      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
-    }
-    .callout{
+
+    .status-box{
+      padding:11px;
       border:1px solid var(--border);
-      background:#fff;
-      border-radius:12px;
-      padding:10px 12px;
-      font-size:13px;
-      color:#374151;
+      border-radius:14px;
+      background:#f8fafc;
     }
-    .callout strong{color:#111827}
+
+    .status-title{
+      margin-bottom:4px;
+      color:var(--muted);
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    .status-value{
+      font-size:14px;
+      font-weight:900;
+    }
+
+    .status-copy{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:9px;
+      line-height:1.4;
+    }
+
+    .slider-card{
+      padding:15px;
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:#f8fafc;
+    }
+
+    .slider-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:10px;
+      margin-bottom:5px;
+    }
+
+    .slider-title{
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .slider-value{
+      color:#334155;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    input[type="range"]{
+      width:100%;
+      height:10px;
+      margin-top:8px;
+      appearance:none;
+      border-radius:999px;
+      outline:none;
+      background:#cbd5e1;
+    }
+
+    input[type="range"]::-webkit-slider-thumb{
+      width:22px;
+      height:22px;
+      appearance:none;
+      cursor:pointer;
+      border:3px solid white;
+      border-radius:50%;
+      background:var(--blue);
+      box-shadow:0 3px 10px rgba(15,23,42,.23);
+    }
+
+    input[type="range"]::-moz-range-thumb{
+      width:19px;
+      height:19px;
+      cursor:pointer;
+      border:3px solid white;
+      border-radius:50%;
+      background:var(--blue);
+      box-shadow:0 3px 10px rgba(15,23,42,.23);
+    }
+
+    .slider-note{
+      margin-top:7px;
+      color:var(--muted);
+      font-size:10px;
+      line-height:1.5;
+    }
+
+    .util-meter{
+      position:relative;
+      height:12px;
+      margin-top:9px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:#e2e8f0;
+    }
+
+    .util-fill{
+      width:0%;
+      height:100%;
+      background:var(--green);
+      transition:width .15s ease,background .15s ease;
+    }
+
+    .util-line{
+      position:absolute;
+      top:0;
+      bottom:0;
+      left:30%;
+      width:2px;
+      background:#0f172a;
+      opacity:.4;
+    }
+
+    .util-status{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:6px;
+      color:var(--muted);
+      font-size:10px;
+      font-weight:800;
+    }
+
+    .toggle{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:12px;
+      margin-top:12px;
+      cursor:pointer;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#f8fafc;
+    }
+
+    .toggle input{
+      margin-top:3px;
+      transform:scale(1.2);
+    }
+
+    .toggle strong{
+      display:block;
+      margin-bottom:2px;
+      font-size:12px;
+    }
+
+    .toggle span{
+      color:var(--muted);
+      font-size:10px;
+      line-height:1.5;
+    }
+
+    .late-alert{
+      display:none;
+      padding:11px;
+      margin-top:10px;
+      color:#991b1b;
+      font-size:10px;
+      line-height:1.55;
+      border-left:4px solid var(--red);
+      border-radius:0 12px 12px 0;
+      background:var(--red-light);
+    }
+
+    details{
+      margin-top:14px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:white;
+    }
+
+    summary{
+      padding:13px 14px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:900;
+      background:#f8fafc;
+    }
+
+    .details-inner{
+      padding:0 14px 14px;
+    }
+
+    .guidance{
+      padding:14px;
+      margin-top:14px;
+      color:#334155;
+      font-size:11px;
+      line-height:1.6;
+      border-left:4px solid var(--blue);
+      border-radius:0 13px 13px 0;
+      background:#f8fafc;
+    }
+
+    .guidance strong{
+      color:#0f172a;
+    }
+
+    .mwu-box{
+      padding:13px;
+      margin-top:14px;
+      color:#5b21b6;
+      font-size:10px;
+      line-height:1.55;
+      border-left:4px solid var(--purple);
+      border-radius:0 13px 13px 0;
+      background:var(--purple-light);
+    }
+
+    @media(max-width:800px){
+      .status-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:600px){
+      body{
+        padding:12px;
+      }
+
+      .hero,
+      .card{
+        padding:16px;
+      }
+
+      .profile-header,
+      .slider-top,
+      .util-status{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+    }
   </style>
 </head>
-<body>
-  <div class="wrap">
-    <div class="header">
-      <h1>Adjust the Score Simulator</h1>
-      <p>Move the sliders to see how changes in Payment History and Utilization impact a simulated score. Learning tool only (not an official FICO score).</p>
 
-      <div class="pillRow">
-        <div class="pill">FICO weights: 35/30/15/10/10</div>
-        <div class="pill">Scale: 300–850</div>
-        <div class="pill">Key levers: Payment History + Utilization</div>
+<body>
+  <main class="wrap">
+
+    <section class="hero">
+      <div class="eyebrow">Interactive credit-profile activity</div>
+
+      <h1>Adjust Your Credit Profile</h1>
+
+      <p>
+        Move the sliders to see how payment history, revolving utilization,
+        credit history, new applications, and other behaviors may strengthen or
+        weaken a credit profile. This tool does not calculate a real FICO or
+        VantageScore.
+      </p>
+    </section>
+
+    <section class="notice">
+      <div class="notice-icon">!</div>
+
+      <p>
+        Published credit-scoring categories help explain what matters, but they
+        cannot be used to calculate a personal credit score. Real scoring models
+        evaluate the complete credit file, and the same action can affect two
+        borrowers differently.
+      </p>
+    </section>
+
+    <section class="grid">
+
+      <div class="card">
+        <div class="profile-header">
+          <div>
+            <h2>Simulated Credit Readiness</h2>
+
+            <p class="card-note">
+              This readiness indicator reflects the direction of the profile,
+              not a numerical lender score.
+            </p>
+
+            <div class="readiness-score" id="readinessNumber">—</div>
+            <div class="readiness-label">Profile readiness out of 100</div>
+          </div>
+
+          <div class="readiness-badge" id="readinessBadge">
+            Developing profile
+          </div>
+        </div>
+
+        <div class="meter-wrap">
+          <div class="meter-top">
+            <span>Overall simulated readiness</span>
+            <strong id="readinessText">Developing</strong>
+          </div>
+
+          <div class="meter-track">
+            <div class="meter-fill" id="readinessFill"></div>
+          </div>
+        </div>
+
+        <div class="status-grid">
+
+          <div class="status-box">
+            <div class="status-title">Payment history</div>
+            <div class="status-value" id="paymentStatus">Stable</div>
+            <div class="status-copy">
+              Late payments may materially affect scoring and underwriting.
+            </div>
+          </div>
+
+          <div class="status-box">
+            <div class="status-title">Utilization</div>
+            <div class="status-value" id="utilizationStatus">28%</div>
+            <div class="status-copy">
+              Lower revolving balances are generally more favorable.
+            </div>
+          </div>
+
+          <div class="status-box">
+            <div class="status-title">Application readiness</div>
+            <div class="status-value" id="applicationStatus">Moderate</div>
+            <div class="status-copy">
+              Stability matters before credit-based education financing.
+            </div>
+          </div>
+
+        </div>
+
+        <div class="guidance" id="guidance">
+          Adjust the factors below to generate personalized educational guidance.
+        </div>
+
+        <div class="mwu-box">
+          <strong>MWU Loan reminder:</strong> The stated minimum
+          independent-borrower FICO score is 660, but reaching 660 does not
+          guarantee approval. The complete review may also consider payment history,
+          utilization, credit depth, collections, defaults, delinquencies, and
+          other program requirements.
+        </div>
       </div>
 
-      <div class="toggleRow">
+      <div class="card">
+        <h2>Core Credit Factors</h2>
+
+        <p class="card-note">
+          Adjust the underlying behaviors rather than trying to manufacture a
+          particular score.
+        </p>
+
+        <div class="slider-card">
+          <div class="slider-top">
+            <div class="slider-title">On-Time Payment Consistency</div>
+            <div class="slider-value">
+              <span id="paymentValue">90</span>/100
+            </div>
+          </div>
+
+          <input
+            id="payment"
+            type="range"
+            min="0"
+            max="100"
+            value="90"
+          >
+
+          <div class="slider-note">
+            Higher values represent a longer, cleaner pattern of paying accounts
+            as agreed. Payment history is generally the most influential scoring
+            category.
+          </div>
+        </div>
+
         <label class="toggle">
-          <input id="lateToggle" type="checkbox" />
+          <input id="latePayment" type="checkbox">
+
           <div>
-            <strong>Missed payment impact (30+ days late)</strong><br/>
-            <span>Applies a realistic score hit + lowers Payment History effectiveness</span>
+            <strong>Simulate a recently reported 30-day late payment</strong>
+            <span>
+              A late payment may materially weaken the profile, but there is no
+              universal point loss.
+            </span>
           </div>
         </label>
-        <div id="lateMsg" class="callout" style="display:none;">
-          <strong>Late payment ON:</strong> score takes a hit and risk increases.
-        </div>
-      </div>
-    </div>
 
-    <div class="grid">
-      <div class="card">
-        <div class="kicker">SIMULATED SCORE (300–850)</div>
-        <div id="score" class="score">—</div>
-        <div id="band" class="band">—</div>
-
-        <!-- Dynamic Range Bar -->
-        <div class="rangeWrap">
-          <div class="rangeBar" aria-label="credit score range bar">
-            <div id="rangeFill" class="rangeFill"></div>
-            <div id="marker" class="marker" title="Your simulated score"></div>
-          </div>
-          <div class="rangeLabels">
-            <span>Poor<br><span style="font-weight:700;">&lt;580</span></span>
-            <span>Fair<br><span style="font-weight:700;">580–669</span></span>
-            <span>Good<br><span style="font-weight:700;">670–739</span></span>
-            <span>Very Good<br><span style="font-weight:700;">740–799</span></span>
-            <span>Exceptional<br><span style="font-weight:700;">800–850</span></span>
-          </div>
+        <div class="late-alert" id="lateAlert">
+          <strong>Recent late payment added:</strong> The profile now shows a
+          serious payment-history concern. The impact depends on recency, severity,
+          prior history, and the scoring or underwriting model.
         </div>
 
-        <div class="note">Reminder: utilization is most controllable; late payments are the most damaging.</div>
-      </div>
-
-      <!-- Payment History -->
-      <div class="card">
-        <div class="rowTop">
-          <div class="label">Payment History <span class="pct">(35%)</span></div>
-          <div class="val">Value: <span id="phv">80</span>/100</div>
-        </div>
-        <input id="ph" type="range" min="0" max="100" value="80" />
-        <div class="note">Missed-payment toggle simulates a 30+ day late: score drop + reduced Payment History effectiveness.</div>
-      </div>
-
-      <!-- Utilization as % -->
-      <div class="card">
-        <div class="rowTop">
-          <div class="label">Credit Utilization <span class="pct">(30%)</span></div>
-          <div class="val"><span id="utPct">28</span>% used • Utilization Score: <span id="utScore">—</span>/100</div>
-        </div>
-        <input id="ut" type="range" min="0" max="100" value="28" />
-        <div class="meter" aria-label="utilization meter">
-          <div id="utFill" class="meterFill"></div>
-          <div class="meterLine" title="30% threshold"></div>
-        </div>
-        <div class="meterText">
-          <span>Target: <strong>&lt;30%</strong> (ideal: <strong>&lt;10%</strong>)</span>
-          <span id="utFlag"></span>
-        </div>
-      </div>
-
-      <details>
-        <summary>Advanced: Other Factors (optional)</summary>
-        <div class="inner">
-          <div class="card" style="margin-top:12px;">
-            <div class="rowTop">
-              <div class="label">Length of Credit History <span class="pct">(15%)</span></div>
-              <div class="val">Value: <span id="lnv">60</span>/100</div>
+        <div class="slider-card">
+          <div class="slider-top">
+            <div class="slider-title">Revolving Credit Utilization</div>
+            <div class="slider-value">
+              <span id="utilizationValue">28</span>% used
             </div>
-            <input id="ln" type="range" min="0" max="100" value="60" />
           </div>
 
-          <div class="card" style="margin-top:12px;">
-            <div class="rowTop">
-              <div class="label">Credit Mix <span class="pct">(10%)</span></div>
-              <div class="val">Value: <span id="mxv">60</span>/100</div>
-            </div>
-            <input id="mx" type="range" min="0" max="100" value="60" />
+          <input
+            id="utilization"
+            type="range"
+            min="0"
+            max="100"
+            value="28"
+          >
+
+          <div class="util-meter">
+            <div class="util-fill" id="utilizationFill"></div>
+            <div class="util-line" title="30% planning benchmark"></div>
           </div>
 
-          <div class="card" style="margin-top:12px;">
-            <div class="rowTop">
-              <div class="label">New Credit / Inquiries <span class="pct">(10%)</span></div>
-              <div class="val">Value: <span id="nwv">70</span>/100</div>
-            </div>
-            <input id="nw" type="range" min="0" max="100" value="70" />
+          <div class="util-status">
+            <span>
+              30% is a planning benchmark—not a scoring guarantee.
+            </span>
+
+            <strong id="utilizationFlag">Manageable</strong>
+          </div>
+
+          <div class="slider-note">
+            Scoring models may consider both total revolving utilization and
+            utilization on individual accounts. Lower is generally more favorable,
+            but no percentage guarantees a particular score.
           </div>
         </div>
-      </details>
-    </div>
-  </div>
+
+        <details>
+          <summary>Advanced Factors</summary>
+
+          <div class="details-inner">
+
+            <div class="slider-card">
+              <div class="slider-top">
+                <div class="slider-title">Length and Depth of Credit History</div>
+                <div class="slider-value">
+                  <span id="historyValue">55</span>/100
+                </div>
+              </div>
+
+              <input
+                id="history"
+                type="range"
+                min="0"
+                max="100"
+                value="55"
+              >
+
+              <div class="slider-note">
+                A longer history of well-managed accounts may strengthen the
+                profile. Opening unnecessary accounts does not create instant
+                maturity.
+              </div>
+            </div>
+
+            <div class="slider-card">
+              <div class="slider-top">
+                <div class="slider-title">Recent Applications and New Accounts</div>
+                <div class="slider-value">
+                  Stability: <span id="newCreditValue">70</span>/100
+                </div>
+              </div>
+
+              <input
+                id="newCredit"
+                type="range"
+                min="0"
+                max="100"
+                value="70"
+              >
+
+              <div class="slider-note">
+                Higher values represent fewer recent applications and greater
+                stability. Avoid unnecessary new accounts before education-loan
+                underwriting.
+              </div>
+            </div>
+
+            <div class="slider-card">
+              <div class="slider-top">
+                <div class="slider-title">Account Mix and Debt Manageability</div>
+                <div class="slider-value">
+                  <span id="mixValue">65</span>/100
+                </div>
+              </div>
+
+              <input
+                id="mix"
+                type="range"
+                min="0"
+                max="100"
+                value="65"
+              >
+
+              <div class="slider-note">
+                Do not take out a personal loan solely to improve credit mix.
+                New debt also adds a payment obligation, inquiry, interest, and
+                underwriting risk.
+              </div>
+            </div>
+
+          </div>
+        </details>
+      </div>
+
+    </section>
+  </main>
 
   <script>
-    const $ = (id) => document.getElementById(id);
-
-    function bandLabel(s){
-      if (s >= 800) return "Exceptional (800–850)";
-      if (s >= 740) return "Very Good (740–799)";
-      if (s >= 670) return "Good (670–739)";
-      if (s >= 580) return "Fair (580–669)";
-      return "Poor (Below 580)";
+    function clamp(value,min,max){
+      return Math.max(min,Math.min(max,value));
     }
 
-    // Convert utilization % to a 0–100 "utilization score"
-    // Heuristic: <=10% = 100, 10–30% linearly drops to 80, 30–100% linearly drops to 0.
-    function utilizationToScore(pct){
-      if (pct <= 10) return 100;
-      if (pct <= 30){
-        // 10->100, 30->80
-        return Math.round(100 - ((pct - 10) * (20/20)));
+    function utilizationStrength(percent){
+      if(percent < 10){
+        return 95;
       }
-      // 30->80, 100->0
-      const score = 80 - ((pct - 30) * (80/70));
-      return Math.max(0, Math.round(score));
+
+      if(percent < 30){
+        return 78;
+      }
+
+      if(percent < 50){
+        return 58;
+      }
+
+      if(percent < 75){
+        return 32;
+      }
+
+      return 12;
     }
 
-    // Map weighted index (0–100) to 300–850
-    function indexToScore(idx){
-      return Math.round(300 + idx * 5.5);
+    function calculateReadiness(){
+      const payment =
+        Number(document.getElementById("payment").value);
+
+      const utilization =
+        Number(document.getElementById("utilization").value);
+
+      const history =
+        Number(document.getElementById("history").value);
+
+      const newCredit =
+        Number(document.getElementById("newCredit").value);
+
+      const mix =
+        Number(document.getElementById("mix").value);
+
+      const latePayment =
+        document.getElementById("latePayment").checked;
+
+      let paymentStrength = payment;
+
+      if(latePayment){
+        paymentStrength =
+          Math.max(0,paymentStrength - 40);
+      }
+
+      const utilizationScore =
+        utilizationStrength(utilization);
+
+      /*
+        This creates only an educational readiness indicator.
+        It is not presented as a credit score.
+      */
+
+      let readiness =
+        paymentStrength * .38 +
+        utilizationScore * .30 +
+        history * .14 +
+        newCredit * .10 +
+        mix * .08;
+
+      if(latePayment){
+        readiness -= 10;
+      }
+
+      return {
+        readiness:clamp(Math.round(readiness),0,100),
+        payment,
+        paymentStrength,
+        utilization,
+        history,
+        newCredit,
+        mix,
+        latePayment
+      };
     }
 
-    function clamp(n, lo, hi){ return Math.max(lo, Math.min(hi, n)); }
+    function readinessLevel(value){
+      if(value >= 75){
+        return {
+          text:"Strong",
+          badge:"Strong profile",
+          className:"strong"
+        };
+      }
+
+      if(value >= 50){
+        return {
+          text:"Developing",
+          badge:"Developing profile",
+          className:""
+        };
+      }
+
+      return {
+        text:"Needs attention",
+        badge:"Needs attention",
+        className:"attention"
+      };
+    }
+
+    function paymentStatus(result){
+      if(result.latePayment){
+        return "Recent serious concern";
+      }
+
+      if(result.payment >= 85){
+        return "Stable";
+      }
+
+      if(result.payment >= 65){
+        return "Some concern";
+      }
+
+      return "Needs attention";
+    }
+
+    function utilizationStatus(percent){
+      if(percent < 10){
+        return {
+          label:"Low",
+          color:"var(--green)"
+        };
+      }
+
+      if(percent < 30){
+        return {
+          label:"Manageable",
+          color:"var(--green)"
+        };
+      }
+
+      if(percent < 50){
+        return {
+          label:"Elevated",
+          color:"var(--orange)"
+        };
+      }
+
+      return {
+        label:"High",
+        color:"var(--red)"
+      };
+    }
+
+    function applicationStatus(result){
+      if(
+        result.latePayment ||
+        result.utilization >= 50 ||
+        result.newCredit < 40
+      ){
+        return "Needs preparation";
+      }
+
+      if(
+        result.readiness >= 75 &&
+        result.utilization < 30 &&
+        result.newCredit >= 65
+      ){
+        return "Stronger";
+      }
+
+      return "Moderate";
+    }
+
+    function guidanceText(result){
+      const priorities = [];
+
+      if(result.latePayment){
+        priorities.push(
+          "prevent additional late payments and bring all accounts current"
+        );
+      } else if(result.payment < 80){
+        priorities.push(
+          "strengthen payment consistency"
+        );
+      }
+
+      if(result.utilization >= 30){
+        priorities.push(
+          "reduce revolving balances"
+        );
+      }
+
+      if(result.newCredit < 60){
+        priorities.push(
+          "limit unnecessary new applications"
+        );
+      }
+
+      if(result.history < 45){
+        priorities.push(
+          "allow positive accounts time to mature"
+        );
+      }
+
+      if(result.mix < 45){
+        priorities.push(
+          "avoid adding debt solely to improve account mix"
+        );
+      }
+
+      if(priorities.length === 0){
+        return (
+          "<strong>Current focus:</strong> Preserve the profile by paying every " +
+          "account on time, keeping revolving balances manageable, and avoiding " +
+          "unnecessary new debt before applying for education financing."
+        );
+      }
+
+      return (
+        "<strong>Priority actions:</strong> " +
+        priorities.join("; ") +
+        ". Credit improvement depends on the full credit file, reporting cycle, " +
+        "and scoring model, so no specific point increase is guaranteed."
+      );
+    }
 
     function update(){
-      const late = $("lateToggle").checked;
+      const result = calculateReadiness();
+      const level = readinessLevel(result.readiness);
 
-      const phRaw = +$("ph").value;
-      const utPct = +$("ut").value;           // utilization in %
-      const ln = +$("ln").value;
-      const mx = +$("mx").value;
-      const nw = +$("nw").value;
+      document.getElementById("paymentValue").textContent =
+        result.payment;
 
-      // Display raw values
-      $("phv").textContent = phRaw;
-      $("utPct").textContent = utPct;
-      $("lnv").textContent = ln;
-      $("mxv").textContent = mx;
-      $("nwv").textContent = nw;
+      document.getElementById("utilizationValue").textContent =
+        result.utilization;
 
-      // Utilization meter + flag + utilization score
-      const utScore = utilizationToScore(utPct);
-      $("utScore").textContent = utScore;
+      document.getElementById("historyValue").textContent =
+        result.history;
 
-      $("utFill").style.width = utPct + "%";
-      if (utPct > 30){
-        $("utFill").style.background = "var(--bad)";
-        $("utFlag").innerHTML = "Status: <strong style='color:#b91c1c;'>Above 30% (hurts score)</strong>";
-      } else if (utPct > 10){
-        $("utFill").style.background = "var(--warn)";
-        $("utFlag").innerHTML = "Status: <strong style='color:#92400e;'>10–30% (okay)</strong>";
-      } else {
-        $("utFill").style.background = "var(--good)";
-        $("utFlag").innerHTML = "Status: <strong style='color:#166534;'>Under 10% (ideal)</strong>";
-      }
+      document.getElementById("newCreditValue").textContent =
+        result.newCredit;
 
-      // Missed payment impact
-      // - Reduce effective Payment History score (trust hit)
-      // - Apply a direct score penalty (models the immediate drop)
-      let phEffective = phRaw;
-      let penalty = 0;
+      document.getElementById("mixValue").textContent =
+        result.mix;
 
-      if (late){
-        phEffective = clamp(phRaw - 40, 0, 100);
-        penalty = 80; // "realistic" one-late-payment hit for education; varies in real life
-        $("lateMsg").style.display = "block";
-      } else {
-        $("lateMsg").style.display = "none";
-      }
+      document.getElementById("readinessNumber").textContent =
+        result.readiness;
 
-      // Weighted index 0–100
-      const idx = (phEffective*0.35 + utScore*0.30 + ln*0.15 + mx*0.10 + nw*0.10);
+      document.getElementById("readinessText").textContent =
+        level.text;
 
-      // Convert to 300–850 and apply penalty, then clamp
-      let score = indexToScore(idx) - penalty;
-      score = clamp(score, 300, 850);
+      document.getElementById("readinessFill").style.width =
+        result.readiness + "%";
 
-      $("score").textContent = score;
-      $("band").textContent = bandLabel(score);
+      const badge =
+        document.getElementById("readinessBadge");
 
-      // Dynamic range bar: fill + marker mapped from 300–850
-      const pct = ((score - 300) / (850 - 300)) * 100;
-      const pctClamped = clamp(pct, 0, 100);
-      $("marker").style.left = pctClamped + "%";
-      $("rangeFill").style.width = pctClamped + "%";
+      badge.textContent = level.badge;
+      badge.className =
+        "readiness-badge" +
+        (level.className ? " " + level.className : "");
+
+      document.getElementById("paymentStatus").textContent =
+        paymentStatus(result);
+
+      document.getElementById("utilizationStatus").textContent =
+        result.utilization + "%";
+
+      document.getElementById("applicationStatus").textContent =
+        applicationStatus(result);
+
+      document.getElementById("lateAlert").style.display =
+        result.latePayment ? "block" : "none";
+
+      const utilStatus =
+        utilizationStatus(result.utilization);
+
+      document.getElementById("utilizationFill").style.width =
+        result.utilization + "%";
+
+      document.getElementById("utilizationFill").style.background =
+        utilStatus.color;
+
+      document.getElementById("utilizationFlag").textContent =
+        utilStatus.label;
+
+      document.getElementById("utilizationFlag").style.color =
+        utilStatus.color;
+
+      document.getElementById("guidance").innerHTML =
+        guidanceText(result);
     }
 
-    ["ph","ut","ln","mx","nw","lateToggle"].forEach(id => $(id).addEventListener("input", update));
+    [
+      "payment",
+      "utilization",
+      "history",
+      "newCredit",
+      "mix",
+      "latePayment"
+    ].forEach(function(id){
+      document
+        .getElementById(id)
+        .addEventListener("input",update);
+
+      document
+        .getElementById(id)
+        .addEventListener("change",update);
+    });
+
     update();
   </script>
 </body>
