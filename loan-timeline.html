@@ -1,397 +1,1122 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Loan Timeline Slider</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Federal Loan System Timeline</title>
 
   <style>
     :root {
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --border: #e5e7eb;
-      --muted: #6b7280;
-      --text: #111827;
-      --header: #0f172a;
-      --accent: #2563eb;
-      --accent-mid: #0ea5e9;
-      --pre: #16a34a;
-      --post: #b91c1c;
-      --gap: #f97316;
-      --fed: #2563eb;
+      --navy:#0f2747;
+      --blue:#2563eb;
+      --sky:#0ea5e9;
+      --green:#16a34a;
+      --green-light:#ecfdf5;
+      --orange:#f97316;
+      --orange-light:#fff7ed;
+      --red:#dc2626;
+      --red-light:#fef2f2;
+      --purple:#7c3aed;
+      --purple-light:#f5f3ff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#dbe3ee;
+      --card:#ffffff;
+      --bg:#f4f7fb;
+      --shadow:0 12px 30px rgba(15,23,42,.09);
     }
+
+    * {
+      box-sizing:border-box;
+    }
+
     body {
-      margin: 0;
-      padding: 24px;
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      margin:0;
+      padding:24px;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left,#dbeafe 0,transparent 36%),
+        linear-gradient(135deg,#f8fafc,#eef2ff);
     }
-    .wrap {
-      max-width: 900px;
-      margin: 0 auto;
+
+    button,
+    input {
+      font:inherit;
     }
+
+    .page {
+      max-width:1080px;
+      margin:0 auto;
+    }
+
+    .hero {
+      padding:24px;
+      margin-bottom:18px;
+      color:white;
+      border-radius:24px;
+      background:linear-gradient(135deg,var(--navy),var(--blue),var(--sky));
+      box-shadow:0 18px 38px rgba(37,99,235,.24);
+    }
+
+    .eyebrow {
+      margin-bottom:6px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:.84;
+    }
+
     h1 {
-      margin: 0 0 6px;
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--header);
-    }
-    p {
-      margin: 0 0 14px;
-      font-size: 14px;
-      color: var(--muted);
+      margin:0 0 8px;
+      font-size:clamp(26px,4vw,38px);
+      line-height:1.1;
     }
 
-    /* Slider */
-    .timeline {
-      margin: 24px 0 18px;
+    .hero p {
+      max-width:870px;
+      margin:0;
+      color:#e0f2fe;
+      font-size:14px;
+      line-height:1.65;
     }
-    .timeline label {
-      font-weight: 800;
-      font-size: 14px;
-      margin-bottom: 5px;
-      display: block;
+
+    .timeline-panel {
+      padding:20px;
+      margin-bottom:18px;
+      border:1px solid var(--border);
+      border-radius:22px;
+      background:var(--card);
+      box-shadow:var(--shadow);
     }
+
+    .timeline-heading {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .timeline-heading h2 {
+      margin:0;
+      font-size:18px;
+    }
+
+    .timeline-heading p {
+      margin:3px 0 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .current-label {
+      padding:6px 10px;
+      color:#1e40af;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      border:1px solid #93c5fd;
+      border-radius:999px;
+      background:#dbeafe;
+    }
+
+    .range-wrap {
+      padding:10px 8px 0;
+    }
+
     input[type="range"] {
-      width: 100%;
-      appearance: none;
-      height: 6px;
-      background: #d1d5db;
-      border-radius: 999px;
-      outline: none;
+      width:100%;
+      height:8px;
+      appearance:none;
+      border-radius:999px;
+      outline:none;
+      cursor:pointer;
+      background:
+        linear-gradient(
+          90deg,
+          var(--green) 0%,
+          var(--green) 33%,
+          var(--sky) 33%,
+          var(--sky) 66%,
+          var(--red) 66%,
+          var(--red) 100%
+        );
     }
+
     input[type="range"]::-webkit-slider-thumb {
-      appearance: none;
-      width: 22px;
-      height: 22px;
-      background: var(--accent);
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid #ffffff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      width:26px;
+      height:26px;
+      appearance:none;
+      border:3px solid white;
+      border-radius:50%;
+      background:var(--blue);
+      box-shadow:0 3px 10px rgba(15,23,42,.25);
     }
+
     input[type="range"]::-moz-range-thumb {
-      width: 22px;
-      height: 22px;
-      background: var(--accent);
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid #ffffff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    .timelineLabels {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 4px;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--muted);
-    }
-    .timelineLabels span {
-      width: 33%;
-      text-align: center;
+      width:23px;
+      height:23px;
+      border:3px solid white;
+      border-radius:50%;
+      background:var(--blue);
+      box-shadow:0 3px 10px rgba(15,23,42,.25);
     }
 
-    /* Card + animation */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      margin-top: 14px;
-      overflow: hidden;
-    }
-    .cardInner {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
-    }
-    .cardInner.fade-out {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-    .card h2 {
-      font-size: 18px;
-      margin: 0 0 10px;
-      font-weight: 900;
-    }
-    .sectionTitle {
-      margin-top: 10px;
-      font-weight: 700;
-      font-size: 14px;
-      color: var(--header);
-    }
-    ul {
-      padding-left: 16px;
-      margin: 4px 0 10px;
-    }
-    li {
-      font-size: 13px;
-      margin-bottom: 3px;
+    .timeline-labels {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      margin-top:10px;
     }
 
-    .tag {
-      font-size: 11px;
-      font-weight: 800;
-      border-radius: 999px;
-      padding: 4px 8px;
-      display: inline-block;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: .3px;
+    .timeline-label {
+      padding:10px 6px;
+      text-align:center;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:800;
+      line-height:1.35;
+      border-radius:12px;
+      transition:.2s ease;
     }
-    .tag.pre  { background: #d1fae5; color: #065f46; }
-    .tag.mid  { background: #e0f2fe; color: #075985; }
-    .tag.post { background: #fee2e2; color: #991b1b; }
 
-    /* Funding bar */
-    .fundingBlock {
-      margin-top: 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: #f9fafb;
-      padding: 10px 12px;
+    .timeline-label.active {
+      color:#1e3a8a;
+      background:#eff6ff;
+      box-shadow:inset 0 0 0 1px #bfdbfe;
     }
-    .fundingTitle {
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .3px;
-      color: var(--muted);
-      margin-bottom: 6px;
+
+    .display-card {
+      padding:20px;
+      border:1px solid var(--border);
+      border-radius:22px;
+      background:var(--card);
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
-    .fundingBar {
-      position: relative;
-      height: 14px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: #e5e7eb;
-      display: flex;
-      margin-bottom: 4px;
+
+    .card-inner {
+      opacity:1;
+      transform:translateY(0);
+      transition:opacity .18s ease,transform .18s ease;
     }
-    .fundSegment {
-      height: 100%;
+
+    .card-inner.fade {
+      opacity:0;
+      transform:translateY(7px);
     }
-    .fundSegment.federal {
-      background: var(--fed);
+
+    .status-row {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:12px;
     }
-    .fundSegment.gap {
-      background: var(--gap);
+
+    .status-tag {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 10px;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      border-radius:999px;
     }
-    .fundingLabels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
+
+    .status-tag.pre {
+      color:#166534;
+      border:1px solid #86efac;
+      background:var(--green-light);
     }
-    .fundingLegend {
-      margin-top: 4px;
-      font-size: 11px;
-      color: var(--muted);
+
+    .status-tag.mid {
+      color:#075985;
+      border:1px solid #7dd3fc;
+      background:#f0f9ff;
     }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-right: 8px;
+
+    .status-tag.post {
+      color:#991b1b;
+      border:1px solid #fca5a5;
+      background:var(--red-light);
     }
+
+    .status-title {
+      margin:8px 0 0;
+      font-size:23px;
+      line-height:1.2;
+    }
+
+    .date-badge {
+      padding:7px 10px;
+      color:#475569;
+      font-size:10px;
+      font-weight:900;
+      white-space:nowrap;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:#f8fafc;
+    }
+
+    .funding-box {
+      padding:14px;
+      margin-bottom:16px;
+      border:1px solid var(--border);
+      border-radius:17px;
+      background:#f8fafc;
+    }
+
+    .funding-title {
+      margin-bottom:8px;
+      color:#475569;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+    }
+
+    .funding-bar {
+      display:flex;
+      height:18px;
+      overflow:hidden;
+      border-radius:999px;
+      background:#e2e8f0;
+    }
+
+    .funding-federal,
+    .funding-gap {
+      height:100%;
+      transition:width .4s ease;
+    }
+
+    .funding-federal {
+      background:linear-gradient(90deg,var(--blue),var(--sky));
+    }
+
+    .funding-gap {
+      background:linear-gradient(90deg,#fb923c,var(--orange));
+    }
+
+    .funding-numbers {
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:7px;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:800;
+    }
+
+    .funding-legend {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:9px;
+      color:var(--muted);
+      font-size:10px;
+    }
+
+    .legend-item {
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+    }
+
     .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
+      width:9px;
+      height:9px;
+      border-radius:50%;
     }
-    .dot.federal { background: var(--fed); }
-    .dot.gap     { background: var(--gap); }
+
+    .dot.federal {
+      background:var(--blue);
+    }
+
+    .dot.gap {
+      background:var(--orange);
+    }
+
+    .content-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .info-card {
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:white;
+    }
+
+    .info-card.full {
+      grid-column:1 / -1;
+    }
+
+    .info-icon {
+      display:grid;
+      width:34px;
+      height:34px;
+      margin-bottom:8px;
+      color:white;
+      font-size:17px;
+      place-items:center;
+      border-radius:10px;
+      background:linear-gradient(135deg,var(--blue),var(--sky));
+    }
+
+    .info-card.green .info-icon {
+      background:linear-gradient(135deg,#15803d,#22c55e);
+    }
+
+    .info-card.orange .info-icon {
+      background:linear-gradient(135deg,#c2410c,#fb923c);
+    }
+
+    .info-card.purple .info-icon {
+      background:linear-gradient(135deg,#6d28d9,#a78bfa);
+    }
+
+    .info-card.red .info-icon {
+      background:linear-gradient(135deg,#b91c1c,#ef4444);
+    }
+
+    .info-card h3 {
+      margin:0 0 7px;
+      font-size:14px;
+    }
+
+    .info-card ul {
+      margin:0;
+      padding-left:18px;
+    }
+
+    .info-card li {
+      margin-bottom:6px;
+      color:#475569;
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .limits-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:9px;
+      margin-top:10px;
+    }
+
+    .limit {
+      padding:10px;
+      text-align:center;
+      border:1px solid #c7d2fe;
+      border-radius:12px;
+      background:#f8faff;
+    }
+
+    .limit span {
+      display:block;
+      color:var(--muted);
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .limit strong {
+      display:block;
+      margin-top:3px;
+      color:#1e3a8a;
+      font-size:15px;
+    }
+
+    .sequence {
+      margin-top:14px;
+      padding:15px;
+      border:1px solid #c4b5fd;
+      border-radius:17px;
+      background:linear-gradient(135deg,#faf5ff,#eef2ff);
+    }
+
+    .sequence-title {
+      margin-bottom:10px;
+      color:#5b21b6;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .sequence-grid {
+      display:grid;
+      grid-template-columns:1fr auto 1fr auto 1fr;
+      align-items:center;
+      gap:8px;
+    }
+
+    .sequence-step {
+      min-height:72px;
+      padding:10px;
+      text-align:center;
+      font-size:11px;
+      font-weight:900;
+      border:1px solid #c7d2fe;
+      border-radius:13px;
+      background:white;
+    }
+
+    .sequence-step small {
+      display:block;
+      margin-top:4px;
+      color:var(--muted);
+      font-size:9px;
+      font-weight:600;
+      line-height:1.4;
+    }
+
+    .arrow {
+      color:var(--purple);
+      font-size:20px;
+      font-weight:900;
+    }
+
+    .takeaway {
+      padding:13px 14px;
+      margin-top:14px;
+      color:#334155;
+      font-size:11px;
+      line-height:1.6;
+      border-left:4px solid var(--blue);
+      border-radius:0 13px 13px 0;
+      background:#f8fafc;
+    }
+
+    .footnote {
+      margin-top:14px;
+      color:var(--muted);
+      font-size:10px;
+      line-height:1.55;
+    }
+
+    @media(max-width:800px) {
+      .content-grid {
+        grid-template-columns:1fr;
+      }
+
+      .info-card.full {
+        grid-column:auto;
+      }
+
+      .limits-grid {
+        grid-template-columns:1fr;
+      }
+
+      .sequence-grid {
+        grid-template-columns:1fr;
+      }
+
+      .arrow {
+        justify-self:center;
+        transform:rotate(90deg);
+      }
+    }
+
+    @media(max-width:600px) {
+      body {
+        padding:12px;
+      }
+
+      .hero,
+      .timeline-panel,
+      .display-card {
+        padding:16px;
+      }
+
+      .timeline-heading,
+      .status-row {
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .timeline-label {
+        font-size:10px;
+      }
+
+      .funding-numbers {
+        flex-direction:column;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
+  <main class="page">
 
-    <h1>Loan System Timeline Slider</h1>
-    <p>
-      Move the slider to see how loan options differ for students who start their program
-      before July 1, 2026, during the transition period, and after the new rules take effect.
-    </p>
+    <section class="hero">
+      <div class="eyebrow">Interactive federal loan timeline</div>
 
-    <div class="timeline">
-      <label for="timeSlider">Timeline</label>
-      <input type="range" id="timeSlider" min="0" max="2" step="1" value="0">
-      <div class="timelineLabels">
-        <span>Pre-2026<br>(Grandfathered)</span>
-        <span>Today<br>(Crossover Period)</span>
-        <span>Post-2026<br>(New Entrants)</span>
+      <h1>How Student Loan Options Change After July 1, 2026</h1>
+
+      <p>
+        Move the slider to compare the legacy federal loan system, the transition
+        period, and the new borrowing structure for students entering graduate or
+        professional programs beginning July 1, 2026.
+      </p>
+    </section>
+
+    <section class="timeline-panel">
+      <div class="timeline-heading">
+        <div>
+          <h2>Select a Borrowing Period</h2>
+          <p>
+            The rules that apply depend on when you enter and first receive a
+            qualifying federal loan for your current program.
+          </p>
+        </div>
+
+        <div class="current-label" id="currentLabel">
+          Pre-2026 system
+        </div>
       </div>
-    </div>
 
-    <div id="content" class="card">
-      <div id="cardInner" class="cardInner">
-        <!-- dynamic content goes here -->
+      <div class="range-wrap">
+        <input
+          type="range"
+          id="timeSlider"
+          min="0"
+          max="2"
+          step="1"
+          value="0"
+          aria-label="Select federal loan period"
+        >
+
+        <div class="timeline-labels">
+          <div class="timeline-label active" id="label0">
+            Before July 1, 2026<br>
+            Legacy / Grandfathered
+          </div>
+
+          <div class="timeline-label" id="label1">
+            Transition Period<br>
+            Determine Your Rules
+          </div>
+
+          <div class="timeline-label" id="label2">
+            July 1, 2026 and Later<br>
+            New Entrants
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-  </div>
+    <section class="display-card">
+      <div class="card-inner" id="cardInner"></div>
+    </section>
+
+  </main>
 
   <script>
-    const stateData = [
+    const states = [
       {
-        // 0: Pre-2026
+        label: "Pre-2026 system",
         tagClass: "pre",
-        tagText: "Pre-2026 Cohorts",
-        title: "Grandfathered Federal Loan System",
+        tag: "Legacy / Grandfathered Borrowers",
+        title: "Federal Loans Can Cover the Full Cost of Attendance",
+        date: "Before July 1, 2026",
         federalPct: 100,
         gapPct: 0,
-        bodyHtml: `
-          <div class="sectionTitle">Direct Unsubsidized Loans</div>
-          <ul>
-            <li>Up to <strong>$20,500</strong> per academic year</li>
-            <li>Lifetime limit: <strong>$138,500</strong> (including undergraduate borrowing)</li>
-            <li>No minimum credit score requirement</li>
-          </ul>
 
-          <div class="sectionTitle">Graduate PLUS Loans (Grandfathered)</div>
-          <ul>
-            <li>Available to students who <strong>first borrowed before July 1, 2026</strong></li>
-            <li>Remain available for the <strong>duration of their current program</strong></li>
-            <li>Subject to an adverse credit history check (no fixed score cutoff)</li>
-            <li>Can borrow up to the full <strong>Cost of Attendance</strong> (tuition, fees, and reasonable living expenses)</li>
-          </ul>
+        content: `
+          <div class="content-grid">
 
-          <div class="sectionTitle">Repayment Protections</div>
-          <ul>
-            <li>Access to standard federal repayment plans (standard, graduated, extended, and income-driven options as allowed)</li>
-            <li>Eligibility for federal benefits such as deferment, forbearance, and certain forgiveness programs (e.g., PSLF) when criteria are met</li>
-            <li>Fixed federal interest rates and federal servicing structure</li>
-          </ul>
+            <article class="info-card green">
+              <div class="info-icon">F</div>
+              <h3>Federal Direct Unsubsidized Loans</h3>
+
+              <ul>
+                <li>
+                  Annual limit of <strong>$20,500</strong>.
+                </li>
+
+                <li>
+                  Lifetime aggregate limit of <strong>$138,500</strong>,
+                  including qualifying undergraduate borrowing.
+                </li>
+
+                <li>
+                  No minimum credit score requirement.
+                </li>
+              </ul>
+            </article>
+
+            <article class="info-card green">
+              <div class="info-icon">+</div>
+              <h3>Graduate PLUS Loans</h3>
+
+              <ul>
+                <li>
+                  Available to eligible legacy or grandfathered borrowers.
+                </li>
+
+                <li>
+                  May cover the remaining Cost of Attendance after other aid.
+                </li>
+
+                <li>
+                  Uses an adverse-credit-history review rather than a fixed
+                  minimum score.
+                </li>
+              </ul>
+            </article>
+
+            <article class="info-card full">
+              <div class="info-icon">✓</div>
+              <h3>Federal Borrower Benefits</h3>
+
+              <ul>
+                <li>Fixed federal interest rates.</li>
+                <li>Federal repayment plans and borrower protections.</li>
+                <li>Deferment and forbearance options.</li>
+                <li>
+                  Eligibility for federal forgiveness programs when all
+                  requirements are met.
+                </li>
+              </ul>
+            </article>
+
+          </div>
+
+          <section class="sequence">
+            <div class="sequence-title">
+              Typical Borrowing Sequence
+            </div>
+
+            <div class="sequence-grid">
+              <div class="sequence-step">
+                Step 1: Direct Unsubsidized Loan
+                <small>
+                  Use the available annual federal amount first.
+                </small>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="sequence-step">
+                Step 2: Graduate PLUS Loan
+                <small>
+                  Fill the remaining certified Cost of Attendance.
+                </small>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="sequence-step">
+                Step 3: Additional Loans Usually Unnecessary
+                <small>
+                  Federal borrowing may cover the full approved cost.
+                </small>
+              </div>
+            </div>
+          </section>
+
+          <div class="takeaway">
+            <strong>Key takeaway:</strong> Eligible legacy borrowers may continue
+            using Graduate PLUS Loans to cover the remaining Cost of Attendance,
+            reducing their reliance on institutional and commercial private loans.
+          </div>
         `
       },
+
       {
-        // 1: Today / Crossover
+        label: "Transition period",
         tagClass: "mid",
-        tagText: "Today / Crossover Years",
-        title: "Transition Period (Enrollment Before July 1, 2026)",
+        tag: "Transition / Crossover Period",
+        title: "Your Entry and Borrowing Date Determine the Rules",
+        date: "Around July 1, 2026",
         federalPct: 90,
         gapPct: 10,
-        bodyHtml: `
-          <div class="sectionTitle">Determining Your Rules</div>
-          <ul>
-            <li>Your treatment depends on <strong>when you first borrow</strong> for your current program.</li>
-            <li>If your first federal loan disbursement is <strong>before July 1, 2026</strong>, you are typically treated as a grandfathered borrower for that program.</li>
-            <li>Exact handling can vary by program and timing — always confirm with Student Financial Services.</li>
-          </ul>
 
-          <div class="sectionTitle">Grandfathered Students in the Transition</div>
-          <ul>
-            <li>Continue to access <strong>Direct Unsubsidized</strong> and <strong>Graduate PLUS</strong> for the length of their current program.</li>
-            <li>Can still use Grad PLUS to fill the gap between Direct Unsubsidized limits and full Cost of Attendance.</li>
-          </ul>
+        content: `
+          <div class="content-grid">
 
-          <div class="sectionTitle">Newer Students Approaching July 2026</div>
-          <ul>
-            <li>Students starting close to the July 1, 2026 cutoff date need to understand which rule set will apply for their full program.</li>
-            <li>Planning ahead helps avoid surprises when Grad PLUS is no longer available for new entrants.</li>
-          </ul>
+            <article class="info-card">
+              <div class="info-icon">?</div>
+              <h3>Which Rules Apply?</h3>
+
+              <ul>
+                <li>
+                  Federal treatment depends on when you begin your current program
+                  and first receive a qualifying Direct Loan.
+                </li>
+
+                <li>
+                  Students who qualify under the grandfathering provisions may
+                  continue using the legacy structure for their current program.
+                </li>
+
+                <li>
+                  Students entering under the new rules follow the revised annual
+                  and lifetime borrowing limits.
+                </li>
+              </ul>
+            </article>
+
+            <article class="info-card purple">
+              <div class="info-icon">G</div>
+              <h3>Grandfathered Students</h3>
+
+              <ul>
+                <li>
+                  May continue to access Direct Unsubsidized and Graduate PLUS
+                  Loans for the applicable grandfathering period.
+                </li>
+
+                <li>
+                  Graduate PLUS may continue filling the Cost of Attendance gap.
+                </li>
+              </ul>
+            </article>
+
+            <article class="info-card orange full">
+              <div class="info-icon">!</div>
+              <h3>Students Entering Near the Cutoff</h3>
+
+              <ul>
+                <li>
+                  Do not assume that admission, orientation, enrollment, or FAFSA
+                  completion alone determines grandfathering.
+                </li>
+
+                <li>
+                  Confirm which federal borrowing structure applies to your
+                  program and academic year.
+                </li>
+
+                <li>
+                  Begin reviewing your credit early in case institutional or
+                  private financing will be required.
+                </li>
+              </ul>
+            </article>
+
+          </div>
+
+          <section class="sequence">
+            <div class="sequence-title">
+              Transition-Period Planning
+            </div>
+
+            <div class="sequence-grid">
+              <div class="sequence-step">
+                Step 1: Confirm Your Status
+                <small>
+                  Determine whether the legacy or new rules apply.
+                </small>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="sequence-step">
+                Step 2: Calculate Your Federal Eligibility
+                <small>
+                  Identify the annual amount available under your rule set.
+                </small>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="sequence-step">
+                Step 3: Prepare for Any Gap
+                <small>
+                  Review MWU and private loan requirements early.
+                </small>
+              </div>
+            </div>
+          </section>
+
+          <div class="takeaway">
+            <strong>Key takeaway:</strong> Students near the July 1, 2026 cutoff
+            should confirm their status rather than guessing. The answer determines
+            whether Graduate PLUS remains available or credit-based gap financing
+            will be needed.
+          </div>
         `
       },
+
       {
-        // 2: Post-2026
+        label: "Post-2026 system",
         tagClass: "post",
-        tagText: "Post-2026 New Entrants",
-        title: "New Federal + Credit-Based Funding Mix",
+        tag: "New Borrowers",
+        title: "Federal Loans Become the Foundation, Not the Full Solution",
+        date: "July 1, 2026 and Later",
         federalPct: 40,
         gapPct: 60,
-        bodyHtml: `
-          <div class="sectionTitle">Direct Unsubsidized Loans</div>
-          <ul>
-            <li>Lifetime cap increased (approx. <strong>$200,000</strong> total, based on final federal limits).</li>
-            <li>Still not tied to a specific credit score.</li>
-            <li>For most professional programs, this <strong>does not cover the full cost</strong> of attendance.</li>
-          </ul>
 
-          <div class="sectionTitle">Graduate PLUS Loans</div>
-          <ul>
-            <li><strong>No longer available</strong> for new borrowers who first enter after July 1, 2026.</li>
-            <li>New students cannot use Grad PLUS to fill the gap between costs and unsubsidized limits.</li>
-          </ul>
+        content: `
+          <div class="content-grid">
 
-          <div class="sectionTitle">How Students Fill the Gap</div>
-          <ul>
-            <li><strong>MWU Institutional Loans</strong> – credit-based, with minimum score requirements and school-specific terms.</li>
-            <li><strong>Private loans</strong> – fully credit-dependent; stronger credit tiers receive lower interest rates.</li>
-            <li>Co-signers are commonly required for lower scores or thin credit files.</li>
-          </ul>
+            <article class="info-card">
+              <div class="info-icon">F</div>
+              <h3>Federal Direct Unsubsidized Limits</h3>
 
-          <div class="sectionTitle">Key Implication</div>
-          <ul>
-            <li>Federal loans alone will <strong>not</strong> cover the full cost of most programs for post-2026 entrants.</li>
-            <li>Your <strong>credit score and co-signer strength</strong> become central to your funding strategy.</li>
-            <li>Improving credit <strong>before enrolling</strong> can significantly reduce your long-term borrowing cost.</li>
-          </ul>
+              <div class="limits-grid">
+                <div class="limit">
+                  <span>Graduate annual</span>
+                  <strong>$20,500</strong>
+                </div>
+
+                <div class="limit">
+                  <span>Graduate lifetime</span>
+                  <strong>$100,000</strong>
+                </div>
+
+                <div class="limit">
+                  <span>Overall federal cap</span>
+                  <strong>$257,500</strong>
+                </div>
+              </div>
+
+              <div class="limits-grid">
+                <div class="limit">
+                  <span>Professional annual</span>
+                  <strong>$50,000</strong>
+                </div>
+
+                <div class="limit">
+                  <span>Professional lifetime</span>
+                  <strong>$200,000</strong>
+                </div>
+
+                <div class="limit">
+                  <span>Credit score required</span>
+                  <strong>No</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="info-card red">
+              <div class="info-icon">×</div>
+              <h3>Graduate PLUS Loans</h3>
+
+              <ul>
+                <li>
+                  No longer available to new graduate and professional borrowers
+                  entering under the new rules.
+                </li>
+
+                <li>
+                  Students cannot use Graduate PLUS to automatically cover the
+                  remaining Cost of Attendance.
+                </li>
+              </ul>
+            </article>
+
+            <article class="info-card purple">
+              <div class="info-icon">M</div>
+              <h3>MWU Loan</h3>
+
+              <ul>
+                <li>
+                  Fixed-rate institutional financing for eligible MWU students.
+                </li>
+
+                <li>
+                  Minimum independent-borrower FICO score of <strong>660</strong>.
+                </li>
+
+                <li>
+                  Approval depends on the complete underwriting review, not the
+                  score alone.
+                </li>
+
+                <li>
+                  A qualified co-signer may be used when applicable.
+                </li>
+              </ul>
+            </article>
+
+            <article class="info-card orange">
+              <div class="info-icon">A</div>
+              <h3>MWU ACCESS Loan</h3>
+
+              <ul>
+                <li>
+                  A separate institutional pathway for certain eligible students
+                  who cannot qualify for the MWU Loan.
+                </li>
+
+                <li>
+                  Requires a qualifying MWU Loan denial, additional documentation,
+                  institutional review and available funding.
+                </li>
+
+                <li>
+                  ACCESS approval is not automatic.
+                </li>
+              </ul>
+            </article>
+
+            <article class="info-card full">
+              <div class="info-icon">$</div>
+              <h3>Private Education Loans</h3>
+
+              <ul>
+                <li>
+                  Approval and interest rates depend heavily on the borrower or
+                  co-signer's credit profile.
+                </li>
+
+                <li>
+                  Terms, fixed or variable rates, hardship options and co-signer
+                  release policies vary by lender.
+                </li>
+
+                <li>
+                  Students should compare actual offers rather than relying only
+                  on advertised starting rates.
+                </li>
+              </ul>
+            </article>
+
+          </div>
+
+          <section class="sequence">
+            <div class="sequence-title">
+              Typical Post-2026 Borrowing Sequence
+            </div>
+
+            <div class="sequence-grid">
+              <div class="sequence-step">
+                Step 1: Federal Direct Unsubsidized Loan
+                <small>
+                  Use available federal eligibility first.
+                </small>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="sequence-step">
+                Step 2: Evaluate MWU Options
+                <small>
+                  Review the MWU Loan or ACCESS pathway when applicable.
+                </small>
+              </div>
+
+              <div class="arrow">→</div>
+
+              <div class="sequence-step">
+                Step 3: Compare Private Loans
+                <small>
+                  Use additional private financing only if a gap remains.
+                </small>
+              </div>
+            </div>
+          </section>
+
+          <div class="takeaway">
+            <strong>Key takeaway:</strong> Federal loans remain the safest starting
+            point, but they will not cover the full cost of many MWU programs.
+            Preparing your credit before enrollment gives you more options when
+            comparing the MWU Loan and commercial private financing.
+          </div>
         `
       }
     ];
 
-    function setFundingBar(federalPct, gapPct) {
-      const fedSeg = document.getElementById("fundFederal");
-      const gapSeg = document.getElementById("fundGap");
-      const fedLabel = document.getElementById("fundLabelFederal");
-      const gapLabel = document.getElementById("fundLabelGap");
-
-      fedSeg.style.width = federalPct + "%";
-      gapSeg.style.width = gapPct + "%";
-      fedLabel.textContent = `Estimated federal coverage: ${federalPct}%`;
-      gapLabel.textContent = `Estimated credit-based gap: ${gapPct}%`;
-    }
-
     function renderState(index) {
-      const data = stateData[index];
+      const data = states[index];
       const inner = document.getElementById("cardInner");
 
-      // Fade out
-      inner.classList.add("fade-out");
+      inner.classList.add("fade");
 
-      setTimeout(() => {
+      document.getElementById("currentLabel").textContent = data.label;
+
+      document.querySelectorAll(".timeline-label").forEach(function(label, i) {
+        label.classList.toggle("active", i === index);
+      });
+
+      setTimeout(function() {
         inner.innerHTML = `
-          <div class="tag ${data.tagClass}">${data.tagText}</div>
-          <h2>${data.title}</h2>
+          <div class="status-row">
+            <div>
+              <div class="status-tag ${data.tagClass}">
+                ${data.tag}
+              </div>
 
-          <div class="fundingBlock">
-            <div class="fundingTitle">Estimated Funding Mix for a Typical Professional Program</div>
-            <div class="fundingBar">
-              <div id="fundFederal" class="fundSegment federal"></div>
-              <div id="fundGap" class="fundSegment gap"></div>
+              <h2 class="status-title">
+                ${data.title}
+              </h2>
             </div>
-            <div class="fundingLabels">
-              <span id="fundLabelFederal"></span>
-              <span id="fundLabelGap" style="text-align:right;"></span>
-            </div>
-            <div class="fundingLegend">
-              <span class="chip"><span class="dot federal"></span> Federal (Direct Unsubsidized +, if applicable, Grad PLUS)</span>
-              <span class="chip"><span class="dot gap"></span> Credit-Based Gap (MWU Institutional + Private)</span>
+
+            <div class="date-badge">
+              ${data.date}
             </div>
           </div>
 
-          ${data.bodyHtml}
+          <div class="funding-box">
+            <div class="funding-title">
+              Illustrative Funding Mix for a Typical Professional Program
+            </div>
+
+            <div class="funding-bar">
+              <div
+                class="funding-federal"
+                style="width:${data.federalPct}%"
+              ></div>
+
+              <div
+                class="funding-gap"
+                style="width:${data.gapPct}%"
+              ></div>
+            </div>
+
+            <div class="funding-numbers">
+              <span>
+                Estimated federal coverage: ${data.federalPct}%
+              </span>
+
+              <span>
+                Estimated remaining gap: ${data.gapPct}%
+              </span>
+            </div>
+
+            <div class="funding-legend">
+              <span class="legend-item">
+                <span class="dot federal"></span>
+                Federal loans
+              </span>
+
+              <span class="legend-item">
+                <span class="dot gap"></span>
+                MWU Loan, MWU ACCESS Loan or private financing
+              </span>
+            </div>
+          </div>
+
+          ${data.content}
+
+          <div class="footnote">
+            Funding percentages are illustrative and will vary by program, Cost of
+            Attendance, prior federal borrowing and other aid. This activity does
+            not determine grandfathering status, loan eligibility or approval.
+          </div>
         `;
 
-        // Update funding bar
-        setFundingBar(data.federalPct, data.gapPct);
-
-        // Fade back in
-        requestAnimationFrame(() => {
-          inner.classList.remove("fade-out");
+        requestAnimationFrame(function() {
+          inner.classList.remove("fade");
         });
       }, 170);
     }
 
-    document.getElementById("timeSlider").addEventListener("input", function () {
-      const idx = Number(this.value);
-      renderState(idx);
-    });
+    document
+      .getElementById("timeSlider")
+      .addEventListener("input", function() {
+        renderState(Number(this.value));
+      });
 
-    // Initial state
     renderState(0);
   </script>
 </body>
