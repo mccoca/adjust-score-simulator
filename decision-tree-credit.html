@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <title>My Score Is… → Next Steps</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 :root{
@@ -11,23 +11,46 @@
   --card:#ffffff;
   --border:#e5e7eb;
   --text:#0f172a;
-  --muted:#6b7280;
-  --good:#22c55e;
-  --mid:#f97316;
-  --bad:#ef4444;
+  --muted:#64748b;
+  --good:#16a34a;
+  --mid:#ea580c;
+  --bad:#dc2626;
+  --access:#7c3aed;
   --accent:#2563eb;
+  --accent2:#0ea5e9;
 }
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+}
+
 body{
   margin:0;
   padding:24px;
-  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
-  background:radial-gradient(circle at top left,#e0f2fe 0,#f9fafb 45%,#eef2ff 100%);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at top left,#dbeafe 0,transparent 38%),
+    linear-gradient(135deg,#f8fafc,#eef2ff);
   color:var(--text);
 }
-.wrap{max-width:1100px;margin:0 auto}
-h1{margin:0 0 8px;font-size:26px;font-weight:900}
-.sub{margin:0 0 18px;font-size:14px;color:var(--muted);line-height:1.6}
+
+.wrap{
+  max-width:1100px;
+  margin:0 auto;
+}
+
+h1{
+  margin:0 0 8px;
+  font-size:28px;
+  font-weight:900;
+}
+
+.sub{
+  margin:0 0 18px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+}
 
 .tree{
   display:flex;
@@ -37,189 +60,691 @@ h1{margin:0 0 8px;font-size:26px;font-weight:900}
 }
 
 .root{
-  background:linear-gradient(135deg,#2563eb,#0ea5e9);
+  padding:17px 24px;
   color:white;
-  padding:16px 22px;
-  border-radius:16px;
-  font-weight:900;
   font-size:18px;
-  box-shadow:0 10px 24px rgba(37,99,235,.35);
+  font-weight:900;
+  text-align:center;
+  border-radius:17px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 12px 26px rgba(37,99,235,.30);
+}
+
+.connector{
+  width:3px;
+  height:28px;
+  border-radius:999px;
+  background:#93c5fd;
 }
 
 .branches{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:18px;
   width:100%;
 }
 
 .node{
-  border-radius:18px;
-  border:1px solid var(--border);
-  background:var(--card);
-  padding:16px;
-  box-shadow:0 8px 18px rgba(15,23,42,.06);
+  position:relative;
+  padding:18px;
   cursor:pointer;
-  transition:.2s ease;
+  border:2px solid var(--border);
+  border-radius:20px;
+  background:var(--card);
+  box-shadow:0 10px 24px rgba(15,23,42,.07);
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
 }
-.node:hover{transform:translateY(-4px)}
+
+.node:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 30px rgba(15,23,42,.11);
+}
+
+.node:focus{
+  outline:3px solid rgba(37,99,235,.22);
+  outline-offset:3px;
+}
+
+.node.strong{
+  border-top-color:var(--good);
+}
+
+.node.building{
+  border-top-color:var(--mid);
+}
+
+.node.rebuilding{
+  border-top-color:var(--bad);
+}
+
 .node h2{
-  margin:0 0 6px;
-  font-size:18px;
+  margin:0 0 7px;
+  font-size:22px;
   font-weight:900;
 }
-.node p{margin:0 0 8px;font-size:13px;color:var(--muted)}
-.badge{
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  font-weight:700;
+
+.node p{
+  margin:10px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
 }
-.good{background:rgba(34,197,94,.15);color:#166534;border:1px solid rgba(34,197,94,.4)}
-.mid{background:rgba(249,115,22,.15);color:#9a3412;border:1px solid rgba(249,115,22,.4)}
-.bad{background:rgba(239,68,68,.15);color:#991b1b;border:1px solid rgba(239,68,68,.4)}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+
+.good{
+  color:#166534;
+  border:1px solid #86efac;
+  background:#ecfdf5;
+}
+
+.mid{
+  color:#9a3412;
+  border:1px solid #fdba74;
+  background:#fff7ed;
+}
+
+.bad{
+  color:#991b1b;
+  border:1px solid #fca5a5;
+  background:#fef2f2;
+}
+
+.access{
+  color:#5b21b6;
+  border:1px solid #c4b5fd;
+  background:#f5f3ff;
+}
+
+.open-label{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:14px;
+  padding-top:11px;
+  color:var(--accent);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  border-top:1px solid #eef2f7;
+}
+
+.chevron{
+  font-size:18px;
+  transition:transform .2s ease;
+}
+
+.node.open .chevron{
+  transform:rotate(180deg);
+}
 
 .details{
-  margin-top:10px;
+  display:none;
+  margin-top:13px;
+  padding-top:13px;
   font-size:13px;
   line-height:1.6;
-  display:none;
+  border-top:1px dashed #dbe3ee;
 }
+
+.node.open .details{
+  display:block;
+  animation:fadeIn .2s ease;
+}
+
+.details h3{
+  margin:0 0 5px;
+  font-size:13px;
+  font-weight:900;
+}
+
 .details ul{
-  margin:6px 0 0 18px;
+  margin:6px 0 14px 18px;
   padding:0;
 }
-.details li{margin-bottom:6px}
+
+.details li{
+  margin-bottom:7px;
+}
+
+.notice{
+  padding:10px 11px;
+  margin-top:10px;
+  border-radius:12px;
+  font-size:11px;
+  line-height:1.5;
+}
+
+.notice.good-note{
+  color:#166534;
+  background:#ecfdf5;
+  border-left:4px solid var(--good);
+}
+
+.notice.mid-note{
+  color:#9a3412;
+  background:#fff7ed;
+  border-left:4px solid var(--mid);
+}
+
+.notice.access-note{
+  color:#5b21b6;
+  background:#f5f3ff;
+  border-left:4px solid var(--access);
+}
+
+.notice.bad-note{
+  color:#991b1b;
+  background:#fef2f2;
+  border-left:4px solid var(--bad);
+}
+
 .timeline{
-  margin-top:8px;
+  padding:9px 10px;
+  margin-top:10px;
+  color:#334155;
+  font-size:11px;
+  line-height:1.5;
+  border-radius:11px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+}
+
+.pathway{
+  margin-top:20px;
+  padding:17px;
+  border:1px solid #c7d2fe;
+  border-radius:18px;
+  background:linear-gradient(135deg,#eff6ff,#f5f3ff);
+}
+
+.pathway-title{
+  margin-bottom:12px;
+  color:#3730a3;
   font-size:12px;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+
+.pathway-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.path-step{
+  padding:12px;
+  text-align:center;
+  border:1px solid #c7d2fe;
+  border-radius:13px;
+  background:white;
+}
+
+.path-step strong{
+  display:block;
+  margin-bottom:4px;
+  font-size:12px;
+}
+
+.path-step span{
   color:var(--muted);
+  font-size:10px;
+  line-height:1.4;
 }
 
 .footer{
   margin-top:18px;
-  font-size:13px;
+  padding:13px 15px;
   color:var(--muted);
+  font-size:11px;
   line-height:1.6;
+  border-radius:14px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(-4px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@media(max-width:850px){
+  .branches{
+    grid-template-columns:1fr;
+  }
+
+  .pathway-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  body{
+    padding:14px;
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  .root{
+    width:100%;
+  }
 }
 </style>
 </head>
 
 <body>
+
 <div class="wrap">
-<h1>My Score Is… → Next Steps</h1>
-<p class="sub">
-Your credit score determines your loan eligibility, interest rate tier, and total borrowing cost.
-Click your score range below to see your precise action plan.
-</p>
 
-<div class="tree">
-  <div class="root">Start Here: What’s Your Score?</div>
+  <h1>My Score Is… → Next Steps</h1>
 
-  <div class="branches">
+  <p class="sub">
+    Your credit score helps shape your education-loan options, but it is not the
+    only factor lenders review. Select your score range to see the most appropriate
+    next steps for improving, protecting, or using your credit strategically.
+  </p>
 
-    <!-- 720+ -->
-    <div class="node" onclick="toggle(this)">
-      <h2>720+</h2>
-      <span class="badge good">Strong / Very Strong Credit</span>
-      <p>Top borrowing tier. Eligible for best private rates and MWU Institutional Loans.</p>
+  <div class="tree">
 
-      <div class="details">
-        <strong>What This Means:</strong>
-        <ul>
-          <li>Likely no co-signer needed.</li>
-          <li>Private lenders often offer lowest advertised APR tiers.</li>
-          <li>MWU Institutional Loan eligibility comfortably met (670+).</li>
-        </ul>
-
-        <strong>Your Strategy:</strong>
-        <ul>
-          <li>Keep utilization under 10% (never above 30%).</li>
-          <li>Maintain autopay on all accounts.</li>
-          <li>Avoid opening multiple new accounts before borrowing.</li>
-          <li>Preserve older accounts to maintain length of credit history.</li>
-        </ul>
-
-        <div class="timeline">
-        Even a small drop (740 → 710) may raise your APR and cost thousands over a multi-year borrowing cycle.
-        </div>
-      </div>
+    <div class="root">
+      Start Here: What Is Your Current Credit Score?
     </div>
 
-    <!-- 660-719 -->
-    <div class="node" onclick="toggle(this)">
-      <h2>660–719</h2>
-      <span class="badge mid">Average → Good Credit</span>
-      <p>Common student range. Improvement here creates major savings.</p>
+    <div class="connector"></div>
 
-      <div class="details">
-        <strong>What This Means:</strong>
-        <ul>
-          <li>670+ → Eligible for MWU Institutional Loans.</li>
-          <li>Private loan rates typically mid-range (varies by lender).</li>
-          <li>Borderline scores risk higher APR tiers.</li>
-        </ul>
+    <div class="branches">
 
-        <strong>Your Strategy:</strong>
-        <ul>
-          <li>Lower utilization below 30% (aim under 10%).</li>
-          <li>Set autopay to eliminate late-payment risk.</li>
-          <li>Consider authorized user status on strong account.</li>
-          <li>Limit hard inquiries before applying.</li>
-        </ul>
+      <!-- 720+ -->
 
-        <div class="timeline">
-        Noticeable score gains often occur within 30–90 days when utilization drops.
+      <div
+        class="node strong"
+        role="button"
+        tabindex="0"
+        aria-expanded="false"
+        onclick="toggleNode(this)"
+        onkeydown="handleKey(event,this)"
+      >
+
+        <h2>720+</h2>
+
+        <span class="badge good">
+          Strong to Excellent Credit
+        </span>
+
+        <p>
+          You may have several competitive borrowing options. Your goal is to
+          protect your score and compare real loan offers carefully.
+        </p>
+
+        <div class="open-label">
+          View my strategy
+          <span class="chevron">⌄</span>
+        </div>
+
+        <div class="details">
+
+          <h3>What This May Mean</h3>
+
+          <ul>
+            <li>
+              You are above the MWU Loan's stated 660 minimum score requirement.
+            </li>
+
+            <li>
+              MWU Loan approval still depends on the complete underwriting review,
+              including credit history, utilization, delinquencies, collections and
+              other eligibility requirements.
+            </li>
+
+            <li>
+              Private lenders may offer competitive fixed rates to borrowers with
+              strong credit.
+            </li>
+
+            <li>
+              You may be able to qualify without a co-signer, depending on the
+              lender and your complete financial profile.
+            </li>
+          </ul>
+
+          <h3>Your Strategy</h3>
+
+          <ul>
+            <li>
+              Keep overall and individual-card utilization low—below 30%, with
+              under 10% generally preferable.
+            </li>
+
+            <li>
+              Continue making every payment on time.
+            </li>
+
+            <li>
+              Avoid unnecessary new credit accounts before applying for education
+              loans.
+            </li>
+
+            <li>
+              Keep older accounts open when practical to preserve credit history.
+            </li>
+
+            <li>
+              Compare the MWU Loan with several private fixed-rate offers.
+            </li>
+
+            <li>
+              Evaluate total cost, repayment flexibility, hardship options and
+              co-signer terms—not just the advertised interest rate.
+            </li>
+          </ul>
+
+          <div class="notice good-note">
+            <strong>Likely next step:</strong> Use federal loans first, then compare
+            the MWU Loan with actual private-loan offers. Excellent credit gives you
+            choices; use that leverage.
+          </div>
+
+          <div class="timeline">
+            Protecting a strong score matters because a lower score may move you
+            into a less favorable private-loan pricing tier.
+          </div>
+
         </div>
       </div>
-    </div>
 
-    <!-- Below 660 -->
-    <div class="node" onclick="toggle(this)">
-      <h2>Below 660</h2>
-      <span class="badge bad">Fair or Rebuilding Credit</span>
-      <p>Higher barriers. Focus shifts to rebuilding before borrowing.</p>
+      <!-- 660–719 -->
 
-      <div class="details">
-        <strong>What This Means:</strong>
-        <ul>
-          <li>May not meet MWU Institutional threshold.</li>
-          <li>Private lenders may require co-signer.</li>
-          <li>Higher APR tiers likely.</li>
-        </ul>
+      <div
+        class="node building"
+        role="button"
+        tabindex="0"
+        aria-expanded="false"
+        onclick="toggleNode(this)"
+        onkeydown="handleKey(event,this)"
+      >
 
-        <strong>Your Strategy:</strong>
-        <ul>
-          <li>Open a secured credit card and use responsibly.</li>
-          <li>Consider a credit-builder installment loan.</li>
-          <li>Resolve or dispute collections.</li>
-          <li>Keep utilization below 30% (ideally under 10%).</li>
-        </ul>
+        <h2>660–719</h2>
 
-        <div class="timeline">
-        Typical rebuild timeline: 3–6 months for progress, 6–12 months for strong improvement.
+        <span class="badge mid">
+          Building to Strong Credit
+        </span>
+
+        <p>
+          You meet or approach the MWU Loan score threshold, but targeted
+          improvement may expand your options and reduce borrowing costs.
+        </p>
+
+        <div class="open-label">
+          View my strategy
+          <span class="chevron">⌄</span>
+        </div>
+
+        <div class="details">
+
+          <h3>What This May Mean</h3>
+
+          <ul>
+            <li>
+              A score of 660 or higher meets the MWU Loan's stated minimum score
+              for an independent application.
+            </li>
+
+            <li>
+              Meeting the score minimum does not guarantee approval; all other
+              underwriting criteria still apply.
+            </li>
+
+            <li>
+              Private lenders may approve borrowers in this range, but rates may
+              be higher than those offered to top-tier applicants.
+            </li>
+
+            <li>
+              A qualified co-signer may improve approval odds or pricing.
+            </li>
+          </ul>
+
+          <h3>Your Strategy</h3>
+
+          <ul>
+            <li>
+              Pay down revolving balances and keep utilization below 30%.
+            </li>
+
+            <li>
+              Aim for utilization below 10% when preparing for a loan application.
+            </li>
+
+            <li>
+              Set up automatic minimum payments to prevent accidental lateness.
+            </li>
+
+            <li>
+              Review all three credit reports for incorrect balances, delinquencies
+              or collection accounts.
+            </li>
+
+            <li>
+              Limit unnecessary hard inquiries.
+            </li>
+
+            <li>
+              Consider authorized-user status only when the primary account has
+              low utilization, strong payment history and a long credit history.
+            </li>
+          </ul>
+
+          <div class="notice mid-note">
+            <strong>Likely next step:</strong> After federal loans, evaluate the MWU
+            Loan first and compare it with private offers. The MWU Loan's fixed
+            pricing may be more predictable than score-tiered private pricing.
+          </div>
+
+          <div class="timeline">
+            Lower utilization may affect a score after the card issuer reports the
+            new balance. Broader credit improvement usually requires several months
+            of consistent positive activity.
+          </div>
+
         </div>
       </div>
-    </div>
 
+      <!-- Below 660 -->
+
+      <div
+        class="node rebuilding"
+        role="button"
+        tabindex="0"
+        aria-expanded="false"
+        onclick="toggleNode(this)"
+        onkeydown="handleKey(event,this)"
+      >
+
+        <h2>Below 660</h2>
+
+        <span class="badge bad">
+          Building or Rebuilding Credit
+        </span>
+
+        <p>
+          Your focus should be strengthening your credit profile and reviewing
+          co-signer or MWU ACCESS Loan pathways.
+        </p>
+
+        <div class="open-label">
+          View my strategy
+          <span class="chevron">⌄</span>
+        </div>
+
+        <div class="details">
+
+          <h3>What This May Mean</h3>
+
+          <ul>
+            <li>
+              You are below the stated independent-borrower score minimum for the
+              MWU Loan.
+            </li>
+
+            <li>
+              You may still be able to apply for the MWU Loan with a qualified
+              co-signer.
+            </li>
+
+            <li>
+              Private lenders may require a co-signer, offer higher rates or decline
+              the application.
+            </li>
+
+            <li>
+              The MWU ACCESS Loan may provide another pathway for students who
+              receive a qualifying MWU Loan denial and meet the separate ACCESS
+              requirements.
+            </li>
+          </ul>
+
+          <h3>Your Strategy</h3>
+
+          <ul>
+            <li>
+              Review your credit reports and dispute information that is inaccurate.
+            </li>
+
+            <li>
+              Bring delinquent accounts current and prevent any new late payments.
+            </li>
+
+            <li>
+              Pay down revolving balances and keep utilization as low as possible.
+            </li>
+
+            <li>
+              Consider a secured credit card if you need to establish positive
+              revolving-credit history.
+            </li>
+
+            <li>
+              Consider a legitimate credit-builder loan only if the payment fits
+              comfortably within your budget.
+            </li>
+
+            <li>
+              Avoid applying for multiple new accounts while rebuilding.
+            </li>
+
+            <li>
+              Discuss qualified co-signer options before your financing deadline.
+            </li>
+          </ul>
+
+          <div class="notice access-note">
+            <strong>MWU ACCESS Loan:</strong> This is not automatic funding. It is
+            a limited, case-by-case institutional pathway for eligible students who
+            cannot qualify for the MWU Loan or other available financing.
+          </div>
+
+          <div class="notice bad-note">
+            <strong>Likely next step:</strong> Build your credit, review MWU Loan
+            co-signer options, and contact Student Financial Services to understand
+            whether the MWU ACCESS Loan process may apply.
+          </div>
+
+          <div class="timeline">
+            Some changes may appear within a few reporting cycles, but rebuilding
+            credit commonly requires six to twelve months or longer depending on
+            the underlying issues.
+          </div>
+
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
 
-<div class="footer">
-A 20–40 point increase can reduce APR tiers significantly. Over professional-school borrowing,
-that difference can translate into $10,000–$40,000+ in lifetime savings.
-Start early. Maintain control.
-</div>
+  <section class="pathway">
+
+    <div class="pathway-title">
+      Borrowing Sequence for Most MWU Students
+    </div>
+
+    <div class="pathway-grid">
+
+      <div class="path-step">
+        <strong>Step 1: Federal Loan</strong>
+        <span>
+          Use available Federal Direct Unsubsidized Loan eligibility first.
+        </span>
+      </div>
+
+      <div class="path-step">
+        <strong>Step 2: Evaluate MWU Options</strong>
+        <span>
+          Consider the MWU Loan or, when applicable, the MWU ACCESS Loan.
+        </span>
+      </div>
+
+      <div class="path-step">
+        <strong>Step 3: Compare Private Loans</strong>
+        <span>
+          Review actual fixed rates, protections, fees and total repayment cost.
+        </span>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="footer">
+    This activity provides general educational guidance and does not determine
+    eligibility or approval. A credit score is only one part of loan underwriting.
+    Students should review current loan terms and eligibility requirements before
+    applying.
+  </div>
 
 </div>
 
 <script>
-function toggle(el){
-  const details = el.querySelector('.details');
-  details.style.display = details.style.display === 'block' ? 'none' : 'block';
+function toggleNode(node){
+  const isOpen = node.classList.contains("open");
+
+  document.querySelectorAll(".node").forEach(function(item){
+    item.classList.remove("open");
+    item.setAttribute("aria-expanded","false");
+  });
+
+  if(!isOpen){
+    node.classList.add("open");
+    node.setAttribute("aria-expanded","true");
+  }
+}
+
+function handleKey(event,node){
+  if(event.key === "Enter" || event.key === " "){
+    event.preventDefault();
+    toggleNode(node);
+  }
 }
 </script>
 
